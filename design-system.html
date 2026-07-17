@@ -139,7 +139,7 @@
       <div class="scale-demo"><div class="t-h3">From our blog</div></div>
     </div>
     <div class="scale-row">
-      <div class="scale-key"><b>--fs-h4</b>Gloock 400 — card title<br>19 → 22px<br>367.5px in a 427px column<span class="live" data-live="h4"></span></div>
+      <div class="scale-key"><b>--fs-h4</b>Gloock 400 — card title<br>19 → 20px<br>2-line box · real titles to 75ch<span class="live" data-live="h4"></span></div>
       <div class="scale-demo"><div class="t-h4">1965 Mercedes-Benz 300SL Roadster</div><div class="t-h4">1961 Jaguar E-Type Series 1 Roadster</div></div>
     </div>
     <div class="scale-row">
@@ -305,7 +305,7 @@
   <div class="wrap">
     <p class="spec-num">06 — Inventory card</p>
     <h2 class="spec-title">No border. No shadow. The photograph is the card.</h2>
-    <p class="spec-note">Brief §04: <b>“Minimal — no heavy card borders or shadows. Let photography carry the weight.”</b> Bootstrap’s <code class="tok">.card</code> ships a border, a background and a radius, so we don’t import <code class="tok">_card.scss</code> at all and neutralise the variables as a safety net for any WordPress markup that still emits <code class="tok">.card</code>. Hover is a 1.03 image scale inside a fixed frame — nothing lifts, nothing shadows. Titles are Gloock at 22px: verified solid down to 18px, with lining figures. <em>Hover a card.</em></p>
+    <p class="spec-note">Brief §04: <b>“Minimal — no heavy card borders or shadows. Let photography carry the weight.”</b> Bootstrap’s <code class="tok">.card</code> ships a border, a background and a radius, so we don’t import <code class="tok">_card.scss</code> at all and neutralise the variables as a safety net for any WordPress markup that still emits <code class="tok">.card</code>. Hover is a 1.03 image scale inside a fixed frame — nothing lifts, nothing shadows. Titles are Gloock at <b>20px in a reserved 2-line box</b> — corrected from 22px once the <em>real</em> inventory was measured: across all 665 live car titles the median is 32 characters but the max is 75, and 17.9% are too long for one line in a 427px column. At 22px the worst case took 3 lines; at 20px it takes 2. <em>Hover a card.</em></p>
     <div class="cards">
       <article class="card-x">
         <div class="card-x__media"><img src="assets/images/hero-still-sm.jpg" alt="1965 Mercedes-Benz 300SL Roadster"></div>

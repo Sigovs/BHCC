@@ -126,8 +126,36 @@
   --fs-h3:       clamp(1.375rem, 1.236rem + 0.571vw, 1.75rem);     /* 22 → 28 */
   --fs-h2:       clamp(1.75rem, 1.471rem + 1.143vw, 2.5rem);       /* 28 → 40 */
   --fs-h1:       clamp(1.875rem, 1.271rem + 2.476vw, 3.5rem);      /* 30 → 56  page H1 */
-  --fs-display:  clamp(2.125rem, 0.871rem + 5.143vw, 5.5rem);      /* 34 → 88  hero H1 */
+  --fs-display:  clamp(2.125rem, 0.871rem + 5.143vw, 5.5rem);      /* 34 → 88  generic display */
   --fs-quote:    clamp(1.25rem, 1.018rem + 0.952vw, 1.875rem);     /* 20 → 30 */
+
+  /* Hero H1 — the client's NEW left-aligned lockup (2026-07).
+     Supersedes the 124px of hero-c-monumental.html, which was centred over
+     the OLD frame and could spend the full 1344px of content width.
+     The new frame puts the car at x 40–67% (measured on the pixels), so the
+     type is left-aligned and must clear it.
+
+     WHY min(vw, vh) AND NOT vw ALONE — this is the 1280×720 / 1366×768 case.
+     A pure vw ramp only asks "how wide is the screen?". On a budget laptop
+     the answer is "wide" while the real constraint is height: at 1280×720 the
+     hero is only 720 − 72 = 648px tall, and a hero H1 sized off 1280px of
+     width pushes the CTAs under the fold. min() lets whichever axis is
+     scarcer win:
+       1280×720  → min(6.6vw=84.5, 12vh=86.4) = 84.5px   ← width binds
+       1366×768  → min(90.2, 92.2)            = 90.2px
+       1440×900  → min(95.0, 108.0)           = 95.0px
+       2560×1440 → min(169, 173)  → clamped   = 96px
+     vmin was rejected: it is min(vw,vh) with ONE shared coefficient, so it
+     cannot be tuned per axis — at 2560×1440 vmin tracks height and would
+     under-size the H1 on the very screen with the most room.
+     Ceiling 96px: Gloock's measured limit at 1440 is ~140px (line 1 = 1337px),
+     but this lockup is left-aligned and must clear the car at x 40%. */
+  --fs-hero:     clamp(1.875rem, min(6.6vw, 12vh), 6rem);          /* 30 → 96 */
+
+  /* §05 editorial headline. NOT --fs-h1: measured in the real 679.4px text
+     column, the 78-char headline takes 4 lines at 56px and 52px, and 3 lines
+     at 50px. Brief §05 says "2–3 lines maximum", so 50 is the ceiling. */
+  --fs-editorial: clamp(1.875rem, 1.411rem + 1.905vw, 3.125rem);   /* 30 → 50 */
 
   /* Weights — READ THIS BEFORE CHANGING.
      The brief asks H1 to be "significantly larger AND lighter-weight than

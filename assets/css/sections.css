@@ -265,42 +265,107 @@ img { max-width: 100%; height: auto; display: block; }
 .offcanvas .btn-b { width: 100%; margin-bottom: var(--sp-1); }
 
 /* ============================================================
-   02  HERO — LOCKED (hero-c-monumental.html, verbatim)
-   Do not re-tune. Numbers below are the approved variant's own.
+   02  HERO — rebuilt to the client's new layout (supersedes
+   hero-c-monumental.html, which was built for the OLD centred frame).
+
+   Frame: assets/images/hero-frame.jpg — 1920×960 (2:1). MEASURED on the
+   actual pixels: the red car occupies x 40–67%, y 39–62%; the left 40%
+   is open road. That is why the type is LEFT-aligned and sits LOW — it
+   lands on empty asphalt, not on the car.
+
+   Lockup: "Beverly Hills / Car Club *by Alex Manos*". The signature line
+   is Newsreader italic — Gloock has no italic, and Newsreader is already
+   loaded for the §07 quotes, so this costs no extra font payload.
    ============================================================ */
-.hero { position: relative; height: 96vh; min-height: 660px; overflow: hidden; }
+/* HEIGHT CONTRACT — DESKTOP ONLY: H1, sub and both CTAs are visible with no
+   scroll. This replaces the brief's "85–100vh" at desktop widths.
+     · Plain 100vh is honest here: desktop browsers have no collapsing
+       address bar, so vh does not lie the way it does on a phone.
+     · The header is solid and sticky (brief §01), so it consumes real height.
+       The hero is the remainder — which is also why the H1 can never dive
+       under it.
+     · NO min-height: a floor is exactly what would break the contract on a
+       short laptop.
+   Mobile keeps the brief's own rule (70vh minimum, fold allowed) — see the
+   mobile block at the end of this file. */
+.hero {
+  position: relative;
+  height: calc(100vh - var(--header-h));
+  overflow: hidden;
+  background: var(--dark);
+}
 .hero-media {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: 50% 34%;
+  /* The frame is 2:1 with the car at x 40–67% (measured on the pixels).
+     Cover-scaled WIDER than the viewport, a SMALLER x moves the visible
+     window left → the car sits further RIGHT and the road opens on the left,
+     which is what the type needs. Per-breakpoint values are set below and
+     verified against the car's real on-screen box at every size. */
+  object-fit: cover; object-position: 22% 50%;
 }
+/* Overlay is weighted LEFT + BOTTOM — that is where the type is. The brief's
+   .25–.45 range is kept; the car side stays light so the image stays dominant. */
 .hero::after {
   content: ""; position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,.22) 38%, rgba(0,0,0,.45) 78%, rgba(0,0,0,.45) 100%),
-    radial-gradient(100% 60% at 50% 82%, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 100%);
+    linear-gradient(to right, rgba(0,0,0,.45) 0%, rgba(0,0,0,.28) 45%, rgba(0,0,0,.18) 70%, rgba(0,0,0,.25) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,.10) 0%, rgba(0,0,0,.12) 45%, rgba(0,0,0,.34) 100%);
 }
 .hero-in {
   position: relative; z-index: 2; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  text-align: center; padding: 0 var(--container-pad) 7vh;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+  text-align: left;
+  /* height-relative so the block cannot outgrow a short laptop */
+  padding: 0 var(--container-pad) clamp(24px, 8vh, 80px);
+  max-width: var(--container-max);
+  margin-inline: auto;
 }
 .hero h1 {
-  margin: 0; font-family: var(--font-display); font-weight: 400;
-  font-size: 124px; line-height: .98; letter-spacing: -0.03em; color: #fff;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-hero);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: #fff;
 }
-.hero h1 span { display: block; }
+.hero h1 .l1 { display: block; }
+.hero h1 .l2 { display: block; white-space: nowrap; }
+/* "by Alex Manos" — the personal brand, set as a distinct voice inside the
+   name rather than as a second H1 line. Newsreader italic, ~0.42× the
+   display size, optically raised so its x-height sits on the Gloock baseline. */
+.hero h1 .sig {
+  font-family: var(--font-text);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.42em;
+  letter-spacing: -0.005em;
+  color: rgba(255,255,255,.94);
+  margin-left: 0.28em;
+  white-space: nowrap;
+}
 .hero .sub {
-  margin: var(--sp-3) 0 0; font-size: 18px; font-weight: 400;
-  line-height: 1.5; color: rgba(255,255,255,.86); letter-spacing: .02em; white-space: nowrap;
+  margin: var(--sp-3) 0 0;
+  max-width: 30ch;                 /* brief §02: one line; the client's layout allows two */
+  font-size: var(--fs-body-lg);
+  font-weight: var(--fw-body-dark);
+  line-height: 1.5;
+  color: rgba(255,255,255,.90);
+  letter-spacing: .01em;
 }
-.hero .ctas { display: flex; gap: 12px; margin-top: var(--sp-4); }
+/* Buttons sit UNDER the subheadline, left — the block reads H1 → sub → CTA
+   as one unit. "Browse inventory" is the page's primary action. */
+.hero .ctas { display: flex; gap: 14px; margin-top: var(--sp-4); }
 .hero .ctas a {
-  padding: 13px 28px; border: 1px solid rgba(255,255,255,.9);
-  color: #fff; text-decoration: none; font-size: 14.5px; font-weight: 500;
-  letter-spacing: .02em; transition: background var(--dur) var(--ease);
+  padding: 14px 30px; border: 1px solid rgba(255,255,255,.9);
+  color: #fff; text-decoration: none;
+  font-size: var(--fs-body-sm); font-weight: var(--fw-medium);
+  letter-spacing: .02em;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 .hero .ctas a:hover, .hero .ctas a:focus-visible { background: rgba(255,255,255,.18); }
 .hero .ctas a + a { border-color: rgba(255,255,255,.45); color: rgba(255,255,255,.84); }
+.hero .ctas a + a:hover, .hero .ctas a + a:focus-visible { border-color: rgba(255,255,255,.9); color: #fff; }
 .hero .ctas a:focus-visible { outline: 2px solid var(--focus-dark); outline-offset: 3px; }
 
 /* ============================================================
@@ -442,34 +507,37 @@ img { max-width: 100%; height: auto; display: block; }
   display: grid;
   grid-template-columns: 45fr 55fr;
   gap: var(--sp-7);
-  align-items: center;
+  align-items: stretch;            /* brief §05: photo is "full-height within the section" */
 }
-/* The supplied photo is a 1280×553 panorama (2.314:1) and §05 asks for
-   "full-height within the section" in a ~45% column — i.e. a portrait box.
-   Cropping 2.314:1 to portrait discards ~70% of the frame, and the frame IS
-   the argument: a warehouse receding into a sea of cars is what sells "over
-   20 years". Brief §A (Photography → Treatment) says "Generous margins around
-   images. Avoid tight crops that cut into subjects." — that rule wins here.
-   So the panorama is shown whole, at native aspect, optically centred in the
-   column. Open question for the client: supply a portrait/4:5 master of Alex
-   and this becomes the full-height treatment §05 describes. */
-.editorial__figure { margin: 0; }
-.editorial__figure img { width: 100%; height: auto; }
-.editorial__cap {
-  margin-top: var(--sp-1);
-  font-size: var(--fs-eyebrow);
-  color: var(--ink-muted);
-  letter-spacing: .02em;
+/* The supplied photo is a 1280×553 panorama (2.314:1) and the column wants
+   ~1.16:1, so it has to be cropped. MEASURED, after an earlier estimate of
+   "~70% lost" turned out to be wrong: the crop keeps 50.2% of the frame
+   width (642 of 1280 px), and at that width Alex, the 300SL, the red/blue/
+   green Porsches and the full depth of the hall all survive — the "sea of
+   cars" argument is intact. So the brief's full-height treatment stands.
+   object-position 34% centres Alex (he stands at x≈530/1280) rather than
+   centring the frame, which would push him to the edge. */
+.editorial__figure { margin: 0; display: flex; min-height: 0; }
+.editorial__figure img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 34% 50%;
 }
+/* Brief §05: "2–3 lines maximum". MEASURED in the real 679.4px text column
+   at 1440, against the real 78-char headline:
+     56px (--fs-h1) → 4 lines ✗   52px → 4 lines ✗   50px → 3 lines ✓
+   50 is therefore the largest size that obeys the brief, so --fs-editorial
+   tops out there rather than reusing --fs-h1. A max-width cap does not help:
+   it only ever ADDS lines. */
 .editorial__title {
   font-family: var(--font-display);
   font-weight: var(--fw-heading);
-  font-size: var(--fs-h1);
+  font-size: var(--fs-editorial);
   line-height: var(--lh-h1);
   letter-spacing: var(--ls-h2);
   color: var(--ink);
   margin: 0 0 var(--sp-3);
-  max-width: 18ch;                 /* holds the headline to the brief's 2–3 lines */
+  text-wrap: pretty;
 }
 .editorial__body { margin: 0 0 var(--sp-3); color: var(--ink-soft); max-width: 54ch; }
 
@@ -822,14 +890,39 @@ img { max-width: 100%; height: auto; display: block; }
   .is-stuck .logo-lockup__sig { height: 12px; }
   .s-header.is-stuck { height: var(--header-h-mob); }
 
-  /* §02 hero — LOCKED values from hero-c-monumental.html */
-  .hero { height: 82vh; min-height: 540px; }
-  .hero-media { object-position: 54% 40%; }
-  .hero-in { padding: 0 var(--container-pad) 5vh; }
-  .hero h1 { font-size: 36px; line-height: 1.0; letter-spacing: -0.025em; }
-  .hero .sub { font-size: 15.5px; white-space: normal; max-width: 34ch; }
-  .hero .ctas { flex-direction: column; width: 100%; gap: 12px; margin-top: var(--sp-4); }
-  .hero .ctas a { width: 100%; padding: 15px 0; }
+  /* §02 hero — mobile follows the BRIEF (§02: "Mobile: 70vh minimum"); the
+     desktop no-fold contract does not apply here. 80vh sits above that floor.
+
+     THE PORTRAIT CROP IS THE REAL RISK. The frame is 2:1 with the car at
+     x 40–67%. In a 390-wide portrait box, cover scales the image by HEIGHT
+     (390/1920 = 0.20 vs 591/960 = 0.62 → height wins), so it renders ~1182px
+     wide against a 390px window: 792px of horizontal overflow. At the desktop
+     x=22% the window lands on image x 15–48% — open asphalt, the car almost
+     entirely cut away. object-position-x must recentre on the car:
+       window = [792·P, 792·P + 390]; car sits at rendered x 473–792 (centre 632)
+       → 792·P + 195 = 632 → P = 0.55
+     Hence 55%. Verified on-screen at 390×844 and 360×640, not assumed.
+     Note object-position-Y is inert in portrait: the image is height-bound,
+     so there is zero vertical overflow to shift. */
+  /* Vertical budget, measured. In portrait the image is height-bound, so the
+     car is locked to y 39–62% of the hero and only 38% of road sits below it.
+     The driver's face is at y 45–50%. For the type to clear the face:
+         heroH − padBottom − blockH  >  0.50 · heroH
+     At 360×640 the stacked block was 292px, which needs heroH > 642 — taller
+     than the whole 640px screen. No hero height can fix that; the block had to
+     get shorter. Trimmed via the MARGINS (sub 24→16, CTA 32→24), never the
+     buttons: they stay ≥44px tall for touch (WCAG 2.5.5). 92vh then clears.
+     The H1 still crosses the car's lower BODY — intentional, it reads as type
+     on the car's mass. The FACE is the thing that must stay clear. */
+  .hero { height: 92vh; }
+  .hero-media { object-position: 55% 50%; }
+  .hero-in { padding: 0 var(--container-pad) 3.5vh; }
+  .hero h1 { letter-spacing: -0.025em; }
+  .hero h1 .l2 { white-space: normal; }
+  .hero h1 .sig { font-size: 0.44em; margin-left: 0.2em; }
+  .hero .sub { max-width: 32ch; margin-top: var(--sp-2); }
+  .hero .ctas { flex-direction: column; align-items: stretch; width: 100%; gap: 10px; margin-top: var(--sp-3); }
+  .hero .ctas a { width: 100%; padding: 15px 0; text-align: center; }   /* ≥44px touch target */
 
   /* §03 — input full width, "Browse all" centred below it */
   .s-search .wrap { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
@@ -862,6 +955,24 @@ img { max-width: 100%; height: auto; display: block; }
   /* press row: 2 per line, per brief */
   .press { gap: var(--sp-3) var(--sp-4); }
   .press__mark { flex: 0 0 calc(50% - var(--sp-4)); text-align: center; }
+}
+
+/* Small AND short phones (e.g. 360×640) — the tightest case in the whole set.
+   Measured, and it is a genuine squeeze:
+     · the car is locked to y 39–62% of the hero (portrait = height-bound crop),
+       so the driver's chin sits at 0.50·heroH and only 38% of road is below it;
+     · at 92vh the H1 grazed the chin by 2px;
+     · at 96vh it cleared by 11px but the hero (60px header + 614) overflowed
+       the 640px screen and pushed the last CTA 12px under the fold.
+   Both cannot hold unless the block itself shrinks: need heroH > (block+pad)/0.5.
+   Fitting the hero exactly (100vh − header = 580) and trimming the CTA margin
+   32→16 and the bottom pad to 2.5vh takes the block to ~265px → needs 574 ✓.
+   Buttons stay 56px. Scoped by height as well, so a tall 390×844 phone keeps
+   92vh and still shows a slice of §03 to invite the scroll. */
+@media (max-width: 400px) and (max-height: 700px) {
+  .hero { height: calc(100vh - var(--header-h)); }
+  .hero-in { padding-bottom: 2.5vh; }
+  .hero .ctas { margin-top: var(--sp-2); }
 }
 
 /* ---------- motion off ---------------------------------------------- */

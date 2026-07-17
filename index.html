@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -15,9 +16,10 @@
      Open question 1 in README: self-host these in the WP theme. -->
 <link href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital@1&family=Inter+Tight:wght@400..600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="assets/css/tokens.css?v=3">
-<link rel="stylesheet" href="assets/css/main.css?v=3">
-<link rel="stylesheet" href="assets/css/sections.css?v=3">
+<link rel="icon" href="assets/images/favicon-32.png" type="image/png">
+<link rel="stylesheet" href="assets/css/tokens.css?v=8">
+<link rel="stylesheet" href="assets/css/main.css?v=8">
+<link rel="stylesheet" href="assets/css/sections.css?v=8">
 </head>
 <body>
 
@@ -105,19 +107,39 @@
 <main id="main">
 
 <!-- ============================================================
-     02  HERO — LOCKED (hero-c-monumental.html). Do not re-tune.
-     Video: assets/video/home.mp4 is the client's 4:55 / 49 MB / 720p promo
-     WITH audio — it is not a hero loop and is deliberately NOT wired up here.
-     The markup stays video-ready; drop a trimmed, silent, ~10–20s <source> in.
-     See the report / README open question 4.
+     02  HERO — the client's new left-aligned lockup.
+     Frame: hero-frame.jpg (1920×960, 2:1) — car measured at x 40–67%,
+     so the type takes the open road on the left.
+
+     VIDEO — live, on the client's instruction.
+     assets/video/hero-loop.{webm,mp4} — 7.97s, 1280×608, 1.38/2.20 MB,
+     silent, seamless (loop seam Δ 5.42/255 against a 5.61 normal frame step),
+     cut from the client's 49MB/295s home.mp4.
+
+     The footage is NOT the canyon road of the original still: it is a dark
+     300SL on the 6th Street Bridge at golden hour. So the poster is now cut
+     from frame 0 of the loop itself — poster and first frame are the same
+     pixels, and the swap cannot jump.
+
+     Two consequences the footage carries, both measured:
+     · It is bright. Mean luminance across the frame runs 84–137 (the canyon
+       still ran 26–135, mostly dark). The left-weighted overlay below is what
+       holds white type over haze; do not lighten it without re-measuring.
+     · Its car sits at x≈28–65%, close enough to the still's 40–67% that
+       object-position: 22% still opens the road on the left for the type.
      ============================================================ -->
 <section class="hero" aria-label="Beverly Hills Car Club by Alex Manos">
   <video class="hero-media" autoplay muted loop playsinline
-         poster="assets/images/hero-still.jpg" aria-label="1965 Mercedes-Benz 300SL Roadster">
-    <!-- <source src="assets/video/hero-loop.mp4" type="video/mp4"> -->
+         poster="assets/images/hero-loop-poster.jpg"
+         aria-label="A classic Mercedes-Benz 300SL crossing the 6th Street Bridge in Los Angeles">
+    <source src="assets/video/hero-loop.webm" type="video/webm">
+    <source src="assets/video/hero-loop.mp4" type="video/mp4">
   </video>
   <div class="hero-in">
-    <h1><span>Beverly Hills Car Club</span><span>by Alex Manos</span></h1>
+    <h1>
+      <span class="l1">Beverly Hills</span>
+      <span class="l2">Car Club<em class="sig">by Alex Manos</em></span>
+    </h1>
     <p class="sub">The world's largest dealer of European and American classic cars.</p>
     <div class="ctas">
       <a href="/inventory.htm">Browse inventory</a>
@@ -235,11 +257,10 @@
 
 <!-- ============================================================
      05  ALEX MANOS EDITORIAL — warm tint · no CTA button (brief)
-     Photo: the supplied 1280×553 panorama, shown WHOLE at native aspect.
-     §05 asks for "full-height within the section", but §A's photography rule
-     — "avoid tight crops that cut into subjects" — wins: a portrait crop
-     throws away ~70% of the frame, and the sea of cars IS the argument.
-     Open question for the client — see the report.
+     Photo: the supplied 1280×553 panorama, cropped full-height per §05.
+     Measured: the crop keeps 50.2% of the frame width and Alex, the 300SL
+     and the depth of the hall all survive. The brief notes this photo will
+     likely be replaced — a 4:5 master would need no crop at all.
      Body copy below is PLACEHOLDER in Alex's voice, pending real copy.
      ============================================================ -->
 <section class="section section--lg s-editorial" aria-labelledby="alex-h">
@@ -249,7 +270,6 @@
         <img src="assets/images/alex-editorial.jpg"
              alt="Alex Manos on the floor of the Beverly Hills Car Club showroom"
              width="1280" height="553" loading="lazy">
-        <figcaption class="editorial__cap">Alex Manos, Los Angeles</figcaption>
       </figure>
 
       <div class="editorial__text">

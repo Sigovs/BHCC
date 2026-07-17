@@ -1,25 +1,100 @@
-# BHCC — Design system (step 1)
+# BHCC — Homepage redesign
 
 Beverly Hills Car Club by Alex Manos — homepage redesign.
-**Scope of this step: the design system only.** The homepage is not built, by instruction.
-
-Open `design-system.html` for the living specification.
+**`index.html` is the full page: all nine sections at 1440 and 390.**
+Open `design-system.html` for the living specification of the underlying system.
 
 ```
 aan_BHCC_redesign/
-├── design-system.html          ← the spec page (open this)
+├── index.html                  ← THE PAGE — §01–§09
+├── design-system.html          ← the spec page
 ├── assets/
 │   ├── css/
 │   │   ├── tokens.css          ← SOURCE OF TRUTH: colour · type · spacing · motion
+│   │   ├── sections.css        ← the section layer (§01, §02, §03–§09)
 │   │   ├── design-system.css   ← styles for the spec page only (not shipped)
 │   │   └── main.css            ← compiled Bootstrap + brand layer (generated)
 │   ├── scss/
 │   │   ├── _variables.scss     ← Bootstrap overrides, BEFORE @import "bootstrap"
 │   │   └── main.scss           ← module import list + brand layer
-│   ├── js/design-system.js     ← spec page: live token readout + spacing ruler
+│   ├── js/
+│   │   ├── site.js             ← header · carousel · accordions · form validation
+│   │   └── bootstrap.bundle.min.js
+│   ├── video/                  ← hero-loop.mp4/.webm (home.mp4 master is gitignored)
 │   └── images/                 ← optimised derivatives (masters stay in refference/)
+├── _shots/                     ← full-page + hero-matrix screenshots
 └── refference/                 ← client-supplied brief, wireframes, logo, photos
 ```
+
+Load order on every page: `tokens.css` → `main.css` → `sections.css`.
+Each section in `index.html` is fenced by a `<!-- ==== NN NAME ==== -->` comment
+so a WordPress dev can lift it straight into a template part.
+
+---
+
+## Superseded — read this before trusting an older note
+
+**The hero was rebuilt (2026-07).** `hero-c-monumental.html` and its 124px centred
+lockup are **history, not the spec** — they were designed for the OLD poster (car
+centred, `Hero placeholder.jpg`). The client supplied a new frame and a new layout;
+`index.html` is authoritative. `hero-a/b/c-*.html` are kept only as a record.
+
+**Two token values were corrected against measurement, not taste:**
+
+| token | was | now | why |
+|---|---|---|---|
+| `--fs-h4` | 19→**22** | 19→**20** | the 22 was justified by a 33-char test string, which turned out to be the *median* of the real inventory. See below. |
+| §05 headline | `--fs-h1` (56) | `--fs-editorial` (30→**50**) | at 56 the real headline took 4 lines; the brief says 2–3 max. |
+
+### Card titles — the real inventory, not a sample string
+
+The old note read *"367.5px in a 427px column ✓"* for `1965 Mercedes-Benz 300SL
+Roadster` (33 chars). That string is the **median**. Pulled all **665 live car
+titles** from the site's own `sitemap.xml`:
+
+| | chars |
+|---|---|
+| median | 32 |
+| p90 | 55 |
+| max | **75** — `1986 Porsche Carrera Super Sport Cabriolet Turbo Look M491 Right-Hand-Drive` |
+
+**17.9% (119/665) cannot fit one line** in the 426.67px column. Two lines is the
+designed state, not an exception — and the 71-char `1960 Bentley S2 Continental
+Sport Saloon Left-Hand-Drive by James Young` is the **$195,000** car, i.e. the
+flagship of the section, not an edge case.
+
+Measured in-browser at the real column width:
+
+| | 75-char worst case |
+|---|---|
+| Gloock 22px | **3 lines** (85.8px) ✗ |
+| Gloock 20px | **2 lines** (52.0px) ✓ |
+| Inter Tight 500 18px | 2 lines (48.6px) |
+
+→ `--fs-h4` tops out at **20**, the title box reserves **2 lines** so prices align
+across a row, and `-webkit-line-clamp: 2` guards any future longer title. Verified
+live: all 6 cards render 2 lines, **none truncated**.
+
+### Hero — the height contract
+
+Client requirement (supersedes the brief's "85–100vh"): **on desktop the hero fits
+the screen — H1, sub and both CTAs visible with no scroll.** Mobile keeps the
+brief's own rule (70vh minimum, fold allowed).
+
+`--fs-hero` is `clamp(1.875rem, min(6.6vw, 12vh), 6rem)`. **`min(vw, vh)`, not vw
+alone**: a pure vw ramp only asks how *wide* the screen is, and on a 1280×720
+laptop the binding constraint is height. `vmin` was rejected — it is min(vw,vh)
+with one shared coefficient, so it cannot be tuned per axis and would under-size
+the H1 at 2560×1440.
+
+Verified by measurement at 2560×1440 · 1920×1080 · 1680×1050 · 1440×900 ·
+1366×768 · 1280×720 · 390×844 · 360×640 — **all pass**: last CTA above the fold,
+no horizontal scroll, car 100% in frame, driver's face never crossed, CTAs ≥44px,
+white-text contrast ≥ **8.43:1** worst case. Sheets in `_shots/hero-matrix-*.png`.
+
+The tightest case is **360×640** and it is a genuine squeeze: in portrait the image
+is height-bound, so the car is locked to y 39–62% and only 38% of road sits below
+it. Documented inline in `sections.css`.
 
 Build:
 ```bash
