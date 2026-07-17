@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beverly Hills Car Club by Alex Manos — Classic European &amp; American cars</title>
+<meta name="description" content="The world's largest dealer of European and American classic cars. Los Angeles.">
+
+<script>document.documentElement.classList.remove('no-js');</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Gloock 400 (display) · Newsreader italic 400 (§07 quotes only) · Inter Tight 400–600 (body/UI).
+     Measured latin payload: 17.2 + 23.8 + 43.9 = 84.9 KB. See README.
+     Open question 1 in README: self-host these in the WP theme. -->
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital@1&family=Inter+Tight:wght@400..600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/tokens.css?v=3">
+<link rel="stylesheet" href="assets/css/main.css?v=3">
+<link rel="stylesheet" href="assets/css/sections.css?v=3">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================================================
+     01  HEADER
+     72px desktop / 60px mobile · sticky · shrinks on scroll.
+     No social icons, no language switcher — both live in §09 now.
+     ============================================================ -->
+<header class="s-header" id="header">
+  <div class="wrap">
+
+    <button class="hdr-icon" type="button" aria-label="Open menu"
+            data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+    </button>
+
+    <!-- The supplied logo master is a VERTICAL lockup (shield over signature).
+         At 72px it cannot be used whole — the signature would render ~11px tall.
+         Both pieces are crops of that master, re-set side by side. See README. -->
+    <a class="logo-lockup" href="/" aria-label="Beverly Hills Car Club by Alex Manos — home">
+      <img class="logo-lockup__shield" src="assets/images/logo-shield.png"
+           alt="" width="102" height="104">
+      <img class="logo-lockup__sig" src="assets/images/logo-signature-ink.png"
+           alt="" width="155" height="34">
+    </a>
+
+    <nav aria-label="Main">
+      <ul class="nav-main">
+        <li><a href="/inventory.htm">Inventory</a></li>
+        <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
+        <li><a href="/about.htm">About</a></li>
+        <li><a href="/blog.htm">Blog</a></li>
+        <li><a href="/how-to-buy.htm">How To Buy</a></li>
+        <li><a href="/contact.htm">Contact</a></li>
+      </ul>
+    </nav>
+
+    <a class="header-tel header-tel--desktop" href="tel:+13109750272">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z"/>
+      </svg>
+      <span>(310) 975-0272</span>
+    </a>
+
+    <div class="header-ctas">
+      <a class="btn-b btn-b--primary" href="/inventory.htm">Browse Cars</a>
+      <a class="btn-b btn-b--outline" href="/sell-your-car.htm">Sell Your Car</a>
+    </div>
+
+    <a class="hdr-icon" href="tel:+13109750272" aria-label="Call (310) 975-0272">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z"/>
+      </svg>
+    </a>
+
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+  <div class="offcanvas-header">
+    <span class="eyebrow" id="mobileNavLabel" style="margin:0;">Menu</span>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <nav aria-label="Mobile">
+      <ul class="nav-mobile">
+        <li><a href="/inventory.htm">Inventory</a></li>
+        <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
+        <li><a href="/about.htm">About</a></li>
+        <li><a href="/blog.htm">Blog</a></li>
+        <li><a href="/how-to-buy.htm">How To Buy</a></li>
+        <li><a href="/contact.htm">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn-b btn-b--primary" href="/inventory.htm">Browse Cars</a>
+    <a class="btn-b btn-b--outline" href="/sell-your-car.htm">Sell Your Car</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ============================================================
+     02  HERO — LOCKED (hero-c-monumental.html). Do not re-tune.
+     Video: assets/video/home.mp4 is the client's 4:55 / 49 MB / 720p promo
+     WITH audio — it is not a hero loop and is deliberately NOT wired up here.
+     The markup stays video-ready; drop a trimmed, silent, ~10–20s <source> in.
+     See the report / README open question 4.
+     ============================================================ -->
+<section class="hero" aria-label="Beverly Hills Car Club by Alex Manos">
+  <video class="hero-media" autoplay muted loop playsinline
+         poster="assets/images/hero-still.jpg" aria-label="1965 Mercedes-Benz 300SL Roadster">
+    <!-- <source src="assets/video/hero-loop.mp4" type="video/mp4"> -->
+  </video>
+  <div class="hero-in">
+    <h1><span>Beverly Hills Car Club</span><span>by Alex Manos</span></h1>
+    <p class="sub">The world's largest dealer of European and American classic cars.</p>
+    <div class="ctas">
+      <a href="/inventory.htm">Browse inventory</a>
+      <a href="/sell-your-car.htm">Sell your classic</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     03  SEARCH BAND — ~80px utility band
+     Removed per brief: make/model dropdown · My Garage · Alerts! · Recently Viewed
+     ============================================================ -->
+<section class="s-search" aria-label="Search inventory">
+  <div class="wrap">
+    <form class="search-form" action="/inventory.htm" method="get" role="search">
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+        <label class="visually-hidden" for="q">Search by make, model, year</label>
+        <input class="search-input" id="q" name="q" type="search"
+               placeholder="Search by make, model, year…" autocomplete="off">
+      </div>
+      <button class="btn-b btn-b--primary search-btn" type="submit">Search</button>
+    </form>
+    <div class="search-all">
+      <a class="link-arrow" href="/inventory.htm">Browse all inventory <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     04  FEATURED CLASSICS — 6 cards · 3-up / 1-up
+     Cards, prices, photos and links are REAL, pulled from
+     beverlyhillscarclub.com/inventory.htm (2026-07-16). Ownership curates
+     the final six. Two of the six carry long titles on purpose: 17.9% of
+     the real 665-car inventory wraps to two lines, and the $195,000 Bentley
+     — the most expensive car in the section — has the 71-character title.
+     ============================================================ -->
+<section class="section s-featured" aria-labelledby="featured-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" id="featured-h">Featured Classics</h2>
+    </div>
+
+    <div class="card-grid">
+
+      <a class="c-card" href="/1960-bentley-s2-continental-sport-saloon-left-hand-drive-by-james-young-c-17794.htm">
+        <div class="c-card__media">
+          <img src="assets/images/inventory/bentley-s2-continental.jpg"
+               alt="1960 Bentley S2 Continental Sport Saloon by James Young" width="600" height="400" loading="lazy">
+          <span class="c-card__reveal" aria-hidden="true"><span>View details</span></span>
+        </div>
+        <h3 class="c-card__title">1960 Bentley S2 Continental Sport Saloon Left-Hand-Drive by James Young</h3>
+        <p class="c-card__price">$195,000</p>
+      </a>
+
+      <a class="c-card" href="/1958-alfa-romeo-giulietta-spider-c-17201.htm">
+        <div class="c-card__media">
+          <img src="assets/images/inventory/alfa-giulietta-spider.jpg"
+               alt="1958 Alfa Romeo Giulietta Spider" width="600" height="400" loading="lazy">
+          <span class="c-card__reveal" aria-hidden="true"><span>View details</span></span>
+        </div>
+        <h3 class="c-card__title">1958 Alfa Romeo Giulietta Spider</h3>
+        <p class="c-card__price">$16,750</p>
+      </a>
+
+      <a class="c-card" href="/1998-bentley-continental-t-rse-c-18673.htm">
+        <div class="c-card__media">
+          <img src="assets/images/inventory/bentley-continental-t.jpg"
+               alt="1998 Bentley Continental T RSE" width="600" height="400" loading="lazy">
+          <span class="c-card__reveal" aria-hidden="true"><span>View details</span></span>
+        </div>
+        <h3 class="c-card__title">1998 Bentley Continental T RSE</h3>
+        <p class="c-card__price">$79,950</p>
+      </a>
+
+      <a class="c-card" href="/1959-austin-healey-100-6-bn6-rare-2-seater-convertible-sports-car-c-17332.htm">
+        <div class="c-card__media">
+          <img src="assets/images/inventory/austin-healey-100-6-bn6.jpg"
+               alt="1959 Austin-Healey 100-6 BN6 two-seater convertible" width="600" height="379" loading="lazy">
+          <span class="c-card__reveal" aria-hidden="true"><span>View details</span></span>
+        </div>
+        <h3 class="c-card__title">1959 Austin-Healey 100-6 BN6 Rare 2 Seater Convertible Sports Car</h3>
+        <p class="c-card__price">$32,500</p>
+      </a>
+
+      <a class="c-card" href="/1974-alfa-romeo-gtv-2000-c-17069.htm">
+        <div class="c-card__media">
+          <img src="assets/images/inventory/alfa-gtv-2000.jpg"
+               alt="1974 Alfa Romeo GTV 2000" width="600" height="400" loading="lazy">
+          <span class="c-card__reveal" aria-hidden="true"><span>View details</span></span>
+        </div>
+        <h3 class="c-card__title">1974 Alfa Romeo GTV 2000</h3>
+        <p class="c-card__price">$14,750</p>
+      </a>
+
+      <a class="c-card" href="/1974-bmw-2002tii-4-speed-c-18967.htm">
+        <div class="c-card__media">
+          <img src="assets/images/inventory/bmw-2002tii.jpg"
+               alt="1974 BMW 2002tii 4-speed" width="600" height="400" loading="lazy">
+          <span class="c-card__reveal" aria-hidden="true"><span>View details</span></span>
+        </div>
+        <h3 class="c-card__title">1974 BMW 2002tii 4-Speed</h3>
+        <p class="c-card__price">$39,950</p>
+      </a>
+
+    </div>
+
+    <div class="section-foot">
+      <a class="link-arrow" href="/inventory.htm">View all inventory <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     05  ALEX MANOS EDITORIAL — warm tint · no CTA button (brief)
+     Photo: the supplied 1280×553 panorama, shown WHOLE at native aspect.
+     §05 asks for "full-height within the section", but §A's photography rule
+     — "avoid tight crops that cut into subjects" — wins: a portrait crop
+     throws away ~70% of the frame, and the sea of cars IS the argument.
+     Open question for the client — see the report.
+     Body copy below is PLACEHOLDER in Alex's voice, pending real copy.
+     ============================================================ -->
+<section class="section section--lg s-editorial" aria-labelledby="alex-h">
+  <div class="wrap">
+    <div class="editorial">
+      <figure class="editorial__figure">
+        <img src="assets/images/alex-editorial.jpg"
+             alt="Alex Manos on the floor of the Beverly Hills Car Club showroom"
+             width="1280" height="553" loading="lazy">
+        <figcaption class="editorial__cap">Alex Manos, Los Angeles</figcaption>
+      </figure>
+
+      <div class="editorial__text">
+        <p class="eyebrow">Alex Manos, Founder</p>
+        <h2 class="editorial__title" id="alex-h">I've been buying and selling the world's finest automobiles for over 20 years.</h2>
+        <!-- PLACEHOLDER COPY — first-person, pending the client's final text. -->
+        <p class="editorial__body">It started with one car and a phone. Today we keep several hundred under one roof in Los Angeles, and I still look at every one of them myself. What hasn't changed is the part I care about — finding the right car for the right person, and being straight with them about what it is.</p>
+        <a class="link-arrow" href="/about-alex-manos.htm">Read Alex's story <span class="arw" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     06  SELL YOUR CAR — --dark · ~40% weight vs the buyer sections
+     Weight is held down with space, not volume: §04 runs 128px of section
+     padding around a two-row grid; this runs 56px around one short column.
+     ============================================================ -->
+<section class="section section--sm s-sell on-dark" aria-labelledby="sell-h">
+  <div class="wrap">
+    <h2 class="h2 sell__title" id="sell-h">We buy classic cars.</h2>
+    <p class="sell__sub">Any Condition. Nationwide. Immediate payment.</p>
+    <a class="btn-b btn-b--gold" href="/sell-your-car.htm">Sell Today</a>
+    <a class="sell__tel" href="tel:+13109750272">(310) 975-0272</a>
+    <p class="sell__detail">365 days a year · Pickup anywhere in the USA · We pay finder's fees</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     07  TESTIMONIALS + PRESS
+     Brief overrides the wireframe: a single-column CAROUSEL, not 3 columns.
+     Quotes are the ones currently running on beverlyhillscarclub.com —
+     final copy comes from the WordPress backend (README open question 6).
+     Press marks are TYPOGRAPHIC PLACEHOLDERS — no logo assets supplied.
+     ============================================================ -->
+<section class="section s-press" aria-labelledby="press-h">
+  <div class="wrap">
+    <div class="quotes">
+      <p class="eyebrow" id="press-h">What they're saying</p>
+
+      <div id="quoteCarousel" class="carousel slide">
+        <div class="carousel-inner">
+
+          <div class="carousel-item active">
+            <figure class="quote">
+              <blockquote class="quote__text">“Almighty Aladdin's Cave of motoring treasure.”</blockquote>
+              <figcaption class="quote__by">Total 911 Magazine</figcaption>
+            </figure>
+          </div>
+
+          <div class="carousel-item">
+            <figure class="quote">
+              <blockquote class="quote__text">“Some of the most jaw-dropping vintage cars in existence.”</blockquote>
+              <figcaption class="quote__by">GQ Magazine</figcaption>
+            </figure>
+          </div>
+
+          <div class="carousel-item">
+            <figure class="quote">
+              <blockquote class="quote__text">“The sheer amount of inventory is mind blowing. Several buildings packed with classic cars!”</blockquote>
+              <figcaption class="quote__by">Review from Facebook</figcaption>
+            </figure>
+          </div>
+
+          <div class="carousel-item">
+            <figure class="quote">
+              <blockquote class="quote__text">“Alex supplies everything from barn find projects to pristine restorations.”</blockquote>
+              <figcaption class="quote__by">911 &amp; Porsche World</figcaption>
+            </figure>
+          </div>
+
+          <div class="carousel-item">
+            <figure class="quote">
+              <blockquote class="quote__text">“Man, you got a lot of cars here!”</blockquote>
+              <figcaption class="quote__by">Richard Rawlings, Gas Monkey Garage</figcaption>
+            </figure>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="quotes-nav">
+        <button class="q-btn" type="button" data-bs-target="#quoteCarousel" data-bs-slide="prev" aria-label="Previous quote">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <ul class="q-dots" id="quoteDots"></ul>
+        <button class="q-btn" type="button" data-bs-target="#quoteCarousel" data-bs-slide="next" aria-label="Next quote">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- PLACEHOLDER: typographic stand-ins, not the real marks. Google and Yelp
+         restrict recolouring — their approved greyscale assets are needed. -->
+    <div class="press" aria-label="As featured in">
+      <span class="press__mark">Google</span>
+      <span class="press__mark">Yelp</span>
+      <span class="press__mark">Hemmings</span>
+      <span class="press__mark">The Hollywood Reporter</span>
+      <span class="press__mark">Total 911</span>
+      <span class="press__mark">eBay</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     08  BLOG / CAR TALES
+     The three posts, dates, images and links are REAL, from
+     beverlyhillscarclub.com (2026-07-16). Excerpts are placeholder one-liners.
+     Brief singles out the current site's small thumbnails — images here run
+     the FULL card width.
+     ============================================================ -->
+<section class="section s-blog" aria-labelledby="blog-h">
+  <div class="wrap">
+    <div class="section-head section-head--split">
+      <h2 class="h2" id="blog-h">From our blog</h2>
+      <a class="link-arrow" href="/blog.htm">See all articles <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="card-grid">
+
+      <article class="b-card">
+        <div class="b-card__media">
+          <img src="assets/images/blog/post-1.jpg"
+               alt="1970 Mercedes-Benz 280SL California Special" width="854" height="603" loading="lazy">
+        </div>
+        <p class="b-card__date"><time datetime="2026-07-10">Jul 10, 2026</time></p>
+        <h3 class="b-card__title">
+          <a href="/car-tales-ultimately-unique-mercedes-benz-280sl-california-special.htm">Car Tales: Ultimately Unique, Mercedes-Benz 280SL California Special</a>
+        </h3>
+        <p class="b-card__excerpt">A one-of-a-kind California Special, and the story of how it found its way to us.</p>
+        <a class="link-arrow b-card__more" href="/car-tales-ultimately-unique-mercedes-benz-280sl-california-special.htm">Read more <span class="arw" aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="b-card">
+        <div class="b-card__media">
+          <img src="assets/images/blog/post-2.jpg"
+               alt="Alex Manos interviewed by DSCENE" width="854" height="617" loading="lazy">
+        </div>
+        <p class="b-card__date"><time datetime="2026-07-01">Jul 01, 2026</time></p>
+        <h3 class="b-card__title">
+          <a href="/dscene-editor-in-chief-interviews-alex-manos.htm">DSCENE Editor-in-Chief Interviews Alex Manos</a>
+        </h3>
+        <p class="b-card__excerpt">On building a collection, the cars that got away, and what he still looks for.</p>
+        <a class="link-arrow b-card__more" href="/dscene-editor-in-chief-interviews-alex-manos.htm">Read more <span class="arw" aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="b-card">
+        <div class="b-card__media">
+          <img src="assets/images/blog/post-3.jpg"
+               alt="Alex Manos on The Collector Car Podcast" width="854" height="617" loading="lazy">
+        </div>
+        <p class="b-card__date"><time datetime="2026-06-25">Jun 25, 2026</time></p>
+        <h3 class="b-card__title">
+          <a href="/alex-manos-interview-the-collector-car-podcast.htm">Alex Manos Interview — The Collector Car Podcast</a>
+        </h3>
+        <p class="b-card__excerpt">An hour on the classic market, provenance, and buying the seller first.</p>
+        <a class="link-arrow b-card__more" href="/alex-manos-interview-the-collector-car-podcast.htm">Read more <span class="arw" aria-hidden="true">→</span></a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     09  FOOTER — --dark-deep · 4 columns · accordions at mobile
+     Social + language switcher are ALWAYS visible (brief), never collapsed.
+     Logo: no white master supplied. The shield is a badge drawn on black and
+     reads here as-is; the signature — pure black in the master, so invisible
+     on this ground — is recoloured to --cream with its alpha untouched.
+     ============================================================ -->
+<footer class="s-footer" aria-labelledby="footer-h">
+  <h2 class="visually-hidden" id="footer-h">Site footer</h2>
+
+  <!-- email signup, full-width band above the columns (brief allows either) -->
+  <div class="foot-signup">
+    <div class="wrap">
+      <p class="foot-signup__copy">Get email alerts when cars like these arrive.</p>
+      <form class="signup-form" id="signupForm" novalidate>
+        <label class="visually-hidden" for="signupEmail">Email address</label>
+        <input class="signup-input" id="signupEmail" name="email" type="email"
+               placeholder="Your email address" autocomplete="email" required>
+        <button class="btn-b btn-b--gold" type="submit">Subscribe</button>
+        <p class="signup-msg" id="signupMsg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="foot-cols">
+
+      <!-- column 1 — brand. Never an accordion. -->
+      <div class="foot-col foot-col--brand">
+        <div class="foot-brand__logo">
+          <img class="foot-brand__shield" src="assets/images/logo-shield.png"
+               alt="Beverly Hills Car Club by Alex Manos" width="102" height="104" loading="lazy">
+          <img class="foot-brand__sig" src="assets/images/logo-signature-cream.png"
+               alt="" width="155" height="34" loading="lazy">
+        </div>
+        <p class="foot-brand__about">One of the world's largest classic car dealers, with hundreds of European and American vehicles for sale under one roof in Los Angeles.</p>
+        <a class="foot-link link-arrow" href="/about.htm">Read more <span class="arw" aria-hidden="true">→</span></a>
+
+        <dl class="foot-hours">
+          <dt>Business hours</dt>
+          <dd><span>Mon–Fri</span><span>8:00am – 6:00pm</span></dd>
+          <dd><span>Saturday</span><span>10:00am – 5:00pm</span></dd>
+          <dd><span>Sunday</span><span>Closed</span></dd>
+        </dl>
+      </div>
+
+      <!-- column 2 — explore -->
+      <div class="foot-col">
+        <h3 class="foot-col__h">Explore</h3>
+        <button class="foot-acc__btn" type="button" aria-expanded="false" aria-controls="acc-explore">
+          Explore <span class="chev" aria-hidden="true"></span>
+        </button>
+        <div class="foot-acc__panel" id="acc-explore">
+          <ul class="foot-list">
+            <li><a href="/inventory.htm">Inventory</a></li>
+            <li><a href="/new-arrivals.htm">New Arrivals</a></li>
+            <li><a href="/coming-soon.htm">Coming Soon</a></li>
+            <li><a href="/sale-specials.htm">Sale Specials</a></li>
+            <li><a href="/right-hand-drive.htm">Right-Hand Drive</a></li>
+            <li><a href="/sold-inventory.htm">Sold Inventory</a></li>
+            <li><a href="/rentals.htm">Rentals</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- column 3 — company -->
+      <div class="foot-col">
+        <h3 class="foot-col__h">Company</h3>
+        <button class="foot-acc__btn" type="button" aria-expanded="false" aria-controls="acc-company">
+          Company <span class="chev" aria-hidden="true"></span>
+        </button>
+        <div class="foot-acc__panel" id="acc-company">
+          <ul class="foot-list">
+            <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
+            <li><a href="/about.htm">About BHCC</a></li>
+            <li><a href="/about-alex-manos.htm">Alex Manos</a></li>
+            <li><a href="/testimonials.htm">Testimonials</a></li>
+            <li><a href="/careers.htm">Careers</a></li>
+            <li><a href="/store.htm">BHCC Store</a></li>
+            <li><a href="/how-to-buy.htm">How To Buy</a></li>
+            <li><a href="/shipping.htm">Shipping</a></li>
+            <li><a href="/faqs.htm">FAQs</a></li>
+            <li><a href="/buy-with-crypto.htm">Buy with Crypto</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- column 4 — connect. Never an accordion: social + language stay visible. -->
+      <div class="foot-col foot-col--connect">
+        <h3 class="foot-col__h">Connect</h3>
+        <ul class="foot-list foot-contact">
+          <li><a class="big" href="tel:+13109750272">(310) 975-0272</a></li>
+          <li><a href="mailto:alex@beverlyhillscarclub.com">alex@beverlyhillscarclub.com</a></li>
+        </ul>
+
+        <ul class="foot-social">
+          <li><a href="https://www.facebook.com/pages/Beverly-Hills-Car-Club/365267410242565">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>
+            <span>Facebook</span></a></li>
+          <li><a href="https://www.youtube.com/user/BevHillsCarClubInc">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.4-.4-5c-.2-.9-.9-1.6-1.8-1.8C19.2 4.8 12 4.8 12 4.8s-7.2 0-8.8.4c-.9.2-1.6.9-1.8 1.8C1 8.6 1 12 1 12s0 3.4.4 5c.2.9.9 1.6 1.8 1.8 1.6.4 8.8.4 8.8.4s7.2 0 8.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.6.4-5 .4-5zM9.8 15.3V8.7l6 3.3-6 3.3z"/></svg>
+            <span>YouTube</span></a></li>
+          <li><a href="https://twitter.com/BHCarClub">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4L18.2 2zm-1.2 18h1.9L7.1 4H5l12 16z"/></svg>
+            <span>Twitter</span></a></li>
+          <li><a href="https://instagram.com/beverlyhillscarclub/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            <span>Instagram</span></a></li>
+          <li><a href="https://www.pinterest.com/bhcarclub/">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.2-5s-.3-.6-.3-1.5c0-1.4.8-2.5 1.8-2.5.9 0 1.3.6 1.3 1.4 0 .9-.5 2.2-.8 3.4-.2 1 .5 1.8 1.5 1.8 1.8 0 3.2-1.9 3.2-4.7 0-2.4-1.8-4.2-4.3-4.2a4.5 4.5 0 0 0-4.7 4.5c0 .9.3 1.8.8 2.3.1.1.1.2.1.3l-.3 1.1c0 .2-.1.2-.3.1-1.3-.6-2.1-2.5-2.1-4 0-3.3 2.4-6.3 6.9-6.3 3.6 0 6.4 2.6 6.4 6 0 3.6-2.2 6.4-5.4 6.4-1 0-2-.5-2.4-1.2l-.6 2.5c-.2.9-.8 2-1.2 2.6A10 10 0 1 0 12 2z"/></svg>
+            <span>Pinterest</span></a></li>
+          <li><a href="https://www.linkedin.com/pub/beverly-hills-car-club/38/520/647">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.9 8.5H3.6V21h3.3V8.5zM5.2 3a1.9 1.9 0 1 0 0 3.9 1.9 1.9 0 0 0 0-3.9zM21 13.9c0-3.3-1.8-4.9-4.2-4.9-1.9 0-2.8 1.1-3.3 1.8V8.5H10.2c0 .9 0 12.5 0 12.5h3.3v-7c0-.3 0-.6.1-.8.3-.6.9-1.3 1.9-1.3 1.3 0 1.9 1 1.9 2.5V21H21v-7.1z"/></svg>
+            <span>LinkedIn</span></a></li>
+        </ul>
+
+        <div class="lang">
+          <label class="visually-hidden" for="lang">Language</label>
+          <select id="lang" name="lang">
+            <option value="en" selected>English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <div class="wrap">
+      <span>Copyright © <span id="year">2026</span> Beverly Hills Car Club</span>
+      <nav aria-label="Legal">
+        <a href="/privacy-policy.htm">Privacy Policy</a>
+        <a href="/terms.htm">Terms</a>
+        <a href="https://www.allautonetwork.com/">Powered by All Auto Network</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/bootstrap.bundle.min.js?v=1"></script>
+<script src="assets/js/site.js?v=1"></script>
+</body>
+</html>

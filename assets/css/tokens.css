@@ -1,0 +1,259 @@
+/* ============================================================
+   BEVERLY HILLS CAR CLUB by Alex Manos — DESIGN TOKENS
+   Single source of truth: colour · type · spacing · layout · motion.
+   Linked BEFORE bootstrap.css / main.css on every page.
+   Change a value here → it updates across all pages + design-system.html.
+
+   Naming convention inherited from PRESTIGE (--bg / --ink / --sp-N /
+   --section-py / --ease). Values are BHCC-specific and share nothing
+   with Prestige: this brand is editorial-serif, warm off-white, classic.
+
+   Contrast: every text/surface pair below is measured (WCAG 2.1).
+   Ratios noted inline. Do not introduce a pair that is not listed.
+   ============================================================ */
+
+:root {
+
+  /* ---------- Surfaces — warm off-white, never pure white -------------
+     Brief: "Off-white — warm, not cool. Not pure white (#FFFFFF)."
+     Section differentiation = tint step, NOT ruled lines.
+     --bg vs --bg-tint = 1.08 luminance ratio: visible band, no hard edge. */
+  --bg:          #FAF9F6;   /* base page surface        hue 45° S29 L97 */
+  --bg-tint:     #F2F0EB;   /* alternating section band hue 43° S21 L94 */
+  --bg-deep:     #E8E4DB;   /* input fill, press row, hover  42° S22 L88 */
+
+  /* Dark surfaces — "We buy classic cars" band + footer.
+     Two steps so the sell band and the footer are not the same slab. */
+  --dark:        #221F1A;   /* §06 sell band — warm charcoal  38° S13 L12 */
+  --dark-deep:   #14120E;   /* §09 footer — warm near-black   40° S18 L7  */
+  --cream:       #EFECE4;   /* body text on dark surfaces — 13.91 on --dark */
+
+  /* ---------- Ink — warm dark, never flat black ---------------------- */
+  --ink:         #1A1A18;   /* primary text     16.55 on --bg  ✓AAA */
+  --ink-soft:    #46443E;   /* secondary text    9.25 on --bg  ✓AAA */
+  --ink-muted:   #6E6B62;   /* meta / captions   5.06 on --bg  ✓AA  */
+  --ink-on-dark:      #FFFFFF; /* headings on dark   16.42 on --dark ✓AAA */
+  --ink-soft-on-dark: #A8A49B; /* muted on dark       6.61 on --dark ✓AA  */
+
+  /* ---------- Accent — gold at two lightness levels -------------------
+     ONE gold (hue 41° vs 39° = same family), TWO levels, because a single
+     gold cannot serve both roles:
+       --gold      2.33 on --bg  ✗ unusable as text on light
+                   6.68 on --dark / 7.61 on --dark-deep ✓ excellent
+       --gold-ink  4.58 on --bg  ✓AA — the ONLY gold allowed as text on light
+     RULE: gold fills take --ink text (7.09 ✓), never white (2.46 ✗). */
+  --gold:        #C2A15C;   /* decorative: hairlines, gold ON DARK, hover */
+  --gold-ink:    #8C6D33;   /* gold as TEXT/ICON on light surfaces */
+  --gold-wash:   rgba(194, 161, 92, 0.14);  /* underline/hover wash */
+
+  /* ---------- Brand red — artwork only, NEVER a UI token --------------
+     Logo shield + hero car are red; the brief bans red as an accent.
+     Both are resolved by role, not by removal: red = photography & logo
+     (content). Gold = chrome (interface). They never occupy the same
+     visual weight. --danger is deliberately darker/desaturated than the
+     logo red (5° S66 L37 vs 357° S80 L46) so errors never read as brand. */
+  --logo-red:    #D31720;   /* reference value only — do not use in CSS */
+
+  /* ---------- States -------------------------------------------------- */
+  --danger:      #9E2B20;   /* 7.07 on --bg ✓AAA */
+  --danger-bg:   #FBF0EE;
+  --success:     #3F6B4A;   /* 5.84 on --bg ✓AA  */
+  --success-bg:  #EFF4F0;
+  --focus:       #8C6D33;   /* focus ring on light — 4.58 ✓ (>3:1 non-text) */
+  --focus-dark:  #C2A15C;   /* focus ring on dark  — 6.68 ✓ */
+
+  /* ---------- Hairlines — used sparingly.
+     Brief: "Avoid heavy ruled lines between sections." Sections separate
+     by tint. Rules exist only inside components (form fields, footer). */
+  --rule:        rgba(26, 26, 24, 0.12);
+  --rule-strong: rgba(26, 26, 24, 0.24);
+  --rule-dark:   rgba(239, 236, 228, 0.16);
+
+  /* ---------- Typography — three families, by role --------------------
+     Client decision: GLOOCK is the display face. It ships ONE style
+     (400, no italic, no axes, static) — verified. That single fact
+     dictates the whole type architecture below:
+
+     1. --font-display  Gloock 400 — hero H1, section headings, card
+        titles. Measured: cap-height 75/100 (the largest of the three),
+        lining figures (ratio 1.03) — years and prices set correctly
+        without OpenType hacks. Hairlines verified solid down to 18px
+        (see README): it holds card titles, so it earns that role.
+     2. --font-text     Newsreader italic 400 — §07 testimonial quotes
+        ONLY. Gloock has no italic, and a synthesised oblique on a didone
+        is unacceptable, so the brief's "quote text (italic serif)"
+        requires a second serif. Loaded as a static italic micro-subset
+        (23.8KB vs 61.7KB for the variable cut).
+     3. --font-sans     INTER TIGHT — body + all UI. Client decision.
+        Two reasons, both verified:
+        (a) No opsz axis at all (Inter has opsz 14–32). The measured
+            71.3KB Inter cut was 71.3 *because* of that axis; the same
+            weight range without it is 47.3. Inter Tight is 43.9 — the
+            saving is structural, there is no axis to forget to drop.
+        (b) Distance from Superior Motors. They run Neue Haas Grotesk;
+            Inter is its free analogue. Inter Tight's tighter fit reads
+            noticeably less like Neue Haas.
+        Under a loud didone the sans must stay silent: Inter Tight is
+        neutral and its figures are unambiguous for price/year/phone.
+     Fallbacks are metric-adjacent, not system-stack defaults. */
+  --font-display: 'Gloock', 'Playfair Display', 'Times New Roman', serif;
+  --font-text:    'Newsreader', 'Iowan Old Style', Georgia, serif;   /* italic quotes only — NOT the UI face */
+  --font-sans:    'Inter Tight', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Fluid type scale — computed for 390px → 1440px.
+     Formula: size = A + B·vw, solved at both ends. Verified in browser.
+     Sizes are tuned DOWN vs a normal serif: Gloock's cap-height runs ~4%
+     larger than Inter/Newsreader at the same px, and it is a loud face —
+     the brief asks for "less busy". */
+  --fs-eyebrow:  clamp(0.6875rem, 0.664rem + 0.095vw, 0.75rem);    /* 11 → 12 */
+  --fs-body-sm:  clamp(0.875rem, 0.852rem + 0.095vw, 0.9375rem);   /* 14 → 15 */
+  --fs-body:     clamp(1rem, 0.977rem + 0.095vw, 1.0625rem);       /* 16 → 17 */
+  --fs-body-lg:  clamp(1.0625rem, 0.993rem + 0.286vw, 1.25rem);    /* 17 → 20 */
+  --fs-h4:       clamp(1.1875rem, 1.164rem + 0.095vw, 1.25rem);    /* 19 → 20  card title
+                    CORRECTED 2026-07 — the old top end was 22, justified by
+                    "367.5px wide in a 427px column ✓". That test string was
+                    "1965 Mercedes-Benz 300SL Roadster" (33 chars), which is the
+                    MEDIAN of the real inventory, not a worst case. Re-measured
+                    against all 665 live car titles (source: the site's own
+                    sitemap.xml): median 32ch, p90 55ch, max 75ch. 17.9%
+                    (119/665) are too long for one line in this column, so the
+                    card title is a TWO-LINE box by design. Measured in-browser,
+                    426.67px column, real titles:
+                      Gloock 22px → 75ch worst case = 3 lines (85.8px)  ✗
+                      Gloock 20px → 75ch worst case = 2 lines (52.0px)  ✓
+                    20 is therefore the ceiling that keeps the real worst case
+                    inside the reserved 2-line box. Rig: _measure/ (scratch). */
+  --fs-h3:       clamp(1.375rem, 1.236rem + 0.571vw, 1.75rem);     /* 22 → 28 */
+  --fs-h2:       clamp(1.75rem, 1.471rem + 1.143vw, 2.5rem);       /* 28 → 40 */
+  --fs-h1:       clamp(1.875rem, 1.271rem + 2.476vw, 3.5rem);      /* 30 → 56  page H1 */
+  --fs-display:  clamp(2.125rem, 0.871rem + 5.143vw, 5.5rem);      /* 34 → 88  hero H1 */
+  --fs-quote:    clamp(1.25rem, 1.018rem + 0.952vw, 1.875rem);     /* 20 → 30 */
+
+  /* Weights — READ THIS BEFORE CHANGING.
+     The brief asks H1 to be "significantly larger AND lighter-weight than
+     H2". Gloock has exactly one weight, so literal weight contrast is
+     IMPOSSIBLE. The hierarchy is therefore carried by size and tracking:
+       hero H1  88px / -0.02em   vs   H2 40px / -0.01em  = 2.2× size.
+     This is a known, accepted consequence of the Gloock decision — do not
+     "fix" it by faux-bolding H2 (synthetic weight on a didone smears the
+     hairlines). If literal weight contrast is ever required, the display
+     face has to change; nothing else will deliver it. */
+  --fw-display:   400;   /* Gloock — the only weight that exists */
+  --fw-heading:   400;   /* Gloock */
+  --fw-card:      400;   /* Gloock */
+  --fw-body:      400;
+  --fw-medium:    500;
+  --fw-semibold:  600;
+
+  /* Inter Tight compensation on dark surfaces — MEASURED, not a preference.
+     Inter Tight's forms are narrower than Inter's, and on --dark/--dark-deep
+     the thin strokes are eaten by the ground. At the real token sizes, at
+     weight 400, small text loses ink against the Inter baseline it replaces:
+       --fs-body-sm 14 on dark:  -5.9% solid ink, +2.2pp smear
+       --fs-body-sm 15 on dark:  -5.5% solid ink, +2.3pp smear
+     Weight 500 over-corrects (+13.7% / +17.0% — visibly heavier than intended).
+     450 lands at parity: +2.4% / +0.6pp at 14, +4.4% / +0.7pp at 15.
+     Inter Tight is a variable font, so 450 is free — no extra file.
+     USE FOR: body-sm and body copy on --dark / --dark-deep (footer, sell band).
+     NOT needed on light: eyebrow 12 measures -2.4% (imperceptible) and the
+     eyebrow at 12 ON DARK is actually BETTER than Inter (+11.4% / -8.6pp). */
+  --fw-body-dark: 450;
+
+  /* Line heights — brief: body "generous line-height (1.7+)".
+     Gloock's cap-height is large, so display leading runs tighter than
+     a normal serif would take: 1.02 at 88px = 90px between baselines. */
+  --lh-display: 1.02;
+  --lh-h1:      1.08;
+  --lh-h2:      1.16;
+  --lh-h3:      1.25;
+  --lh-card:    1.3;
+  --lh-quote:   1.5;
+  --lh-body:    1.75;   /* ✓ brief 1.7+ */
+  --lh-tight:   1.4;
+
+  /* Tracking */
+  --ls-display: -0.02em;
+  --ls-h2:      -0.01em;
+  --ls-body:    0;
+  --ls-eyebrow: 0.16em;   /* uppercase eyebrow — the ONLY all-caps allowed */
+  --ls-button:  0.01em;   /* CTAs are SENTENCE CASE per brief — not tracked caps */
+
+  /* ---------- Spacing — 8px base, generous editorial ramp -------------
+     Aligned to Bootstrap's $spacers so tokens and utilities agree:
+     sp-5 = 48px = Bootstrap's `5`. Steps 6→9 are added, not remapped. */
+  --sp-1:  8px;
+  --sp-2:  16px;
+  --sp-3:  24px;
+  --sp-4:  32px;
+  --sp-5:  48px;
+  --sp-6:  64px;
+  --sp-7:  96px;
+  --sp-8:  128px;
+  --sp-9:  160px;
+
+  /* ---------- Section rhythm — "less busy" + "generous", as numbers ---
+     Reference measurements: Superior Motors ≈ 96–120px, Prestige 140px.
+     BHCC: 72px @390 → 128px @1440; editorial section gets 160px. */
+  --section-py:    clamp(4.5rem, 3.2rem + 5.333vw, 8rem);   /* 72 → 128 */
+  --section-py-lg: clamp(5rem, 3.3rem + 6.86vw, 10rem);     /* 80 → 160  §05 editorial */
+  --section-py-sm: clamp(2.5rem, 2.13rem + 1.52vw, 3.5rem); /* 40 → 56   compact bands */
+  --block-gap:     var(--sp-5);   /* headline → content */
+  --grid-gap:      32px;          /* card grid — matches Superior Motors' 32px */
+
+  /* ---------- Layout --------------------------------------------------
+     Desktop comp is 1440. Bootstrap caps .container at 1320 on xxl →
+     raised to 1440 with responsive inline padding (content = 1344 @1440). */
+  --container-max:  1440px;
+  --container-pad:  clamp(1.25rem, 0.5rem + 2.7vw, 3rem);   /* 20 → 48 */
+  --header-h:       72px;   /* brief §01 desktop */
+  --header-h-mob:   60px;   /* brief §01 mobile  */
+  --header-h-shrunk: 60px;  /* sticky shrink-on-scroll */
+  --searchbar-h:    80px;   /* brief §03 utility band */
+  --hero-h:         92vh;   /* brief §02: 85–100vh */
+  --hero-h-mob:     70vh;   /* brief §02: 70vh minimum */
+
+  /* ---------- Radius — square. Both style anchors agree ---------------
+     Measured: Superior Motors 672 elements @0px vs 13 @5px;
+     Gallery Aaldering 0px throughout. Bootstrap's .375rem default reads
+     as a template and is switched off at the variable level. */
+  --radius:     0;
+  --radius-pill: 999px;   /* reserved: carousel dots / avatars only */
+
+  /* ---------- Elevation — the brief bans shadows on inventory cards.
+     Photography carries the card. One restrained shadow exists for
+     transient overlays only (dropdown / offcanvas / sticky header). */
+  --shadow-none: none;
+  --shadow-pop:  0 16px 40px -12px rgba(26, 26, 24, 0.22);
+  --shadow-header: 0 1px 0 rgba(26, 26, 24, 0.08);   /* on scroll only */
+
+  /* ---------- Hero overlay — brief §02 exact values -------------------
+     "rgba(0,0,0,0.25) to rgba(0,0,0,0.45) centered" — heavier at centre
+     where text sits, lighter at edges. Image stays dominant. */
+  --hero-overlay: radial-gradient(120% 95% at 50% 50%,
+                    rgba(0, 0, 0, 0.45) 0%,
+                    rgba(0, 0, 0, 0.25) 100%);
+
+  /* ---------- Motion --------------------------------------------------
+     Restrained: hover lifts nothing, it reveals. */
+  --ease:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:   160ms;
+  --dur:        280ms;
+  --dur-slow:   520ms;
+  --img-hover-scale: 1.03;   /* brief §04: "slight scale" */
+}
+
+/* Mobile header height swap */
+@media (max-width: 767.98px) {
+  :root { --header-h: var(--header-h-mob); }
+}
+
+/* Motion off — full no-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+    --img-hover-scale: 1;
+  }
+}

@@ -1,0 +1,303 @@
+// ============================================================
+//  BHCC — BOOTSTRAP 5.3.8 BUILD
+//  Import order matters: variables → bootstrap parts → brand layer.
+//
+//  We import ONLY the modules the homepage spec actually uses.
+//  MEASURED against bootstrap@5.3.8 (not estimated):
+//    our build   184.2 KB compressed · 26.1 KB gzipped
+//    bootstrap   226.7 KB compressed · 30.4 KB gzipped
+//  A 19% / 14% saving — smaller than dropping 15 components suggests,
+//  because the utilities API dominates the output (77 margin + 72 padding
+//  + 47 text rules). If the bundle must shrink further, trim the
+//  $utilities map — not the component list.
+//
+//  Build:  npx sass assets/scss/main.scss assets/css/main.css \
+//               --load-path=node_modules --style=compressed
+//  Verified: compiles clean against bootstrap@5.3.8 (exit 0).
+//  Note: Bootstrap 5.3 is @import-based and Dart Sass warns that @import
+//  is deprecated (removal in 3.0). Upstream's own 5.3 docs still use
+//  @import, so we follow it. Revisit when the theme moves to a Bootstrap
+//  that is @use-native.
+// ============================================================
+
+// ---------- 1. Required plumbing -------------------------------------
+@import "bootstrap/scss/functions";
+@import "variables";                      // ← our overrides, BEFORE defaults
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Drop the `.shadow*` utilities. The brief bans shadows on inventory cards,
+// and the only sanctioned shadows in this design are component-level
+// (dropdown, offcanvas, header-on-scroll) — none of which use the utility.
+// Leaving `.shadow` in the bundle only offers a way to break the rule.
+$utilities: map-remove($utilities, "shadow");
+
+// ---------- 2. Layout + base -----------------------------------------
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/helpers";
+
+// ---------- 3. Components actually used by the 9 sections ------------
+@import "bootstrap/scss/transitions";   // .fade/.collapse — needed by accordion+offcanvas+carousel
+@import "bootstrap/scss/buttons";       // §01 §02 §03 §06 CTAs
+@import "bootstrap/scss/forms";         // §03 search · §09 email signup
+@import "bootstrap/scss/nav";           // §01 header nav
+@import "bootstrap/scss/navbar";        // §01 header
+@import "bootstrap/scss/dropdown";      // §09 language switcher
+@import "bootstrap/scss/accordion";     // §09 footer columns on mobile
+@import "bootstrap/scss/carousel";      // §07 testimonial carousel
+@import "bootstrap/scss/offcanvas";     // §01 mobile menu
+@import "bootstrap/scss/close";         // offcanvas dismiss
+
+// NOT imported — nothing in the spec needs them:
+//   card         → §04/§08 cards are borderless/shadowless; we build .c-card
+//   modal, alert, badge, breadcrumb, list-group, pagination, popover,
+//   progress, spinners, tables, toasts, tooltip, placeholders,
+//   button-group, image (thumbnails), reboot's dark-mode tables.
+
+// ---------- 4. Utilities API — must come last -------------------------
+@import "bootstrap/scss/utilities/api";
+
+// ============================================================
+//  5. BRAND LAYER — tokens.css is linked separately in <head> so the
+//  WordPress theme can override live without a rebuild. This layer
+//  consumes those custom properties.
+// ============================================================
+
+// --- Container: raise to the 1440 comp with responsive padding -------
+.container,
+.container-fluid,
+.container-xxl {
+  --bs-gutter-x: 0;
+  padding-inline: var(--container-pad);
+}
+.container { max-width: var(--container-max); }
+
+// --- Base type -------------------------------------------------------
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Gloock is a single-weight didone. Synthesis OFF everywhere: a faux-bold
+// or faux-italic thickens/shears the hairlines and looks broken at scale.
+h1, h2, h3, h4, .h1, .h2, .h3, .h4, .display-hero, .c-card__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);       // 400 — the only weight Gloock has
+  font-synthesis: none;
+  text-wrap: balance;
+}
+
+// Hierarchy is size-driven, not weight-driven (Gloock has one weight).
+h1, .h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: var(--ls-display);
+}
+h2, .h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  letter-spacing: var(--ls-h2);
+}
+h3, .h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); }
+h4, .h4 { font-size: var(--fs-h4); line-height: var(--lh-card); }
+
+// Hero display H1 — §02.
+// Two-line lockup by construction: measured at 88px the full string is
+// 1477.9px against 1344px of content — it CANNOT sit on one line at 1440.
+// Break after "Car Club"; never let it auto-wrap into an orphan.
+.display-hero {
+  font-size: var(--fs-display);        // 34 → 88
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+// --- Eyebrow — the only all-caps in the system (brief §05/§07) -------
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: var(--sp-2);
+}
+.eyebrow--serif {                       // §05 "small serif label"
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  text-transform: none;
+  letter-spacing: 0.08em;
+  font-size: var(--fs-body-sm);
+}
+.eyebrow--on-dark { color: var(--gold); }
+
+// --- Section rhythm --------------------------------------------------
+.section        { padding-block: var(--section-py); }
+.section--lg    { padding-block: var(--section-py-lg); }
+.section--sm    { padding-block: var(--section-py-sm); }
+.section--tint  { background-color: var(--bg-tint); }
+.section--dark  { background-color: var(--dark);      color: var(--cream); }
+.section--deep  { background-color: var(--dark-deep); color: var(--cream); }
+
+.section--dark h1, .section--dark h2, .section--dark h3,
+.section--deep h1, .section--deep h2, .section--deep h3 { color: var(--ink-on-dark); }
+
+// --- Buttons — sentence case, square, no shadow ----------------------
+.btn {
+  font-family: var(--font-sans);
+  letter-spacing: var(--ls-button);
+  text-transform: none;                 // brief: sentence case CTAs
+}
+.btn-primary {
+  --bs-btn-bg: var(--dark);
+  --bs-btn-border-color: var(--dark);
+  --bs-btn-color: var(--cream);
+  --bs-btn-hover-bg: #000;
+  --bs-btn-hover-border-color: #000;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: #000;
+  --bs-btn-active-border-color: #000;
+}
+.btn-outline-ink {
+  --bs-btn-color: var(--ink);
+  --bs-btn-border-color: rgba(26,26,24,.34);
+  --bs-btn-bg: transparent;
+  --bs-btn-hover-bg: var(--ink);
+  --bs-btn-hover-border-color: var(--ink);
+  --bs-btn-hover-color: var(--bg);
+  --bs-btn-active-bg: var(--ink);
+  --bs-btn-active-color: var(--bg);
+}
+// §02 ghost buttons over video — white outline, white text
+.btn-ghost {
+  --bs-btn-color: #fff;
+  --bs-btn-border-color: rgba(255,255,255,.75);
+  --bs-btn-bg: transparent;
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #fff;
+  --bs-btn-hover-color: var(--ink);
+  --bs-btn-active-bg: #fff;
+  --bs-btn-active-color: var(--ink);
+  backdrop-filter: blur(2px);
+}
+.btn-ghost--secondary { --bs-btn-border-color: rgba(255,255,255,.5); opacity: .9; }
+
+// Gold fill takes INK text (7.09 ✓). White on gold = 2.46 ✗ — never.
+.btn-secondary {
+  --bs-btn-bg: var(--gold);
+  --bs-btn-border-color: var(--gold);
+  --bs-btn-color: var(--ink);
+  --bs-btn-hover-bg: #B08D4A;
+  --bs-btn-hover-border-color: #B08D4A;
+  --bs-btn-hover-color: var(--ink);
+}
+
+// --- Text link — editorial arrow link (§05 §08) ----------------------
+.link-arrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-medium);
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 2px;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  &:hover { color: var(--gold-ink); border-color: var(--gold-ink); }
+  .link-arrow__icon { transition: transform var(--dur) var(--ease); display: inline-block; }
+  &:hover .link-arrow__icon { transform: translateX(4px); }
+}
+
+// --- Inventory / blog card — no border, no shadow (brief §04) --------
+.c-card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  &__media { overflow: hidden; aspect-ratio: 3 / 2; margin-bottom: var(--sp-3); }
+  &__media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+  &:hover &__media img { transform: scale(var(--img-hover-scale)); }
+  // Gloock at 22px — verified: hairlines hold, lining figures, and the
+  // string measures 367.5px inside a 427px column at 1440.
+  &__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-display);
+    font-synthesis: none;
+    line-height: var(--lh-card);
+    margin: 0 0 var(--sp-1);
+  }
+  &__price {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    font-weight: var(--fw-medium);
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// --- Testimonial quote — italic serif (brief §07) --------------------
+// The ONLY place --font-text appears. Gloock has no italic; this is why
+// a second serif exists at all. Real italic, never a synthesised oblique.
+.quote {
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: var(--fs-quote);
+  font-weight: var(--fw-body);
+  font-synthesis: none;
+  line-height: var(--lh-quote);
+  color: var(--ink);
+  margin: 0 0 var(--sp-3);
+}
+.quote-cite {
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-style: normal;
+}
+
+// --- Press logo row — monochrome (brief §07) -------------------------
+.press-logo {
+  filter: grayscale(1) contrast(0.85);
+  opacity: 0.55;
+  transition: opacity var(--dur) var(--ease);
+  &:hover { opacity: 0.9; }
+}
+
+// --- Focus — visible on both light and dark -------------------------
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.section--dark :focus-visible,
+.section--deep :focus-visible,
+.btn-ghost:focus-visible {
+  outline-color: var(--focus-dark);
+}
+
+// --- Reduced motion --------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

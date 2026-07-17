@@ -1,0 +1,352 @@
+// ============================================================
+//  BHCC — BOOTSTRAP 5.3.8 VARIABLE OVERRIDES
+//  Loaded BEFORE `@import "bootstrap"`. Nothing here is a patch:
+//  every Bootstrap default that fights the brief is closed at the
+//  variable level so the compiled CSS never emits it in the first place.
+//
+//  Mirrors assets/css/tokens.css. tokens.css stays the runtime source of
+//  truth (WordPress theme can override live); this file makes Bootstrap's
+//  own components compile to the same values.
+// ============================================================
+
+// ---------- Brand scale (Sass-side mirror of tokens.css) --------------
+$bhcc-bg:          #FAF9F6;
+$bhcc-bg-tint:     #F2F0EB;
+$bhcc-bg-deep:     #E8E4DB;
+$bhcc-dark:        #221F1A;
+$bhcc-dark-deep:   #14120E;
+$bhcc-cream:       #EFECE4;
+
+$bhcc-ink:         #1A1A18;
+$bhcc-ink-soft:    #46443E;
+$bhcc-ink-muted:   #6E6B62;
+
+$bhcc-gold:        #C2A15C;   // decorative / on dark  — NOT text on light
+$bhcc-gold-ink:    #8C6D33;   // gold as text on light — 4.58 ✓AA
+
+$bhcc-danger:      #9E2B20;
+$bhcc-success:     #3F6B4A;
+
+// ============================================================
+//  CONFLICT 1 — $body-bg is #FFF and $body-color is #212529.
+//  Brief: warm off-white base, warm near-black ink. Both replaced.
+// ============================================================
+$body-bg:          $bhcc-bg;
+$body-color:       $bhcc-ink;
+$body-secondary-color: $bhcc-ink-soft;
+$body-tertiary-color:  $bhcc-ink-muted;
+$body-tertiary-bg:     $bhcc-bg-tint;
+
+// ============================================================
+//  CONFLICT 2 — $font-family-base falls back to the system stack.
+//  Brief explicitly bans system fonts / Roboto / Open Sans.
+//  Fallbacks below are metric-adjacent faces, never -apple-system.
+// ============================================================
+// Three families by role — Gloock is display-only (single weight 400,
+// no italic, no axes), so a text serif is required for §07 italic quotes.
+//
+// UI face is INTER TIGHT (client decision). It has NO opsz axis, so the
+// 24KB that Inter's `opsz,wght@14..32` cut carried simply never appears:
+// Inter(opsz) 71.3KB -> Inter Tight 43.9KB, measured latin woff2.
+// It also sits further from Superior Motors' Neue Haas Grotesk than Inter,
+// which is Neue Haas's free analogue.
+// NOTE: $font-family-serif stays NEWSREADER — it is the §07 italic quote
+// face, not a UI face. Do not point it at Inter Tight.
+$font-family-sans-serif: 'Inter Tight', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+$font-family-display:    'Gloock', 'Playfair Display', 'Times New Roman', serif;
+$font-family-serif:      'Newsreader', 'Iowan Old Style', Georgia, serif;  // italic quotes only
+$font-family-base:       $font-family-sans-serif;
+$font-family-code:       ui-monospace, SFMono-Regular, Menlo, monospace;
+
+$font-size-base:   1rem;      // kept at 1rem: component padding math stays predictable.
+                              // Body size is applied fluidly via --fs-body in tokens.css.
+$line-height-base: 1.75;      // CONFLICT: BS default 1.5 → brief demands 1.7+
+$line-height-sm:   1.4;
+$line-height-lg:   1.8;
+
+// ============================================================
+//  CONFLICT 3 — h1 = 2.5rem is far too small for the hero.
+//  Headings map to the fluid scale. NOTE: $headings-font-weight is 400,
+//  not Bootstrap's 500 — Gloock has ONE weight, and any other value makes
+//  the browser SYNTHESISE a bold, which smears a didone's hairlines.
+//  The H1/H2 hierarchy is carried by size (2.2×), not weight. See tokens.css.
+// ============================================================
+$headings-font-family:     $font-family-display;
+$headings-font-weight:     400;              // Gloock's only weight — do not raise
+$headings-line-height:     1.16;
+$headings-color:           $bhcc-ink;
+$headings-margin-bottom:   1.5rem;
+
+$h1-font-size: clamp(1.875rem, 1.271rem + 2.476vw, 3.5rem);    // 30 → 56
+$h2-font-size: clamp(1.75rem, 1.471rem + 1.143vw, 2.5rem);     // 28 → 40
+$h3-font-size: clamp(1.375rem, 1.236rem + 0.571vw, 1.75rem);   // 22 → 28
+$h4-font-size: clamp(1.1875rem, 1.118rem + 0.286vw, 1.375rem); // 19 → 22
+$h5-font-size: 1.0625rem;
+$h6-font-size: 0.9375rem;
+
+$lead-font-size:   clamp(1.0625rem, 0.993rem + 0.286vw, 1.25rem);  // 17 → 20
+$lead-font-weight: 400;
+$small-font-size:  0.875em;
+
+// ============================================================
+//  CONFLICT 4 — $border-radius: .375rem on everything reads as a template.
+//  Both style anchors are square: Superior Motors 672 elements at 0px
+//  (vs 13 at 5px); Gallery Aaldering 0px throughout.
+//  $enable-rounded:false stops the mixin emitting radius at all — the
+//  surgical kill. The vars are zeroed too, for anything that reads them.
+// ============================================================
+$enable-rounded:   false;
+$enable-shadows:   false;
+$enable-gradients: false;
+
+// $enable-shadows:false stops the mixins, but _root.scss still emits
+// --bs-box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) into :root (verified).
+// Zeroed so no generic drop-shadow is reachable from a CSS variable.
+// The two sanctioned shadows are set per-component (dropdown, offcanvas).
+$box-shadow:       none;
+$box-shadow-sm:    none;
+$box-shadow-lg:    none;
+$box-shadow-inset: none;
+$enable-transitions: true;
+$enable-smooth-scroll: true;
+
+$border-radius:      0;
+$border-radius-sm:   0;
+$border-radius-lg:   0;
+$border-radius-xl:   0;
+$border-radius-xxl:  0;
+$border-radius-pill: 999px;   // reserved: carousel indicators only
+
+$border-color:           rgba($bhcc-ink, 0.12);
+$border-color-translucent: rgba($bhcc-ink, 0.12);
+
+// ============================================================
+//  CONFLICT 5 — .container caps at 1320px on xxl; the comp is 1440.
+//  Raised to 1440. Inline padding is applied responsively in main.scss
+//  (20px @390 → 48px @1440) so content is 1344px at the 1440 comp.
+// ============================================================
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1440px
+);
+$grid-gutter-width: 2rem;   // 32px — matches Superior Motors' measured card gap
+$container-padding-x: 0;    // handled by --container-pad; see main.scss
+
+// ---------- Spacers — EXTENDED, not remapped -------------------------
+// Bootstrap's 0–5 keep their stock meaning so the dev team's muscle
+// memory (mb-3 = 1rem) still holds. 6–9 add the editorial steps.
+$spacers: (
+  0: 0,
+  1: 0.25rem,   //  4
+  2: 0.5rem,    //  8
+  3: 1rem,      // 16
+  4: 1.5rem,    // 24
+  5: 3rem,      // 48
+  6: 4rem,      // 64
+  7: 6rem,      // 96
+  8: 8rem,      // 128
+  9: 10rem      // 160
+);
+
+// ============================================================
+//  CONFLICT 6 — $primary is #0d6efd (blue) and $danger is a primary red.
+//  The brief bans primary red/blue/green as accents. Theme colours are
+//  remapped to the brand: "primary" = the dark solid button, "secondary"
+//  = gold. $danger stays (a form error is functional, not decorative) but
+//  is darkened/desaturated so it can never read as the logo red.
+// ============================================================
+$primary:   $bhcc-dark;
+$secondary: $bhcc-gold;
+$success:   $bhcc-success;
+$danger:    $bhcc-danger;
+$light:     $bhcc-bg-tint;
+$dark:      $bhcc-dark-deep;
+
+// info/warning dropped — nothing in the homepage spec uses them.
+$theme-colors: (
+  "primary":   $primary,
+  "secondary": $secondary,
+  "success":   $success,
+  "danger":    $danger,
+  "light":     $light,
+  "dark":      $dark
+);
+
+// Bootstrap's _root.scss emits its whole crayon box into :root
+// (--bs-blue #0d6efd, --bs-red #dc3545, --bs-green #198754, …). Verified
+// in the compiled output. Nothing consumes them, but they sit there
+// inviting a dev to reach for exactly the three hues the brief bans.
+// Emptying $colors removes them from :root entirely.
+$colors: ();
+
+// ---------- Links — editorial: underline, gold on hover ---------------
+$link-color:                $bhcc-ink;
+$link-hover-color:          $bhcc-gold-ink;
+$link-decoration:           underline;
+$link-hover-decoration:     underline;
+$link-shade-percentage:     0%;
+
+// ---------- Focus — visible on light AND dark ------------------------
+// Ring uses --gold-ink on light (4.58 ✓ >3:1 non-text contrast).
+// Plain $gold would fail at 2.33 on off-white — hence gold-ink here.
+$focus-ring-width:   2px;
+$focus-ring-opacity: 1;
+$focus-ring-color:   $bhcc-gold-ink;
+$focus-ring-blur:    0;
+
+// ============================================================
+//  CONFLICT 7 — .card ships borders + a bg + radius. Brief §04:
+//  "Minimal — no heavy card borders or shadows. Let photography carry
+//  the weight." The component is neutralised here; we do not import
+//  _card.scss at all (see main.scss), so this is belt-and-braces for
+//  any WordPress markup that still emits .card.
+// ============================================================
+$card-spacer-y:        0;
+$card-spacer-x:        0;
+$card-border-width:    0;
+$card-border-color:    transparent;
+$card-border-radius:   0;
+$card-box-shadow:      none;
+$card-bg:              transparent;
+$card-cap-bg:          transparent;
+$card-cap-padding-y:   0;
+$card-cap-padding-x:   0;
+
+// ---------- Buttons — sentence case per brief, square, restrained -----
+// Brief: "Sentence case for all headlines and CTAs." No text-transform.
+$btn-padding-y:        0.875rem;   // 14px
+$btn-padding-x:        1.875rem;   // 30px
+$btn-font-family:      $font-family-sans-serif;
+$btn-font-size:        0.9375rem;  // 15px
+$btn-font-weight:      500;
+$btn-line-height:      1.2;
+$btn-border-width:     1px;
+$btn-border-radius:    0;
+$btn-box-shadow:       none;
+$btn-focus-box-shadow: none;
+$btn-active-box-shadow: none;
+$btn-disabled-opacity: 0.42;
+$btn-transition:       color .28s cubic-bezier(.22,1,.36,1),
+                       background-color .28s cubic-bezier(.22,1,.36,1),
+                       border-color .28s cubic-bezier(.22,1,.36,1);
+
+$btn-padding-y-lg:     1rem;
+$btn-padding-x-lg:     2.25rem;
+$btn-font-size-lg:     1rem;
+$btn-padding-y-sm:     0.625rem;
+$btn-padding-x-sm:     1.25rem;
+$btn-font-size-sm:     0.875rem;
+
+// ---------- Forms — accessible, square, warm --------------------------
+$input-bg:                    $bhcc-bg;
+$input-disabled-bg:           $bhcc-bg-deep;
+$input-color:                 $bhcc-ink;
+$input-border-color:          rgba($bhcc-ink, 0.24);
+$input-border-width:          1px;
+$input-border-radius:         0;
+$input-box-shadow:            none;
+$input-padding-y:             0.8125rem;
+$input-padding-x:             1rem;
+$input-font-size:             1rem;
+$input-placeholder-color:     $bhcc-ink-muted;   // 5.06 ✓AA — never light-on-light
+$input-focus-bg:              $bhcc-bg;
+$input-focus-border-color:    $bhcc-gold-ink;
+$input-focus-box-shadow:      0 0 0 2px rgba($bhcc-gold-ink, 0.28);
+$input-focus-color:           $bhcc-ink;
+$input-height:                48px;
+
+$form-label-font-size:        0.8125rem;
+$form-label-font-weight:      500;
+$form-label-color:            $bhcc-ink-soft;
+$form-label-margin-bottom:    0.5rem;
+
+$form-feedback-font-size:     0.8125rem;
+$form-feedback-valid-color:   $bhcc-success;
+$form-feedback-invalid-color: $bhcc-danger;
+
+$form-select-bg:              $bhcc-bg;
+$form-select-border-radius:   0;
+$form-select-indicator-color: $bhcc-ink-soft;
+
+// ---------- Navbar / header ------------------------------------------
+$navbar-padding-y:              0;
+$navbar-nav-link-padding-x:     1rem;
+$navbar-light-color:            $bhcc-ink-soft;
+$navbar-light-hover-color:      $bhcc-ink;
+$navbar-light-active-color:     $bhcc-ink;
+$navbar-toggler-focus-width:    2px;
+$navbar-toggler-border-radius:  0;
+$nav-link-font-size:            0.9375rem;
+$nav-link-font-weight:          500;
+$nav-link-color:                $bhcc-ink-soft;
+$nav-link-hover-color:          $bhcc-ink;
+$nav-link-padding-y:            0.5rem;
+
+// ---------- Dropdown (language switcher, nav overflow) ---------------
+$dropdown-bg:              $bhcc-bg;
+$dropdown-border-width:    1px;
+$dropdown-border-color:    rgba($bhcc-ink, 0.12);
+$dropdown-border-radius:   0;
+// Must be set explicitly. Bootstrap derives it via subtract($radius, $width),
+// which with a unitless 0 compiles to `calc(0 - 1px)` — invalid CSS that the
+// browser drops. Verified in the compiled output before this line existed.
+$dropdown-inner-border-radius: 0;
+$dropdown-box-shadow:      0 16px 40px -12px rgba($bhcc-ink, 0.22);
+$dropdown-link-color:      $bhcc-ink-soft;
+$dropdown-link-hover-color: $bhcc-ink;
+$dropdown-link-hover-bg:   $bhcc-bg-tint;
+$dropdown-font-size:       0.9375rem;
+$dropdown-padding-y:       0.5rem;
+$dropdown-item-padding-y:  0.5rem;
+$dropdown-item-padding-x:  1rem;
+
+// ---------- Accordion — footer columns on mobile (brief §09) ---------
+$accordion-bg:                    transparent;
+$accordion-border-width:          1px;
+$accordion-border-color:          rgba($bhcc-cream, 0.16);
+$accordion-border-radius:         0;
+$accordion-inner-border-radius:   0;
+$accordion-button-color:          $bhcc-cream;
+$accordion-button-bg:             transparent;
+$accordion-button-active-bg:      transparent;
+$accordion-button-active-color:   $bhcc-cream;
+$accordion-button-focus-box-shadow: 0 0 0 2px rgba($bhcc-gold, 0.5);
+$accordion-padding-y:             1rem;
+$accordion-padding-x:             0;
+$accordion-body-padding-x:        0;
+$accordion-icon-color:            $bhcc-cream;
+$accordion-icon-active-color:     $bhcc-gold;
+
+// ---------- Carousel — testimonial quotes (brief §07) ----------------
+$carousel-control-color:         $bhcc-ink;
+$carousel-control-width:         8%;
+$carousel-control-opacity:       0.6;
+$carousel-indicator-width:       8px;
+$carousel-indicator-height:      8px;
+$carousel-indicator-spacer:      6px;
+$carousel-indicator-active-bg:   $bhcc-ink;
+$carousel-transition-duration:   0.52s;
+
+// ---------- Offcanvas — mobile menu ----------------------------------
+$offcanvas-bg-color:      $bhcc-bg;
+$offcanvas-color:         $bhcc-ink;
+$offcanvas-border-width:  0;
+$offcanvas-box-shadow:    0 16px 40px -12px rgba($bhcc-ink, 0.22);
+$offcanvas-horizontal-width: 340px;
+$offcanvas-transition-duration: 0.28s;
+
+// ---------- Misc ------------------------------------------------------
+$hr-color:              rgba($bhcc-ink, 0.12);
+$hr-opacity:            1;
+$hr-border-width:       1px;
+$transition-base:       all .28s cubic-bezier(.22,1,.36,1);
+$transition-collapse:   height .28s ease;
+$blockquote-font-size:  clamp(1.25rem, 1.018rem + 0.952vw, 1.875rem);
+$blockquote-margin-y:   0;
+
+// Bootstrap's dark mode is not part of this brief — the dark bands are
+// explicit sections, not a colour-scheme. Keeps the payload smaller.
+$enable-dark-mode: false;

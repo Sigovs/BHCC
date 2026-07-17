@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BHCC — Hero C · Monumental</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Inter+Tight:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css?v=2">
+<style>
+/* ============================================================
+   HERO C — MONUMENTAL
+   Reading: the name IS the image. Gloock is a display didone with
+   real mass — this variant spends it.
+   H1 at 124px, tracked tighter (-0.03em) and leaded tighter (0.98)
+   so the two lines lock into one solid block. Measured: line 1 at
+   124px = 1184.3px against 1344px of content — it fits with 159.7px
+   to spare, so 124 is a real ceiling, not a guess. (At 140px it would
+   be 1337px — 7px of headroom, too close to risk.)
+   The block sits LOW, in the 62–87% band (mean luminance 42–50), with
+   the car's nose and the driver reading ABOVE it — the type becomes a
+   plinth the car sits on rather than a veil across it.
+   Overlay is weighted to the BOTTOM, not the centre, because that is
+   where the type is. The brief's .25/.45 range is kept.
+   ============================================================ */
+*,*::before,*::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-sans); font-synthesis: none; -webkit-font-smoothing: antialiased; }
+
+.hero { position: relative; height: 96vh; min-height: 660px; overflow: hidden; }
+.hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  object-position: 50% 34%; }   /* lift the car up, clear the lower third for type */
+
+/* Weighted low: .45 under the lockup, .25 at the top where the car lives. */
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,.22) 38%, rgba(0,0,0,.45) 78%, rgba(0,0,0,.45) 100%),
+    radial-gradient(100% 60% at 50% 82%, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 100%); }
+
+.hero-in { position: relative; z-index: 2; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  text-align: center; padding: 0 var(--container-pad) 7vh; }
+
+.hero h1 { margin: 0; font-family: var(--font-display); font-weight: 400;
+  font-size: 124px; line-height: .98; letter-spacing: -0.03em; color: #fff; }
+.hero h1 span { display: block; }
+
+/* Brief §02: the subheadline is ONE line. */
+.hero .sub { margin: var(--sp-3) 0 0; font-size: 18px; font-weight: 400;
+  line-height: 1.5; color: rgba(255,255,255,.86); letter-spacing: .02em; white-space: nowrap; }
+
+/* CTAs sit tight under the block — this variant is dense, not airy. */
+.ctas { display: flex; gap: 12px; margin-top: var(--sp-4); }
+.ctas a { padding: 13px 28px; border: 1px solid rgba(255,255,255,.9);
+  color: #fff; text-decoration: none; font-size: 14.5px; font-weight: 500;
+  letter-spacing: .02em; transition: background var(--dur) var(--ease); }
+.ctas a:hover, .ctas a:focus-visible { background: rgba(255,255,255,.18); }
+.ctas a + a { border-color: rgba(255,255,255,.45); color: rgba(255,255,255,.84); }
+.ctas a:focus-visible { outline: 2px solid var(--focus-dark); outline-offset: 3px; }
+
+@media (max-width: 767.98px) {
+  .hero { height: 82vh; min-height: 540px; }
+  .hero-media { object-position: 54% 40%; }
+  .hero-in { padding: 0 var(--container-pad) 5vh; }
+  .hero h1 { font-size: 36px; line-height: 1.0; letter-spacing: -0.025em; }
+  .hero .sub { font-size: 15.5px; white-space: normal; max-width: 34ch; }
+  .ctas { flex-direction: column; width: 100%; gap: 12px; margin-top: var(--sp-4); }
+  .ctas a { width: 100%; padding: 15px 0; }
+}
+@media (prefers-reduced-motion: reduce) { .ctas a { transition: none; } }
+</style>
+</head>
+<body>
+<section class="hero">
+  <video class="hero-media" autoplay muted loop playsinline
+         poster="assets/images/hero-still.jpg" aria-label="1965 Mercedes-Benz 300SL Roadster">
+    <!-- <source src="assets/video/hero.mp4" type="video/mp4"> -->
+  </video>
+  <div class="hero-in">
+    <h1><span>Beverly Hills Car Club</span><span>by Alex Manos</span></h1>
+    <p class="sub">The world's largest dealer of European and American classic cars.</p>
+    <div class="ctas">
+      <a href="/inventory.htm">Browse inventory</a>
+      <a href="/sell-your-car.htm">Sell your classic</a>
+    </div>
+  </div>
+</section>
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('video.hero-media').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
+  }
+</script>
+</body>
+</html>

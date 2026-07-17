@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+_*.png
+_font-lab*.html
+
+# Uncompressed hero master (49MB, 295s) — replaced by a compressed loop.
+# Do not commit: git keeps blobs forever.
+assets/video/home.mp4
