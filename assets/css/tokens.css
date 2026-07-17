@@ -152,10 +152,14 @@
      but this lockup is left-aligned and must clear the car at x 40%. */
   --fs-hero:     clamp(1.875rem, min(6.6vw, 12vh), 6rem);          /* 30 → 96 */
 
-  /* §05 editorial headline. NOT --fs-h1: measured in the real 679.4px text
-     column, the 78-char headline takes 4 lines at 56px and 52px, and 3 lines
-     at 50px. Brief §05 says "2–3 lines maximum", so 50 is the ceiling. */
-  --fs-editorial: clamp(1.875rem, 1.411rem + 1.905vw, 3.125rem);   /* 30 → 50 */
+  /* §05 editorial headline. NOT --fs-h1 — brief §05 says "2–3 lines maximum",
+     and that has to hold at BOTH ends, so both ends were solved in-browser
+     against the real 78-char headline:
+       @1440, 679.4px column: 56px → 4 lines ✗ · 52 → 4 ✗ · 50 → 3 ✓
+       @390,  350px column:   30px → 4 lines ✗ · 27 → 4 ✗ · 26 → 3 ✓
+     Hence 26 → 50, not 30 → 50: the mobile floor was one step too big and
+     shipped 4 lines. A max-width cap cannot help — it only ADDS lines. */
+  --fs-editorial: clamp(1.625rem, 1.068rem + 2.286vw, 3.125rem);   /* 26 → 50 */
 
   /* Weights — READ THIS BEFORE CHANGING.
      The brief asks H1 to be "significantly larger AND lighter-weight than

@@ -353,27 +353,87 @@ The real style anchors are **gallery-aaldering.com** and **superiormotors.us**.
 
 ---
 
+## The hero video — done, but deliberately not wired in
+
+`assets/video/home.mp4` (49 MB · 295 s · 1280×720 · **with audio**) is a five-minute
+brand film, not a loop. It is **gitignored**; the compressed loop ships beside it.
+
+Delivered — `assets/video/hero-loop.mp4` (2.20 MB) + `.webm` (1.38 MB), 7.97 s,
+1280×608, silent, `+faststart`, poster `assets/images/hero-loop-poster.jpg` taken
+from the loop's own frame 0:
+
+- **The film is letterboxed.** ffmpeg's `cropdetect` and a pixel measurement agree:
+  `crop=1280:608:0:56` — a 2.105:1 master inside a 16:9 container with 56px bars.
+  Full-bleed would have shown black bars; the loop is cropped.
+- **No continuous driving take reaches 8–15 s.** Longest is 6.67 s (14.6–21.3);
+  the bridge take is 5.33 s. The loop is therefore two driving takes joined by a
+  0.6 s **dissolve** (a dissolve, not the hard cut the brief rules out).
+- **No hard-cut loop is seamless.** Best possible seam Δ 23.44/255 vs a normal
+  consecutive-frame step of 5.61 — 4.2× worse, i.e. visibly jumping. With the
+  tail crossfaded onto the head the shipped seam measures **5.42/255 — below a
+  normal frame step**, i.e. indistinguishable.
+
+**It is not autoplayed, and that is the point.** The footage shows a **dark** 300SL
+on the 6th Street Bridge in hazy LA light. The client's chosen poster is a **red**
+300SL on a canyon road. Different car, location and light — and the video's car sits
+centre-frame, exactly where the left-aligned H1 lives. Measured, text zone (left 46%):
+video luma 83.7 / p90 118.0 vs poster 69.8 / p90 82.0. Swapping the loop in would
+jump the picture and drop type onto the car. The `<source>` tags are in place,
+commented, with the reason. **Uncomment once footage matching this frame exists.**
+
+## Logo — no white master was supplied
+
+The brief asks for a white logo in the dark footer; only the colour PNG exists.
+Measured: the master is a **vertical** lockup with a clean transparent gap at rows
+781–802 splitting the shield from the "by Alex Manos" signature, and the signature
+is **100% pure black** (27,105 opaque px, mean RGB 0,0,0) — invisible on `--dark-deep`.
+
+Temporary, honest solution — no letterform is redrawn:
+- `logo-shield.png` — the shield, used as-is. It is a badge drawn on black, so it
+  reads on both `--bg` and `--dark-deep`.
+- `logo-signature-ink.png` / `logo-signature-cream.png` — the signature, with only
+  its **ink** flipped to `--cream` for the footer; the alpha is untouched.
+- The two are re-set **side by side**. The vertical master cannot be used whole in a
+  72px header: it would put the signature at ~11px tall, illegible. This is a
+  re-arrangement of supplied art, and it needs client sign-off.
+
 ## Open — needs a client answer
 
 1. **Font licensing / hosting.** Gloock and Newsreader are OFL via Google Fonts;
    Inter Tight is OFL. Recommend **self-hosting** all three in the WP theme (removes the
    Google CDN dependency and its GDPR exposure, and lets us subset Newsreader italic
    to the quote glyphs — well under 23.8 KB). Confirm the team is happy to self-host.
-2. **Gloock density on a full page.** The homepage will carry Gloock in the hero, 2
-   section headings, 6 inventory cards and 3 blog cards — ~12 blocks of a loud didone
-   against a brief that says "less busy". It reads well in a 3-up test; it needs
-   judging on the full comp. Lever if it feels heavy: card titles drop to Inter Tight 500
-   (which is what Superior Motors actually does — their card titles are sans, not
-   serif) or to Newsreader. This changes §04/§08 only.
-3. **"Lighter-weight H1"** — see above. Confirm the client accepts size-only
-   hierarchy, since Gloock cannot do weight contrast.
-4. **Hero video** — footage from the BHCC content team is still outstanding; the
-   poster still is currently the Mercedes 300SL placeholder. Overlay values are the
-   brief's own (rgba .45 centre → .25 edge) and may need retuning against real
-   footage, which is likely brighter/busier than the still.
-5. **Press logos (§07)** — Google/Yelp/Hemmings/Hollywood Reporter/Total 911/eBay
-   assets not supplied. Need monochrome SVGs. Note some (Google, Yelp) have brand
-   guidelines that restrict recolouring to grayscale — may need an exception or their
-   approved marks.
-6. **Testimonial source** — brief says quotes come from the WordPress backend. Need
-   the field structure to know whether attribution is one string or name/location split.
+2. **Gloock density — answered on the full comp: it is NOT overloaded. Keep Gloock.**
+   Measured on the built page: 15 Gloock blocks, **38.3% of rendered text area**.
+   It holds because there are only *two* loud moments (hero 95px, §05 at 50px),
+   separated by a whole section, and because §07 (Newsreader) and §09 (all Inter
+   Tight) are long Gloock-free stretches. At 20px the card titles read as text, not
+   display. The lever was built and compared side by side (`_shots/`): Inter Tight
+   500 does buy a cleaner family-contrast against the Gloock section heading, but it
+   costs the classic-catalogue character that is the whole point of the brand. If the
+   client still wants it quieter, that swap is a 5-line change to §04/§08.
+3. **"Lighter-weight H1"** — Gloock has one weight, so hierarchy is size-only.
+   Confirm the client accepts this.
+4. **Inventory photography carries a burned-in watermark.** Every `_main_f.jpg` the
+   site serves has `Stock#XXXXX CALL NOW (310) 975-0272` baked into the image in a
+   generic sans — verified on all 6 featured cars. The brief's core instruction is
+   "photography is the primary visual element" and it bans fonts that "read as
+   generic or corporate". We cannot remove it from the derivative. **Need
+   unwatermarked masters.** Also: 600×400 is the largest size the site serves, so
+   cards render at ~1.4× DPR, not 2×.
+5. **Press logos (§07)** — not supplied. Currently **typographic stand-ins**, not
+   imitations of the real marks. Need monochrome SVGs; note Google and Yelp restrict
+   recolouring, so their approved assets (or an exception) are required.
+6. **Testimonial source** — the quotes in §07 are the ones currently running on
+   beverlyhillscarclub.com. Final copy comes from the WordPress backend; need the
+   field structure (is attribution one string, or name/location split?).
+7. **§05 photo** — the supplied 1280×553 panorama is cropped to fill the column
+   full-height, which keeps **50.2%** of the frame width. Measured and checked
+   visually: Alex, the 300SL, the Porsches and the depth of the hall all survive, so
+   the brief's treatment stands. A 4:5 master would need no crop at all — the brief
+   already says this photo will likely change.
+8. **§05 body copy and the §08 excerpts are placeholder**, written in Alex's
+   first-person voice rather than lorem so the tone can be judged. Not approved copy.
+9. **§08 blog images fight the type.** The real featured images have headlines baked
+   into them ("DSCENE", "406: From Barn Finds to Global"). That clashes with any card
+   title, serif or sans. Recommend clean featured images.
