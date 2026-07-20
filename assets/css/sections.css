@@ -98,6 +98,35 @@ img { max-width: 100%; height: auto; display: block; }
   margin: 0;
 }
 
+/* ---------- section masthead — SCALE IS THE HIERARCHY -----------------
+   The page critique was "no rhythm — every heading is 40px". Gloock has one
+   weight, so contrast is carried by SIZE + air. This masthead pairs a small
+   tracked eyebrow with a large display title so a section opens with a real
+   change of scale, the way the hero does. Sizes vary by section on purpose
+   (see §04 vs §08) — the loud/quiet alternation is the point. */
+.sec-head { margin-bottom: var(--block-gap); }
+.sec-head .eyebrow { margin-bottom: var(--sp-2); }
+.sec-title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-heading);
+  font-size: var(--fs-display);        /* 34 → 88 — the loud section title */
+  line-height: 1.0;
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
+  margin: 0;
+  text-wrap: balance;
+}
+.sec-title--mid { font-size: var(--fs-h1); }   /* 30 → 56 — the quieter counterpoint */
+.on-dark .sec-title { color: var(--ink-on-dark); }
+
+/* Split masthead — title left, utility link parked on the baseline right. */
+.sec-head--split {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--sp-4); flex-wrap: wrap;
+}
+.sec-head--split .sec-head__lead { min-width: 0; }
+.sec-head--split .link-arrow { flex: 0 0 auto; padding-bottom: 6px; }
+
 /* Text link with the gold rule underneath — the house link.
    Underline is drawn as a background so it can animate without shifting text. */
 .link-arrow {
@@ -412,28 +441,82 @@ img { max-width: 100%; height: auto; display: block; }
 .search-all .link-arrow { font-size: var(--fs-body-sm); }
 
 /* ============================================================
-   04  FEATURED CLASSICS — 3-up desktop / 1-up mobile · 6 cards
-   Brief: NO borders, NO shadows. The photograph carries the card.
+   04  FEATURED CLASSICS — anchor + duo + trio (a diminishing scale ladder)
+   Brief: image-first — "sections built AROUND the imagery", NO borders,
+   NO shadows. The old flat 3×2 of six equal thumbnails read as a stock
+   dealer template. Now one flagship runs large, two run medium, three run
+   small — the photograph carries the weight and the scale creates rhythm.
+   All source photos re-cropped to a clean 16:9 with the dealer watermark
+   ("Stock# … CALL NOW") cropped off the bottom edge; originals backed up
+   outside the repo. Unwatermarked masters are still the real fix (README q4).
    ============================================================ */
 .s-featured { background: var(--bg); }
 .section-head { margin-bottom: var(--block-gap); }
-.section-head--split {
-  display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3);
+
+/* stacked rows get generous air between the scale steps */
+.feat-rows > * + * { margin-top: var(--sp-6); }
+
+/* -- ANCHOR: the flagship, image left / caption right, vertically centred -- */
+.feat-anchor {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: clamp(var(--sp-4), 4vw, var(--sp-7));
+  align-items: center;
+  text-decoration: none; color: inherit;
+}
+.feat-anchor__media {
+  position: relative; overflow: hidden;
+  background: var(--bg-deep);
+  aspect-ratio: 16 / 9;
+}
+.feat-anchor__media img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease);
+}
+.feat-anchor:hover .feat-anchor__media img,
+.feat-anchor:focus-visible .feat-anchor__media img { transform: scale(var(--img-hover-scale)); }
+.feat-anchor__body { max-width: 34ch; }
+.feat-anchor__kicker {
+  font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-eyebrow); text-transform: uppercase;
+  color: var(--gold-ink); margin: 0 0 var(--sp-2);
+}
+.feat-anchor__title {
+  font-family: var(--font-display); font-weight: var(--fw-heading);
+  font-size: var(--fs-h2);              /* 28 → 40 — the loud card title */
+  line-height: var(--lh-h2); letter-spacing: var(--ls-h2);
+  color: var(--ink); margin: 0 0 var(--sp-1);
+  transition: color var(--dur) var(--ease);
+}
+.feat-anchor:hover .feat-anchor__title,
+.feat-anchor:focus-visible .feat-anchor__title { color: var(--gold-ink); }
+.feat-anchor__sub {
+  font-size: var(--fs-body-sm); color: var(--ink-muted);
+  margin: 0 0 var(--sp-3);
+}
+.feat-anchor__price {
+  font-family: var(--font-display); font-weight: var(--fw-heading);
+  font-size: var(--fs-h3);              /* price sings — larger, gold */
+  color: var(--gold-ink); margin: 0 0 var(--sp-3);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
+/* -- card grids: duo (2-up) then trio (3-up) ------------------------- */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-6) var(--grid-gap);   /* 64px row gap = "generous white space between cards" */
 }
+.card-grid--duo { grid-template-columns: repeat(2, 1fr); }
+.card-grid--trio { grid-template-columns: repeat(3, 1fr); }
 
 .c-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
 .c-card__media {
   position: relative;
   overflow: hidden;
   background: var(--bg-deep);
-  aspect-ratio: 3 / 2;                /* brief §04: "16:9 or 3:2" — 3:2 matches the
-                                         real 600×400 source exactly, so nothing is cropped */
+  aspect-ratio: 16 / 9;               /* brief §04: "16:9 or 3:2" — sources are now
+                                         clean 16:9 crops, so nothing is re-cropped */
   margin-bottom: var(--sp-2);
 }
 .c-card__media img {
@@ -489,46 +572,38 @@ img { max-width: 100%; height: auto; display: block; }
 .c-card__title { transition: color var(--dur) var(--ease); }
 
 .c-card__price {
-  font-size: var(--fs-body-sm);
-  font-weight: var(--fw-medium);
-  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-weight: var(--fw-heading);
+  font-size: var(--fs-h4);
+  color: var(--gold-ink);              /* price as a quiet gold accent — 4.58 ✓AA */
   margin: 0;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
-.section-foot { margin-top: var(--sp-6); text-align: center; }
+.section-foot { margin-top: var(--sp-7); text-align: center; }
 
 /* ============================================================
-   05  ALEX MANOS EDITORIAL — warm tint · photo ~45% left
-   Brief: NO CTA button here — the tone is editorial, not transactional.
+   05  ALEX MANOS EDITORIAL — warm tint · the trust anchor
+   Brief §05: the photo is the star and runs "full-height within the section".
+   The supplied 1280×553 panorama (2.31:1) — Alex, the 300SL and the whole
+   sea of cars — was previously choked into a ~600px column in a field of
+   grey. Now the masthead sits contained on top and the panorama runs
+   FULL-BLEED, edge to edge, at its native ratio (uncropped on desktop): the
+   image finally has the size a trust anchor needs.
    ============================================================ */
 .s-editorial { background: var(--bg-tint); }
-.editorial {
+.s-editorial > .wrap { margin-bottom: var(--sp-6); }
+
+/* masthead — headline left (large), body + link parked bottom-right */
+.editorial-head {
   display: grid;
-  grid-template-columns: 45fr 55fr;
-  gap: var(--sp-7);
-  align-items: stretch;            /* brief §05: photo is "full-height within the section" */
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(var(--sp-4), 5vw, var(--sp-8));
+  align-items: end;
 }
-/* The supplied photo is a 1280×553 panorama (2.314:1) and the column wants
-   ~1.16:1, so it has to be cropped. MEASURED, after an earlier estimate of
-   "~70% lost" turned out to be wrong: the crop keeps 50.2% of the frame
-   width (642 of 1280 px), and at that width Alex, the 300SL, the red/blue/
-   green Porsches and the full depth of the hall all survive — the "sea of
-   cars" argument is intact. So the brief's full-height treatment stands.
-   object-position 34% centres Alex (he stands at x≈530/1280) rather than
-   centring the frame, which would push him to the edge. */
-.editorial__figure { margin: 0; display: flex; min-height: 0; }
-.editorial__figure img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: 34% 50%;
-}
-/* Brief §05: "2–3 lines maximum". MEASURED in the real 679.4px text column
-   at 1440, against the real 78-char headline:
-     56px (--fs-h1) → 4 lines ✗   52px → 4 lines ✗   50px → 3 lines ✓
-   50 is therefore the largest size that obeys the brief, so --fs-editorial
-   tops out there rather than reusing --fs-h1. A max-width cap does not help:
-   it only ever ADDS lines. */
+.editorial-head__lead .eyebrow { margin-bottom: var(--sp-2); }
+/* Brief §05: "2–3 lines maximum". MEASURED: at 50px in the ~700px column the
+   real 78-char headline sets to 3 lines — so --fs-editorial tops out at 50. */
 .editorial__title {
   font-family: var(--font-display);
   font-weight: var(--fw-heading);
@@ -536,10 +611,18 @@ img { max-width: 100%; height: auto; display: block; }
   line-height: var(--lh-h1);
   letter-spacing: var(--ls-h2);
   color: var(--ink);
-  margin: 0 0 var(--sp-3);
+  margin: 0;
   text-wrap: pretty;
 }
-.editorial__body { margin: 0 0 var(--sp-3); color: var(--ink-soft); max-width: 54ch; }
+.editorial__body { margin: 0 0 var(--sp-3); color: var(--ink-soft); }
+
+/* FULL-BLEED panorama — direct child of the section, outside .wrap, so it
+   spans the whole viewport. Native ratio on desktop = the entire hall,
+   uncropped and large (≈623px tall at 1440). */
+.editorial__figure--bleed { margin: 0; display: block; }
+.editorial__figure--bleed img {
+  width: 100%; height: auto; display: block;
+}
 
 /* ============================================================
    06  SELL YOUR CAR — --dark · ~40% weight vs the buyer sections
@@ -579,17 +662,29 @@ img { max-width: 100%; height: auto; display: block; }
    not the wireframe's three columns. No stars, no avatars — editorial.
    ============================================================ */
 .s-press { background: var(--bg-tint); }
-.quotes { max-width: 900px; margin-inline: auto; text-align: center; }
+.quotes { max-width: 980px; margin-inline: auto; text-align: center; }
+.quotes .eyebrow { margin-bottom: var(--sp-3); }
+/* oversized ornamental quotation mark — an editorial anchor above the pull-quote */
+.quotes__mark {
+  display: block;
+  font-family: var(--font-text); font-style: italic; font-weight: 400;
+  font-size: clamp(5rem, 2rem + 8vw, 8.5rem);
+  line-height: 0.5; height: 0.55em;
+  color: var(--gold); opacity: 0.4;                 /* ornament, not text */
+  margin-bottom: var(--sp-3);
+  user-select: none;
+}
 .quote { margin: 0; }
 .quote__text {
-  /* Gloock has no italic. Newsreader italic is loaded for THIS and nothing else. */
+  /* Gloock has no italic. Newsreader italic is loaded for THIS and nothing else.
+     Enlarged for §07: the pull-quote is a scale moment, not a caption. */
   font-family: var(--font-text);
   font-style: italic;
   font-weight: 400;
-  font-size: var(--fs-quote);
-  line-height: var(--lh-quote);
+  font-size: clamp(1.75rem, 1.15rem + 2.6vw, 2.875rem);   /* 28 → 46 — the big quote */
+  line-height: 1.3;
   color: var(--ink);
-  margin: 0 0 var(--sp-3);
+  margin: 0 0 var(--sp-4);
   text-wrap: balance;
 }
 .quote__by {
@@ -628,29 +723,43 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .q-dots button[aria-current="true"] { background: var(--gold-ink); transform: scale(1.35); }
 
-/* -- press row ------------------------------------------------------- */
-.press {
+/* -- press bar ------------------------------------------------------
+   A DELIBERATE row, not scattered text: a contained hairline, a tracked
+   "As featured in" label, then the marks at one uniform optical size with
+   thin dividers between them.
+   PLACEHOLDER — no press logo assets were supplied. These are typographic
+   stand-ins, deliberately NOT imitations of the real marks. Google and Yelp
+   restrict recolouring, so the greyscale logo row needs their approved
+   assets; swap each <span> for an <img>/<svg> when the marks arrive. */
+.press-bar {
   margin-top: var(--sp-7);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-5);
+}
+.press__label { text-align: center; margin-bottom: var(--sp-4); }
+.press {
   display: flex; flex-wrap: wrap;
   align-items: center; justify-content: center;
-  gap: var(--sp-4) var(--sp-6);       /* "separated by generous spacing" */
+  gap: var(--sp-2) 0;
 }
-/* PLACEHOLDER — no press logo assets were supplied. These are typographic
-   stand-ins at a uniform optical size, deliberately NOT imitations of the
-   real marks. Google and Yelp both restrict recolouring of their logos, so
-   the greyscale row the brief asks for needs their approved assets.
-   Swap each <span> for an <img>/<svg> when the marks arrive. */
 .press__mark {
+  position: relative;
+  padding-inline: clamp(var(--sp-3), 2.4vw, var(--sp-5));
   font-family: var(--font-sans);
   font-size: var(--fs-body-sm);
   font-weight: var(--fw-semibold);
-  letter-spacing: .12em;
+  letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--ink-muted);            /* 5.06 ✓AA — monochrome, per brief */
   white-space: nowrap;
   transition: color var(--dur) var(--ease);
 }
-.press__mark:hover { color: var(--ink-soft); }
+.press__mark + .press__mark::before {
+  content: ""; position: absolute; left: 0; top: 50%;
+  width: 1px; height: 15px; transform: translateY(-50%);
+  background: var(--rule-strong);
+}
+.press__mark:hover { color: var(--ink); }
 
 /* ============================================================
    08  BLOG / CAR TALES — 3-up desktop / 1-up mobile
@@ -873,8 +982,11 @@ img { max-width: 100%; height: auto; display: block; }
   .foot-cols { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 991.98px) {
-  .card-grid { grid-template-columns: repeat(2, 1fr); }
-  .editorial { gap: var(--sp-5); }
+  .card-grid, .card-grid--trio { grid-template-columns: repeat(2, 1fr); }
+  .card-grid--duo { grid-template-columns: repeat(2, 1fr); }
+  .sec-title { font-size: clamp(2.5rem, 1rem + 6vw, 4rem); }   /* ease the big title on tablet */
+  .editorial-head { grid-template-columns: 1fr; gap: var(--sp-4); align-items: start; }
+  .editorial-head__lead { margin-bottom: var(--sp-2); }
 }
 
 /* --- mobile --------------------------------------------------------- */
@@ -930,11 +1042,17 @@ img { max-width: 100%; height: auto; display: block; }
   .search-all { margin-left: 0; text-align: center; }
 
   /* §04 / §08 — single column, full-width cards */
-  .card-grid { grid-template-columns: 1fr; gap: var(--sp-5); }
-  .section-head--split { flex-direction: row; align-items: baseline; }
+  .card-grid, .card-grid--duo, .card-grid--trio { grid-template-columns: 1fr; gap: var(--sp-5); }
+  .feat-anchor { grid-template-columns: 1fr; gap: var(--sp-3); }
+  .feat-anchor__body { max-width: none; }
+  .feat-rows > * + * { margin-top: var(--sp-5); }
 
-  /* §05 — photo above text */
-  .editorial { grid-template-columns: 1fr; gap: var(--sp-4); }
+  /* §05 — masthead stacks; panorama stays full-bleed but crops to a usable
+     ratio so it isn't a thin sliver on a narrow screen */
+  .editorial-head { grid-template-columns: 1fr; gap: var(--sp-3); }
+  .editorial__figure--bleed img {
+    aspect-ratio: 4 / 3; object-fit: cover; object-position: 32% 50%;
+  }
 
   /* §09 — columns collapse to accordions */
   .foot-cols { grid-template-columns: 1fr; gap: 0; padding-block: var(--sp-4); }
@@ -951,10 +1069,12 @@ img { max-width: 100%; height: auto; display: block; }
   .foot-bottom .wrap { flex-direction: column; align-items: flex-start; }
 }
 
-@media (max-width: 480px) {
-  /* press row: 2 per line, per brief */
-  .press { gap: var(--sp-3) var(--sp-4); }
-  .press__mark { flex: 0 0 calc(50% - var(--sp-4)); text-align: center; }
+@media (max-width: 767.98px) {
+  /* press bar wraps to a centred cluster; dividers off so a row-start mark
+     never carries a stray leading rule */
+  .press { gap: var(--sp-2) var(--sp-3); }
+  .press__mark { padding-inline: var(--sp-2); }
+  .press__mark + .press__mark::before { display: none; }
 }
 
 /* Small AND short phones (e.g. 360×640) — the tightest case in the whole set.
