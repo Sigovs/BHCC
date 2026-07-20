@@ -252,10 +252,12 @@
   /* ============================================================
      FOUNDER — split
      ============================================================ */
-  .founder { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(36px, 5vw, 80px); align-items: center; }
+  /* full-bleed founder — photo runs to the left screen edge, copy sits right */
+  .founder-sec { padding-block: 0; }
+  .founder { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
   .founder__media { overflow: hidden; background: var(--bg-deep); }
-  .founder__media img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; object-position: 50% 42%; }
-  .founder__body { max-width: 44ch; }
+  .founder__media img { width: 100%; height: 100%; min-height: clamp(480px, 62vh, 760px); object-fit: cover; object-position: 50% 45%; }
+  .founder__body { align-self: center; max-width: 600px; padding: clamp(44px, 6vw, 96px) clamp(24px, 5vw, 84px); }
   .founder__body .eyebrow { display: block; margin-bottom: 20px; }
   .founder__quote {
     font-family: var(--font-display); font-weight: 400; color: var(--ink);
@@ -370,8 +372,9 @@
     .hdr__actions .btn { display: none; }
     .hdr__actions .hdr__phone { display: none; }
     .hdr__burger { display: block; }
-    .founder { grid-template-columns: 1fr; gap: 32px; }
-    .founder__media img { min-height: 360px; }
+    .founder { grid-template-columns: 1fr; }
+    .founder__media img { min-height: 340px; }
+    .founder__body { padding: 32px var(--container-pad) 8px; }
     .footer__grid { grid-template-columns: 1fr 1fr; gap: 40px 32px; }
     .footer__brand { grid-column: 1 / -1; }
   }
@@ -543,11 +546,10 @@
 <!-- ============================================================
      FOUNDER
      ============================================================ -->
-<section class="section section--tint" aria-labelledby="founder-h">
-  <div class="shell">
+<section class="founder-sec section--tint" aria-labelledby="founder-h">
     <div class="founder">
       <figure class="founder__media">
-        <img src="assets/images/alex-editorial.jpg?v=1" alt="Alex Manos among the classic cars in the Beverly Hills Car Club showroom" loading="lazy" width="1280" height="676">
+        <img src="assets/images/founder-ferrari.jpg" alt="Alex Manos beside a red Ferrari 308 GTS" loading="lazy" width="1200" height="1077">
       </figure>
       <div class="founder__body">
         <span class="eyebrow">Alex Manos, Founder</span>
@@ -558,7 +560,6 @@
         </div>
       </div>
     </div>
-  </div>
 </section>
 
 <!-- ============================================================
