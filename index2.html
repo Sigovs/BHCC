@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beverly Hills Car Club by Alex Manos</title>
+<meta name="description" content="The world's largest dealer of European and American classic cars. Los Angeles.">
+
+<!-- ============================================================
+     CLEAN SLATE — index2
+     Only the final type system and colour survive here. No section
+     layout, no old CSS. tokens.css is the single source of truth
+     (fonts + measured palette + fluid scale + spacing). Build sections
+     from scratch below <main>.
+
+     Type:   Gloock 400 (display) · Newsreader italic (quotes only) ·
+             Inter Tight 400–600 (body / UI). 84.9 KB latin.
+     Colour: warm off-white base, warm ink, one gold at two levels —
+             all ratios measured, see tokens.css.
+     ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital@1&family=Inter+Tight:wght@400..600&display=swap" rel="stylesheet">
+
+<link rel="icon" href="assets/images/favicon-32.png" type="image/png">
+<link rel="stylesheet" href="assets/css/tokens.css?v=9">
+
+<style>
+  /* --- minimal reset --- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body, h1, h2, h3, h4, h5, h6, p, figure, blockquote { margin: 0; }
+  img, picture, video { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+
+  /* --- base: type system + colour, straight from tokens.css --- */
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    font-weight: var(--fw-body);
+    font-synthesis: none;              /* Gloock is single-weight — never fake a bold */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: var(--fw-heading);
+    letter-spacing: var(--ls-h2);
+    color: var(--ink);
+  }
+  h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); }
+  h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); }
+  h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .quote {                              /* Newsreader italic — the only place it lives */
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: var(--fs-quote);
+    line-height: var(--lh-quote);
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<main id="main">
+
+  <!-- ============================================================
+       Nothing built yet. Start here. The type and palette above
+       are live and final — build sections against these tokens.
+       ============================================================ -->
+
+</main>
+
+</body>
+</html>
