@@ -231,6 +231,16 @@
   .card { display: block; }
   .card figure { overflow: hidden; background: var(--bg-deep); }
   .card img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+  /* horizontal view — image left, details right; 2 across */
+  .cards--h { grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 3vw, 48px) clamp(24px, 2.6vw, 40px); }
+  .card--h { display: grid; grid-template-columns: 56% 1fr; gap: clamp(16px, 1.6vw, 24px); align-items: center; }
+  .card--h figure { aspect-ratio: 16 / 9; align-self: center; }
+  .card--h img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
+  .card--h .card__meta { flex-direction: column; align-items: flex-start; justify-content: center; gap: 7px; margin-top: 0; }
+  .card--h .card__view { display: inline-flex; align-items: center; gap: 7px; margin-top: 6px; font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink-soft); }
+  .card--h .card__view .a { transition: transform var(--dur) var(--ease); }
+  .card--h:hover .card__view { color: var(--gold-ink); }
+  .card--h:hover .card__view .a { transform: translateX(4px); }
   .card:hover img { transform: scale(var(--img-hover-scale)); }
   .card__meta { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 18px; }
   .card__title {
@@ -485,26 +495,53 @@
       <h2 id="feat-h">Featured classics</h2>
     </div>
 
-    <div class="cards">
-      <a class="card" href="/inventory.htm">
-        <figure><img src="assets/images/inventory/bentley-s2-continental.jpg?v=1" alt="1960 Bentley S2 Continental in silver over burgundy on a palm-lined Beverly Hills street" loading="lazy" width="600" height="400"></figure>
+    <div class="cards cards--h">
+      <a class="card card--h" href="https://www.beverlyhillscarclub.com/inventory.htm">
+        <figure><img src="assets/images/inventory-real/1959-porsche-356a-cabriolet.jpg" alt="1959 Porsche 356A Cabriolet" loading="lazy" width="1200" height="675"></figure>
         <div class="card__meta">
-          <h3 class="card__title">1960 Bentley S2 Continental</h3>
-          <span class="card__price mono">$265,000</span>
-        </div>
-      </a>
-      <a class="card" href="/inventory.htm">
-        <figure><img src="assets/images/inventory/aston-martin-dbs.jpg?v=1" alt="1970 Aston Martin DBS in Dover White" loading="lazy" width="600" height="400"></figure>
-        <div class="card__meta">
-          <h3 class="card__title">1970 Aston Martin DBS</h3>
-          <span class="card__price mono">$149,500</span>
-        </div>
-      </a>
-      <a class="card" href="/inventory.htm">
-        <figure><img src="assets/images/inventory/austin-healey-100-4.jpg?v=1" alt="1955 Austin-Healey 100-4 BN1 roadster in black" loading="lazy" width="600" height="400"></figure>
-        <div class="card__meta">
-          <h3 class="card__title">1955 Austin-Healey 100-4</h3>
+          <h3 class="card__title">1959 Porsche 356A Cabriolet</h3>
           <span class="card__price mono">$89,500</span>
+          <span class="card__view">View details <span class="a" aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="card card--h" href="https://www.beverlyhillscarclub.com/inventory.htm">
+        <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series 1 Roadster" loading="lazy" width="1200" height="675"></figure>
+        <div class="card__meta">
+          <h3 class="card__title">1962 Jaguar XKE Roadster</h3>
+          <span class="card__price mono">$99,500</span>
+          <span class="card__view">View details <span class="a" aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="card card--h" href="https://www.beverlyhillscarclub.com/inventory.htm">
+        <figure><img src="assets/images/inventory-real/1964-mercedes-230sl-pagoda.jpg" alt="1964 Mercedes-Benz 230SL Pagoda" loading="lazy" width="1200" height="675"></figure>
+        <div class="card__meta">
+          <h3 class="card__title">1964 Mercedes-Benz 230SL Pagoda</h3>
+          <span class="card__price mono">$64,500</span>
+          <span class="card__view">View details <span class="a" aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="card card--h" href="https://www.beverlyhillscarclub.com/1969-aston-martin-dbs-left-hand-drive-c-16944.htm">
+        <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="675"></figure>
+        <div class="card__meta">
+          <h3 class="card__title">1969 Aston Martin DBS</h3>
+          <span class="card__price mono">$59,950</span>
+          <span class="card__view">View details <span class="a" aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="card card--h" href="https://www.beverlyhillscarclub.com/1959-austin-healey-100-6-convertible-sports-car-c-18315.htm">
+        <figure><img src="assets/images/inventory-real/1959-austin-healey-100-6.jpg" alt="1959 Austin-Healey 100-6 Convertible" loading="lazy" width="1200" height="675"></figure>
+        <div class="card__meta">
+          <h3 class="card__title">1959 Austin-Healey 100-6</h3>
+          <span class="card__price mono">$19,750</span>
+          <span class="card__view">View details <span class="a" aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="card card--h" href="https://www.beverlyhillscarclub.com/inventory.htm">
+        <figure><img src="assets/images/inventory-real/1963-alfa-romeo-giulia-spider.jpg" alt="1963 Alfa Romeo Giulia Spider" loading="lazy" width="1200" height="675"></figure>
+        <div class="card__meta">
+          <h3 class="card__title">1963 Alfa Romeo Giulia Spider</h3>
+          <span class="card__price mono">$16,750</span>
+          <span class="card__view">View details <span class="a" aria-hidden="true">→</span></span>
         </div>
       </a>
     </div>
