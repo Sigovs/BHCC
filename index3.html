@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beverly Hills Car Club by Alex Manos</title>
+<meta name="description" content="The world's largest dealer of European and American classic cars. Los Angeles.">
+
+<!-- LIGHT DIRECTION — index3. Editorial / off-white, per the brief's own
+     "Light / off-white base · editorial · sophisticated · Headline centered".
+     Hero is an inset frame on the warm page, not a full-bleed dark screen.
+     Same final tokens (Gloock / Newsreader / Inter Tight). -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital@1&family=Inter+Tight:wght@300..600&display=swap" rel="stylesheet">
+
+<link rel="icon" href="assets/images/favicon-32.png" type="image/png">
+<link rel="stylesheet" href="assets/css/tokens.css?v=9">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body, h1, h2, h3, p, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img, picture, video { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap { max-width: 1440px; margin-inline: auto; padding-inline: clamp(24px, 4vw, 56px); }
+
+  /* ---------- header (light, over the page) ---------- */
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250,249,246,.86);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(26,26,24,.06);
+  }
+  .site-header .wrap { display: flex; align-items: center; gap: 32px; height: 76px; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; }
+  .brand img { height: 40px; width: auto; }
+  .brand b {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 13px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--gold-ink); white-space: nowrap;
+  }
+  .site-nav { margin-left: auto; }
+  .site-nav ul { display: flex; align-items: center; gap: clamp(16px, 1.6vw, 26px); }
+  .site-nav a { font-size: 15px; font-weight: 400; color: var(--ink-soft); transition: color .2s; }
+  .site-nav a:hover { color: var(--gold-ink); }
+  .header-tel { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; color: var(--ink); white-space: nowrap; }
+  .header-tel svg { width: 16px; height: 16px; }
+  .btn { display: inline-flex; align-items: center; height: 42px; padding: 0 20px; font-size: 14px; font-weight: 500; white-space: nowrap; transition: all .2s; }
+  .btn--gold { background: var(--gold-ink); color: #fff; }
+  .btn--gold:hover { background: #765a29; }
+  .btn--outline { border: 1px solid var(--ink); color: var(--ink); }
+  .btn--outline:hover { background: var(--ink); color: var(--bg); }
+
+  /* ---------- hero (inset frame on the page) ---------- */
+  .hero { padding: clamp(16px, 1.6vw, 24px) clamp(24px, 4vw, 56px) 0; }
+  .hero__frame {
+    position: relative; overflow: hidden;
+    max-width: 1440px; margin-inline: auto;
+    height: clamp(520px, 78vh, 820px);
+    display: grid; align-content: start; justify-items: center; text-align: center;
+    padding-top: clamp(56px, 9vh, 104px);
+    isolation: isolate; background: #0c0f10;
+  }
+  .hero__frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 92%; z-index: -2; }
+  .hero__frame::after {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(to bottom, rgba(8,10,11,.55) 0%, rgba(8,10,11,.28) 34%, rgba(8,10,11,.04) 58%, rgba(8,10,11,.12) 100%),
+      radial-gradient(90% 60% at 50% 26%, rgba(8,10,11,.30) 0%, rgba(8,10,11,0) 70%);
+  }
+  .hero__inner { max-width: 780px; padding: 0 24px; }
+  .hero__title {
+    font-family: var(--font-display); font-weight: 400; color: #fff;
+    line-height: 1.02; letter-spacing: -.015em;
+    font-size: clamp(2.4rem, 5vw, 4.25rem);
+  }
+  .hero__title .sig { font-family: var(--font-text); font-style: italic; font-weight: 400; font-size: .5em; display: block; margin-top: .18em; color: rgba(255,255,255,.9); }
+  .hero__sub { margin: clamp(16px,2vw,22px) auto 0; max-width: 46ch; font-weight: 300; font-size: clamp(15px,1.3vw,19px); line-height: 1.5; color: rgba(255,255,255,.9); }
+  .hero__ctas { display: flex; gap: 14px; justify-content: center; margin-top: clamp(24px,3vw,36px); flex-wrap: wrap; }
+  .ghost { display: inline-flex; align-items: center; height: 50px; padding: 0 28px; font-size: 15px; color: #fff; border: 1px solid rgba(255,255,255,.7); transition: all .2s; }
+  .ghost:hover { background: #fff; color: var(--ink); }
+  .ghost--soft { border-color: rgba(255,255,255,.4); }
+
+  /* ---------- search band (brief §03) ---------- */
+  .search-band { border-bottom: 1px solid rgba(26,26,24,.08); }
+  .search-band .wrap { display: flex; align-items: center; gap: 24px; height: 84px; }
+  .search-band__num { font-size: 13px; color: var(--ink-muted); }
+  .search-form { flex: 1; display: flex; justify-content: center; }
+  .search-form__field { position: relative; width: min(560px, 100%); }
+  .search-form__field input {
+    width: 100%; height: 48px; padding: 0 46px 0 18px;
+    background: var(--bg-deep); border: 1px solid rgba(26,26,24,.10);
+    font-family: var(--font-sans); font-size: 15px; color: var(--ink);
+  }
+  .search-form__field input::placeholder { color: var(--ink-muted); }
+  .search-form__field .ic { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-muted); }
+  .browse-all { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: var(--ink); white-space: nowrap; }
+  .browse-all:hover { color: var(--gold-ink); }
+
+  @media (max-width: 860px) {
+    .site-nav, .header-tel, .header-ctas .btn--outline { display: none; }
+    .search-band .wrap { flex-direction: column; height: auto; padding-block: 20px; gap: 14px; }
+    .hero__title .sig { font-size: .46em; }
+  }
+</style>
+</head>
+<body>
+
+<!-- header -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Beverly Hills Car Club by Alex Manos">
+      <img src="assets/images/logo-shield-hi.png?v=2" alt="">
+      <b>Beverly Hills Car Club</b>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/inventory.htm">Inventory</a></li>
+        <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
+        <li><a href="/about.htm">About</a></li>
+        <li><a href="/blog.htm">Blog</a></li>
+        <li><a href="/how-to-buy.htm">How to Buy</a></li>
+        <li><a href="/contact.htm">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="header-tel" href="tel:+13109750272" aria-label="Call (310) 975-0272">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z"/></svg>
+      <span>(310) 975-0272</span>
+    </a>
+    <div class="header-ctas" style="display:inline-flex; gap:10px;">
+      <a class="btn btn--outline" href="/inventory.htm">Browse Cars</a>
+      <a class="btn btn--gold" href="/sell-your-car.htm">Sell Your Car</a>
+    </div>
+  </div>
+</header>
+
+<!-- hero: inset frame -->
+<section class="hero">
+  <figure class="hero__frame">
+    <img src="assets/images/hero-canyon.jpg" alt="A 1957 Mercedes-Benz 300SL Roadster on a canyon road above Los Angeles">
+    <div class="hero__inner">
+      <h1 class="hero__title">Beverly Hills Car Club<span class="sig">by Alex Manos</span></h1>
+      <p class="hero__sub">The world's largest dealer of European and American classic cars.</p>
+      <div class="hero__ctas">
+        <a class="ghost" href="/inventory.htm">Browse inventory</a>
+        <a class="ghost ghost--soft" href="/sell-your-car.htm">Sell your classic</a>
+      </div>
+    </div>
+  </figure>
+</section>
+
+<!-- search band -->
+<section class="search-band" aria-label="Search inventory">
+  <div class="wrap">
+    <form class="search-form" action="/inventory.htm" role="search">
+      <div class="search-form__field">
+        <input type="search" placeholder="Search by make, model, year…" aria-label="Search inventory">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
+    </form>
+    <a class="browse-all" href="/inventory.htm">Browse all inventory <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+</body>
+</html>
