@@ -3,232 +3,381 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Beverly Hills Car Club by Alex Manos</title>
+<title>Beverly Hills Car Club by Alex Manos — Classics, after dark</title>
 <meta name="description" content="The world's largest dealer of European and American classic cars. Los Angeles.">
 
-<!-- CLEAN SLATE — index2. Type + colour from tokens.css. Hero built to the Figma
-     proto (node 2002:730): transparent header over a canyon frame, left lockup,
-     glass CTAs, a Play Video pill. Title set in Gloock (our final display face),
-     not the Figma outlines. -->
+<!-- ============================================================
+     index2.html — "NIGHT DRIVE" award concept (bold variant).
+     Standalone dark cinematic homepage. Does NOT share the light
+     theme of index.html (the client-final Figma hero). Night art
+     is AI-generated (fal-ai FLUX1.1 pro ultra) + composited cutout.
+     ============================================================ -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital@1&family=Inter+Tight:wght@300..600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <link rel="icon" href="assets/images/favicon-32.png" type="image/png">
-<link rel="stylesheet" href="assets/css/tokens.css?v=9">
-
-<style>
-  /* ---------- minimal reset ---------- */
-  *, *::before, *::after { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body, h1, h2, h3, p, figure, ul { margin: 0; }
-  ul { padding: 0; list-style: none; }
-  img, picture, video { display: block; max-width: 100%; }
-  a { color: inherit; text-decoration: none; }
-  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-
-  /* ---------- base: type + colour from tokens ---------- */
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    font-size: var(--fs-body);
-    line-height: var(--lh-body);
-    font-synthesis: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-
-  /* ============================================================
-     HERO — Figma proto 2002:730
-     ============================================================ */
-  .hero {
-    position: relative;
-    min-height: 100svh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    overflow: hidden;
-    background: #070a0b;                 /* Figma base under the frame */
-    isolation: isolate;
-  }
-
-  /* --- background frame + overlay --- */
-  .hero__media { position: absolute; inset: 0; z-index: -2; }
-  .hero__media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: 66% 82%;            /* pull focus down the frame → car rides higher on screen */
-    transform: scale(1.12);              /* zoom creates the vertical headroom object-position needs */
-    transform-origin: 66% 100%;
-  }
-  .hero__scrim {
-    position: absolute; inset: 0; z-index: -1;
-    background:
-      linear-gradient(100deg, rgba(7,10,11,.74) 0%, rgba(7,10,11,.45) 34%, rgba(7,10,11,.05) 62%, rgba(7,10,11,0) 80%),
-      linear-gradient(to bottom, rgba(7,10,11,.30) 0%, rgba(7,10,11,0) 26%, rgba(7,10,11,0) 62%, rgba(7,10,11,.42) 100%);
-  }
-
-  /* --- shared page gutter (Figma content sits at x≈239/1920) --- */
-  .hero__row { padding-inline: clamp(24px, 7vw, 116px); }
-
-  /* --- header --- */
-  .hero__header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px;
-    padding-top: clamp(18px, 2.2vw, 30px);
-    padding-bottom: 12px;
-  }
-  .brand { display: inline-flex; align-items: center; gap: 16px; }
-  .brand__shield { width: auto; height: clamp(64px, 6.4vw, 104px); }
-  .brand__sig { width: auto; height: clamp(22px, 2vw, 32px); opacity: .95; }
-
-  .hero__nav ul { display: flex; align-items: center; gap: clamp(18px, 2vw, 34px); }
-  .hero__nav a {
-    font-family: var(--font-sans);
-    font-weight: 300;
-    font-size: clamp(14px, 1.1vw, 18px);
-    color: #fff;
-    letter-spacing: .01em;
-    padding-block: 6px;
-    transition: color .2s ease;
-  }
-  .hero__nav a:hover { color: var(--gold); }
-
-  /* --- centre lockup --- */
-  .hero__content {
-    align-self: center;
-    padding-top: clamp(24px, 6vh, 80px);
-    max-width: 760px;
-  }
-  .hero__title {
-    font-family: var(--font-display);
-    font-weight: 400;
-    color: #fff;
-    line-height: .98;
-    letter-spacing: -.015em;
-    font-size: var(--fs-hero);           /* 30 → 96, height-aware */
-  }
-  .hero__title .l { display: block; white-space: nowrap; }   /* Beverly Hills / Car Club — always two lines */
-  .hero__title .sig {
-    font-family: var(--font-text);       /* Newsreader italic — our editorial cursive */
-    font-style: italic;
-    font-weight: 400;
-    font-size: .34em;
-    letter-spacing: 0;
-    color: rgba(255,255,255,.92);
-    margin-left: .28em;
-    vertical-align: baseline;
-    white-space: nowrap;
-  }
-  .hero__sub {
-    margin-top: clamp(18px, 2.4vw, 28px);
-    max-width: 30ch;
-    font-family: var(--font-sans);
-    font-weight: 300;
-    font-size: clamp(16px, 1.4vw, 20px);
-    line-height: 1.5;
-    color: rgba(255,255,255,.90);
-  }
-
-  /* --- bottom action row --- */
-  .hero__actions {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px; flex-wrap: wrap;
-    padding-bottom: clamp(48px, 13vh, 120px);   /* Figma proto: buttons sit ~13% off the bottom edge, not jammed to it */
-  }
-  .hero__ctas { display: flex; gap: 16px; flex-wrap: wrap; }
-
-  /* glass buttons (Figma: backdrop-blur, translucent, radius 5) */
-  .glass {
-    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    height: 50px; padding: 0 26px;
-    border-radius: 5px;
-    font-family: var(--font-sans);
-    font-weight: 400; font-size: 16px; color: #fff;
-    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    background: rgba(217,217,217,.16);
-    border: 1px solid rgba(255,255,255,.14);
-    transition: background .22s ease, border-color .22s ease, transform .22s ease;
-  }
-  .glass:hover { background: rgba(217,217,217,.26); transform: translateY(-1px); }
-  .glass--fill { background: rgba(217,217,217,.22); border-color: rgba(255,255,255,.20); }
-  .glass--outline { background: rgba(217,217,217,.10); border-color: #6b716f; }
-  .glass--pill { border-radius: 999px; padding: 0 28px; }
-  .glass--pill .tri {
-    width: 0; height: 0;
-    border-style: solid; border-width: 6px 0 6px 10px;
-    border-color: transparent transparent transparent #fff;
-  }
-
-  /* ---------- desktop refinements ---------- */
-  @media (min-width: 900px) {
-    .hero__title { font-size: clamp(3rem, 6.2vw, 5.75rem); }
-  }
-
-  /* ---------- mobile ---------- */
-  @media (max-width: 640px) {
-    .hero { min-height: 88svh; grid-template-rows: auto 1fr auto; }
-    .hero__nav { display: none; }              /* burger comes when we build nav */
-    .hero__title .sig { display: inline-block; margin-left: 0; }
-    .hero__actions { flex-direction: column; align-items: stretch; }
-    .hero__ctas { flex-direction: column; }
-    .glass { width: 100%; }
-    .hero__actions .glass--pill { order: -1; }
-  }
-</style>
+<link rel="preload" as="image" href="assets/images/night/hero-plate.jpg" fetchpriority="high">
+<link rel="stylesheet" href="assets/css/night.css?v=4">
+<script>document.documentElement.className += ' js';</script>
 </head>
 <body>
 
-<section class="hero">
-  <div class="hero__media">
+<!-- ============================ HEADER (§01) ============================ -->
+<header class="site-head">
+  <div class="site-head__in">
+    <a class="wordmark" href="/" aria-label="Beverly Hills Car Club by Alex Manos — home">
+      <span class="wordmark__name">Beverly Hills Car Club</span>
+      <span class="wordmark__by">by Alex Manos</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#collection">The Collection</a>
+      <a href="#founder">The Founder</a>
+      <a href="#tales">Journal</a>
+    </nav>
+
+    <div class="site-head__cluster">
+      <a class="site-head__tel" href="tel:+13109750272">(310)&nbsp;975-0272</a>
+      <a class="btn btn--sm btn--outline-amber" href="#collection">Inventory</a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile overlay menu -->
+<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile">
+  <button class="mobile-menu__close" type="button" aria-label="Close menu">Close ✕</button>
+  <a href="#collection">The Collection</a>
+  <a href="#founder">The Founder</a>
+  <a href="#sell">Sell Your Car</a>
+  <a href="#tales">Journal</a>
+  <a class="mobile-menu__tel" href="tel:+13109750272">(310) 975-0272</a>
+</nav>
+
+<!-- ============================ HERO (§02) ============================ -->
+<section class="hero" aria-label="Beverly Hills Car Club — classics, after dark">
+  <div class="hero__bg">
     <picture>
-      <source media="(max-width: 700px)" srcset="assets/images/hero-canyon-sm.jpg">
-      <img src="assets/images/hero-canyon.jpg" alt="A 1957 Mercedes-Benz 300SL Roadster on a canyon road above Los Angeles" fetchpriority="high">
+      <source media="(max-width: 700px)" srcset="assets/images/night/hero-plate-sm.jpg">
+      <img src="assets/images/night/hero-plate.jpg" alt="Mulholland Drive at night, the lights of Los Angeles glittering in the valley far below" fetchpriority="high">
     </picture>
   </div>
   <div class="hero__scrim"></div>
 
-  <!-- header over the frame -->
-  <header class="hero__header hero__row">
-    <a class="brand" href="/" aria-label="Beverly Hills Car Club by Alex Manos — home">
-      <img class="brand__shield" src="assets/images/logo-shield-hi.png?v=2" alt="" width="123" height="124">
-      <img class="brand__sig" src="assets/images/logo-signature-cream.png" alt="" width="155" height="34">
-    </a>
-    <nav class="hero__nav" aria-label="Main">
-      <ul>
-        <li><a href="/inventory.htm">Inventory</a></li>
-        <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
-        <li><a href="/about.htm">About</a></li>
-        <li><a href="/blog.htm">Blog</a></li>
-        <li><a href="/how-to-buy.htm">How to Buy</a></li>
-        <li><a href="/contact.htm">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+  <p class="hero__eyebrow">The world's largest dealer of European &amp; American <span>classic cars</span></p>
+  <span class="hero__edge">Est. Los Angeles</span>
 
-  <!-- centre lockup -->
-  <div class="hero__content hero__row">
-    <h1 class="hero__title">
-      <span class="l">Beverly Hills</span>
-      <span class="l">Car Club<em class="sig">by Alex Manos</em></span>
-    </h1>
-    <p class="hero__sub">The world's largest dealer of European and American classic cars.</p>
+  <h1 class="hero__word" aria-label="Classics">Classics</h1>
+  <picture>
+    <source media="(max-width: 640px)" type="image/webp" srcset="assets/images/night/hero-car-sm.webp">
+    <source media="(max-width: 640px)" srcset="assets/images/night/hero-car-sm.png">
+    <source type="image/webp" srcset="assets/images/night/hero-car.webp">
+    <img class="hero__car" src="assets/images/night/hero-car.png" width="1800" height="1074"
+         alt="A red 1957 Mercedes-Benz 300SL Gullwing, headlights aglow, doors raised">
+  </picture>
+
+  <div class="hero__cta">
+    <a class="btn btn--amber" href="#collection">Browse inventory</a>
+    <a class="btn btn--ghost" href="#sell">Sell your classic</a>
   </div>
 
-  <!-- bottom actions -->
-  <div class="hero__actions hero__row">
-    <div class="hero__ctas">
-      <a class="glass glass--fill" href="/inventory.htm">Browse Our Inventory</a>
-      <a class="glass glass--outline" href="/sell-your-car.htm">Sell Your Classic</a>
+  <a class="hero__scroll" href="#ticker" aria-label="Scroll to explore">
+    <span>Scroll</span>
+    <span class="line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<!-- ============================ TICKER (§03) ============================ -->
+<div class="ticker" id="ticker" aria-label="Showroom marquee">
+  <div class="ticker__track" aria-hidden="false">
+    <div class="ticker__group">
+      <span class="ticker__item is-strong">300+ cars in showroom</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Porsche</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Ferrari</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Mercedes-Benz</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Jaguar</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Aston Martin</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item is-strong">We buy classic cars</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">(310) 975-0272</span><span class="ticker__dot">◆</span>
     </div>
-    <button class="glass glass--pill" type="button" aria-label="Play video">
-      <span class="tri" aria-hidden="true"></span>
-      <span>Play Video</span>
-    </button>
+    <div class="ticker__group" aria-hidden="true">
+      <span class="ticker__item is-strong">300+ cars in showroom</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Porsche</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Ferrari</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Mercedes-Benz</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Jaguar</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">Aston Martin</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item is-strong">We buy classic cars</span><span class="ticker__dot">◆</span>
+      <span class="ticker__item">(310) 975-0272</span><span class="ticker__dot">◆</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ COLLECTION (§04) ============================ -->
+<section class="section section--collection collection" id="collection" aria-labelledby="collection-h">
+  <span class="ghost-num" aria-hidden="true">01</span>
+  <div class="wrap">
+    <div class="collection__intro">
+      <div data-reveal>
+        <span class="eyebrow">The Collection</span>
+        <h2 class="h-serif" id="collection-h" style="margin-top:1rem;">Featured classics</h2>
+      </div>
+      <a class="a-link" href="#collection" data-reveal>View all inventory <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+
+    <!-- huge 21:9 lead -->
+    <figure class="lead-car" data-reveal="up-lg">
+      <div class="lead-car__frame">
+        <img src="assets/images/night/collection-hero.jpg" alt="A 1965 Ferrari 275 GTB in oxblood red under studio rim light" loading="lazy" width="2400" height="1007">
+        <figcaption class="car-label">
+          <span class="car-label__name">1965 Ferrari 275 GTB</span>
+          <span class="car-label__meta">
+            <span class="car-label__price">$2,650,000</span>
+            <span class="car-label__tag">Coachwork by Scaglietti</span>
+          </span>
+        </figcaption>
+      </div>
+    </figure>
+
+    <!-- staggered "road" grid -->
+    <div class="road">
+      <article class="road__card" data-reveal>
+        <a class="road__frame road__frame--tall" href="#collection">
+          <img src="assets/images/night/car-porsche.jpg" alt="A silver 1973 Porsche 911 Carrera RS at night" loading="lazy" width="1400" height="1738">
+        </a>
+        <div class="road__label">
+          <span class="road__name">1973 Porsche 911 Carrera RS</span>
+          <span class="road__price">$895,000</span>
+        </div>
+      </article>
+
+      <article class="road__card road__card--offset" data-reveal>
+        <a class="road__frame road__frame--wide" href="#collection">
+          <img src="assets/images/night/car-jaguar.jpg" alt="A British racing green 1961 Jaguar E-Type Series 1 roadster" loading="lazy" width="1800" height="1200">
+        </a>
+        <div class="road__label">
+          <span class="road__name">1961 Jaguar E-Type S1</span>
+          <span class="road__price">$265,000</span>
+        </div>
+      </article>
+
+      <article class="road__card" data-reveal>
+        <a class="road__frame road__frame--wide" href="#collection">
+          <img src="assets/images/night/car-aston.jpg" alt="A silver 1964 Aston Martin DB5 under studio rim light" loading="lazy" width="1800" height="1200">
+        </a>
+        <div class="road__label">
+          <span class="road__name">1964 Aston Martin DB5</span>
+          <span class="road__price">$1,150,000</span>
+        </div>
+      </article>
+
+      <article class="road__card road__card--offset" data-reveal>
+        <a class="road__frame road__frame--tall" href="#collection">
+          <img src="assets/images/night/car-merc.jpg" alt="A cream 1968 Mercedes-Benz 280SL Pagoda at night" loading="lazy" width="1400" height="1738">
+        </a>
+        <div class="road__label">
+          <span class="road__name">1968 Mercedes-Benz 280SL</span>
+          <span class="road__price">$189,500</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="collection__foot" data-reveal>
+      <a class="btn btn--ghost" href="#collection">View all 300+ classics</a>
+    </div>
   </div>
 </section>
 
+<!-- ============================ FOUNDER (§05) ============================ -->
+<section class="section section--founder" id="founder" aria-labelledby="founder-h">
+  <div class="founder">
+    <figure class="founder__media">
+      <img src="assets/images/night/founder.jpg" alt="Alex Manos leaning on a classic car at night under a streetlight" loading="lazy" width="1500" height="1862">
+    </figure>
+    <div class="founder__body">
+      <span class="ghost-num" aria-hidden="true">02</span>
+      <span class="eyebrow founder__eyebrow" data-reveal>Alex Manos, Founder</span>
+      <h2 class="founder__statement" id="founder-h" data-reveal>
+        <span>Twenty years.</span>
+        <span>The world's finest automobiles.</span>
+        <span class="accent">One obsession.</span>
+      </h2>
+      <p class="founder__p" data-reveal>
+        What began with a single car in Los Angeles is now the largest classic-car dealer in
+        the world. Every automobile is chosen the way it was in the beginning — by hand, by eye,
+        and by an unreasonable standard of what a great car should be.
+      </p>
+      <a class="a-link founder__cta" href="#founder" data-reveal>Read Alex's story <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SELL (§06) ============================ -->
+<section class="sell" id="sell" aria-labelledby="sell-h">
+  <div class="wrap sell__in">
+    <div data-reveal>
+      <h2 class="sell__head" id="sell-h">We buy classic cars.</h2>
+      <p class="sell__sub">Any condition. Nationwide. Immediate payment.</p>
+    </div>
+    <div class="sell__aside" data-reveal>
+      <a class="btn btn--dark" href="#sell">Sell Today</a>
+      <a class="sell__tel" href="tel:+13109750272"><small>Speak with a specialist</small>(310) 975-0272</a>
+      <p class="sell__cred">Over $250M in classic cars purchased since 2005.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TESTIMONIALS (§07) ============================ -->
+<section class="section section--quotes" aria-label="What our clients say">
+  <div class="wrap">
+    <div class="quotes__in">
+      <div class="quotes__spot" aria-hidden="true"></div>
+      <div class="quotes__mark" aria-hidden="true">&ldquo;</div>
+      <div class="quotes__stage">
+        <figure class="quote is-active">
+          <blockquote class="quote__text">The most seamless transaction I've had in forty years of collecting. The car arrived exactly as promised.</blockquote>
+          <figcaption class="quote__by">James H. <span>· Collector, Greenwich CT</span></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__text">They found the exact Pagoda I'd chased for a decade. Impeccable, honest, effortless.</blockquote>
+          <figcaption class="quote__by">Marcus R. <span>· Los Angeles CA</span></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__text">From first call to enclosed delivery — pure class. This is how buying a classic should feel.</blockquote>
+          <figcaption class="quote__by">David L. <span>· London UK</span></figcaption>
+        </figure>
+      </div>
+      <div class="quotes__dots" role="tablist" aria-label="Testimonials">
+        <button class="quotes__dot is-active" role="tab" aria-selected="true" aria-label="Testimonial 1"></button>
+        <button class="quotes__dot" role="tab" aria-selected="false" aria-label="Testimonial 2"></button>
+        <button class="quotes__dot" role="tab" aria-selected="false" aria-label="Testimonial 3"></button>
+      </div>
+
+      <div class="press" aria-label="As featured in">
+        <span class="press__logo">Hemmings</span>
+        <span class="press__logo">The Hollywood Reporter</span>
+        <span class="press__logo">Total 911</span>
+        <span class="press__logo">Google</span>
+        <span class="press__logo">Yelp</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CAR TALES (§08) ============================ -->
+<section class="section section--tales tales" id="tales" aria-labelledby="tales-h">
+  <span class="ghost-num" aria-hidden="true">03</span>
+  <div class="wrap">
+    <div class="tales__intro">
+      <div data-reveal>
+        <span class="eyebrow">Car Tales</span>
+        <h2 class="h-serif" id="tales-h" style="margin-top:1rem;">From the Journal</h2>
+      </div>
+      <a class="a-link" href="#tales" data-reveal>See all articles <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="tales__grid">
+      <article class="tale" data-reveal>
+        <a class="tale__frame" href="#tales">
+          <img src="assets/images/night/tale-1.jpg" alt="A classic sports car lit by tungsten light in a dark garage" loading="lazy" width="1600" height="893">
+        </a>
+        <p class="tale__date">March 2026</p>
+        <h3 class="tale__title">Why the 300SL Gullwing still owns the night</h3>
+        <div class="tale__rule"></div>
+      </article>
+
+      <article class="tale" data-reveal>
+        <a class="tale__frame" href="#tales">
+          <img src="assets/images/night/tale-2.jpg" alt="Close-up of a glowing chrome headlight under warm light" loading="lazy" width="1600" height="893">
+        </a>
+        <p class="tale__date">February 2026</p>
+        <h3 class="tale__title">The art of the concours headlight</h3>
+        <div class="tale__rule"></div>
+      </article>
+
+      <article class="tale" data-reveal>
+        <a class="tale__frame" href="#tales">
+          <img src="assets/images/night/tale-3.jpg" alt="A vintage engine bay open under a warm inspection lamp" loading="lazy" width="1600" height="893">
+        </a>
+        <p class="tale__date">January 2026</p>
+        <h3 class="tale__title">Inside the engine bay: a restorer's craft</h3>
+        <div class="tale__rule"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FOOTER (§09) ============================ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div class="foot__brand">
+        <div class="foot__logo">Beverly Hills Car Club<em>by Alex Manos</em></div>
+        <p class="foot__col" style="color:var(--bone-3);font-size:.875rem;max-width:26ch;">The world's largest dealer of European and American classic cars. Los Angeles, California.</p>
+        <div class="foot__socials">
+          <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V9H6.5v3H9v9h3v-9h2.5l.5-3H12V6.5a1 1 0 0 1 1-1h2z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.2v5.6l5-2.8z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="X"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l16 16M20 4L4 20"/></svg></a>
+        </div>
+      </div>
+
+      <div class="foot__col">
+        <h4>Inventory</h4>
+        <ul>
+          <li><a href="#collection">Browse all</a></li>
+          <li><a href="#collection">Porsche</a></li>
+          <li><a href="#collection">Ferrari</a></li>
+          <li><a href="#collection">Mercedes-Benz</a></li>
+          <li><a href="#collection">Recent arrivals</a></li>
+        </ul>
+      </div>
+
+      <div class="foot__col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#founder">About Alex</a></li>
+          <li><a href="#sell">Sell your car</a></li>
+          <li><a href="#collection">How to buy</a></li>
+          <li><a href="#collection">Shipping</a></li>
+        </ul>
+      </div>
+
+      <div class="foot__col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="tel:+13109750272">(310) 975-0272</a></li>
+          <li><a href="#tales">Journal</a></li>
+          <li><a href="#collection">Careers</a></li>
+          <li><a href="#collection">Locations</a></li>
+        </ul>
+      </div>
+
+      <div class="foot__news">
+        <h4>The Night Register</h4>
+        <p>Occasional dispatches on fresh arrivals and the cars that got away.</p>
+        <form class="news-form" novalidate>
+          <input type="email" name="email" placeholder="Email address" aria-label="Email address" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="foot__bar">
+      <p class="foot__copy">© 2026 Beverly Hills Car Club by Alex Manos<span class="tail">.</span></p>
+      <div class="foot__legal">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/night.js?v=1" defer></script>
 </body>
 </html>

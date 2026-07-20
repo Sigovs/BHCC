@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beverly Hills Car Club — Design System</title>
+<meta name="description" content="The design system spec for the BHCC homepage: type, colour, spacing. Every value mirrors tokens.css.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital@1&family=Inter+Tight:wght@300..600&display=swap" rel="stylesheet">
+
+<link rel="icon" href="assets/images/favicon-32.png" type="image/png">
+<link rel="stylesheet" href="assets/css/tokens.css?v=9">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, figure, ul, dl, dd { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img { display: block; max-width: 100%; }
+
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--font-sans); font-size: var(--fs-body); line-height: var(--lh-body);
+    font-synthesis: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 1200px; margin-inline: auto; padding-inline: clamp(24px, 5vw, 64px); }
+
+  /* eyebrow / meta */
+  .eyebrow { font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold-ink); }
+  .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+  /* page head */
+  .masthead { padding-block: clamp(64px, 10vw, 128px) clamp(40px, 6vw, 72px); border-bottom: 1px solid var(--rule); }
+  .masthead h1 { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--ls-display); margin-top: 14px; }
+  .masthead p { margin-top: 24px; max-width: 60ch; font-size: var(--fs-body-lg); color: var(--ink-soft); line-height: 1.6; }
+  .masthead code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .85em; background: var(--bg-deep); padding: 2px 7px; }
+
+  /* section shell */
+  section.block { padding-block: clamp(56px, 8vw, 112px); border-bottom: 1px solid var(--rule); }
+  .sec-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: clamp(32px, 4vw, 56px); }
+  .sec-head .n { font-family: var(--font-display); font-size: var(--fs-h3); color: var(--gold-ink); }
+  .sec-head h2 { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); }
+
+  /* type specimens */
+  .type-row { display: grid; grid-template-columns: 190px 1fr; gap: 28px; align-items: baseline; padding-block: 20px; border-top: 1px solid var(--rule); }
+  .type-row:first-of-type { border-top: 0; }
+  .type-row dt { color: var(--ink-muted); font-size: var(--fs-body-sm); line-height: 1.5; }
+  .type-row dt b { display: block; color: var(--ink); font-weight: var(--fw-semibold); font-size: var(--fs-body); }
+  .type-row dt .px { font-family: ui-monospace, Menlo, monospace; }
+  .specimen { color: var(--ink); overflow: hidden; text-overflow: ellipsis; }
+  .s-display { font-family: var(--font-display); font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--ls-display); }
+  .s-h1 { font-family: var(--font-display); font-size: var(--fs-h1); line-height: var(--lh-h1); }
+  .s-h2 { font-family: var(--font-display); font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); }
+  .s-h3 { font-family: var(--font-display); font-size: var(--fs-h3); line-height: var(--lh-h3); }
+  .s-h4 { font-family: var(--font-display); font-size: var(--fs-h4); line-height: var(--lh-card); }
+  .s-quote { font-family: var(--font-text); font-style: italic; font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--ink-soft); }
+  .s-lg { font-size: var(--fs-body-lg); }
+  .s-body { font-size: var(--fs-body); line-height: var(--lh-body); max-width: 62ch; }
+  .s-sm { font-size: var(--fs-body-sm); color: var(--ink-soft); }
+
+  .family-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+  .family { border: 1px solid var(--rule); padding: 28px; }
+  .family .big { font-size: 64px; line-height: 1; color: var(--ink); }
+  .family .g { font-family: var(--font-display); }
+  .family .n { font-family: var(--font-text); font-style: italic; }
+  .family .i { font-family: var(--font-sans); }
+  .family h3 { margin-top: 18px; font-family: var(--font-sans); font-weight: var(--fw-semibold); font-size: var(--fs-body); }
+  .family p { margin-top: 6px; font-size: var(--fs-body-sm); color: var(--ink-muted); line-height: 1.5; }
+
+  /* colour swatches */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+  .sw { border: 1px solid var(--rule); }
+  .sw__chip { height: 108px; display: flex; align-items: flex-end; padding: 12px; }
+  .sw__chip span { font-size: var(--fs-body-sm); font-weight: var(--fw-medium); }
+  .sw__meta { padding: 12px 14px 16px; }
+  .sw__meta b { font-size: var(--fs-body-sm); font-weight: var(--fw-semibold); }
+  .sw__meta .hex { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--ink-muted); display: block; margin-top: 3px; }
+  .sw__meta .ratio { font-size: 12px; color: var(--ink-soft); display: block; margin-top: 8px; }
+  .tag { display: inline-block; font-size: 11px; letter-spacing: .04em; padding: 1px 6px; border: 1px solid var(--rule-strong); color: var(--ink-soft); margin-top: 8px; }
+  .tag--warn { color: var(--danger); border-color: var(--danger); }
+
+  /* buttons */
+  .btnrow { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; height: 50px; padding: 0 26px; font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body); letter-spacing: var(--ls-button); border-radius: var(--radius); border: 1px solid transparent; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+  .btn--gold { background: var(--gold-ink); color: #fff; }
+  .btn--gold:hover { background: #765a29; }
+  .btn--outline { border-color: var(--ink); color: var(--ink); background: transparent; }
+  .btn--outline:hover { background: var(--ink); color: var(--bg); }
+  .btn--ghost { border-color: var(--rule-strong); color: var(--ink); background: transparent; }
+  .btn--ghost:hover { background: var(--gold-wash); }
+  .on-dark { background: var(--dark); padding: 28px; margin-top: 20px; }
+  .btn--fill-gold { background: var(--gold); color: var(--ink); }  /* gold fill takes ink, never white */
+
+  /* inventory card sample */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gap); }
+  .card figure { overflow: hidden; }
+  .card img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+  .card:hover img { transform: scale(var(--img-hover-scale)); }
+  .card h3 { margin-top: 16px; font-family: var(--font-display); font-weight: var(--fw-card); font-size: var(--fs-h4); line-height: var(--lh-card); }
+  .card .price { margin-top: 6px; font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--gold-ink); letter-spacing: .02em; }
+
+  /* spacing scale */
+  .spacing { display: grid; gap: 12px; }
+  .sp { display: grid; grid-template-columns: 90px 70px 1fr; gap: 16px; align-items: center; }
+  .sp code { font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--ink); }
+  .sp .val { font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--ink-muted); }
+  .sp .bar { height: 16px; background: var(--gold-wash); border-left: 2px solid var(--gold-ink); }
+
+  .note { margin-top: 20px; font-size: var(--fs-body-sm); color: var(--ink-muted); max-width: 70ch; line-height: 1.6; }
+
+  @media (max-width: 760px) {
+    .type-row { grid-template-columns: 1fr; gap: 10px; }
+    .family-cards, .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- masthead -->
+  <header class="masthead">
+    <span class="eyebrow">Beverly Hills Car Club · by Alex Manos</span>
+    <h1>Design system</h1>
+    <p>The spec for the homepage — type, colour, spacing. Every value below is a live token from <code>assets/css/tokens.css</code>; change it there and it updates here. Contrast ratios are measured (WCAG 2.1), not estimated.</p>
+  </header>
+
+  <!-- 01 typefaces -->
+  <section class="block">
+    <div class="sec-head"><span class="n">01</span><h2>Typefaces — three families, by role</h2></div>
+    <div class="family-cards">
+      <div class="family">
+        <div class="big g">Aa</div>
+        <h3>Gloock — display</h3>
+        <p>Hero, section headings, card titles. One static weight (400), lining figures. The loud didone that carries the brand voice.</p>
+      </div>
+      <div class="family">
+        <div class="big n">Aa</div>
+        <h3>Newsreader italic — quotes</h3>
+        <p>§07 testimonial quotes only. Gloock has no italic; a synthesised oblique on a didone is unacceptable, so a true italic serif is loaded as a micro-subset.</p>
+      </div>
+      <div class="family">
+        <div class="big i">Aa</div>
+        <h3>Inter Tight — body &amp; UI</h3>
+        <p>All running text and interface. Neutral under the didone; unambiguous figures for price, year and phone. Weight 450 on dark surfaces (measured).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 type scale -->
+  <section class="block">
+    <div class="sec-head"><span class="n">02</span><h2>Type scale — fluid 390 → 1440</h2></div>
+    <dl>
+      <div class="type-row"><dt><b>Hero</b><span class="px">--fs-hero · 30→96px</span> Gloock</dt><dd class="specimen s-display">Beverly Hills Car Club</dd></div>
+      <div class="type-row"><dt><b>Display</b><span class="px">--fs-display · 34→88px</span> Gloock</dt><dd class="specimen s-display">Featured Classics</dd></div>
+      <div class="type-row"><dt><b>H1</b><span class="px">--fs-h1 · 30→56px</span> Gloock</dt><dd class="specimen s-h1">The world's finest automobiles</dd></div>
+      <div class="type-row"><dt><b>H2</b><span class="px">--fs-h2 · 28→40px</span> Gloock</dt><dd class="specimen s-h2">We buy classic cars.</dd></div>
+      <div class="type-row"><dt><b>H3</b><span class="px">--fs-h3 · 22→28px</span> Gloock</dt><dd class="specimen s-h3">From our blog</dd></div>
+      <div class="type-row"><dt><b>Card title / H4</b><span class="px">--fs-h4 · 19→20px</span> Gloock · 2-line box</dt><dd class="specimen s-h4">1959 Austin-Healey 100-6 BN6 Roadster</dd></div>
+      <div class="type-row"><dt><b>Quote</b><span class="px">--fs-quote · 20→30px</span> Newsreader italic</dt><dd class="specimen s-quote">“Some of the most jaw-dropping vintage cars in existence.”</dd></div>
+      <div class="type-row"><dt><b>Body large</b><span class="px">--fs-body-lg · 17→20px</span> Inter Tight</dt><dd class="specimen s-lg">Every car we sell is inspected, documented and photographed in our Los Angeles showroom.</dd></div>
+      <div class="type-row"><dt><b>Body</b><span class="px">--fs-body · 16→17px</span> Inter Tight · lh 1.75</dt><dd class="specimen s-body">We handle the paperwork, the transport and the details — so the only thing left for you is the drive. Body copy runs at a generous 1.75 line-height per the brief.</dd></div>
+      <div class="type-row"><dt><b>Body small</b><span class="px">--fs-body-sm · 14→15px</span> Inter Tight</dt><dd class="specimen s-sm">365 days a year · Pickup anywhere in the USA · We pay finder's fees</dd></div>
+      <div class="type-row"><dt><b>Eyebrow</b><span class="px">--fs-eyebrow · 11→12px</span> Inter Tight · caps · tracked</dt><dd class="specimen"><span class="eyebrow">Alex Manos, Founder</span></dd></div>
+    </dl>
+    <p class="note">Gloock ships a single weight, so hierarchy is carried by <b>size and tracking</b>, not weight — hero is 2.2× H2. The brief's “lighter-weight H1” is not literally achievable with a one-weight display face; this is the accepted consequence of the Gloock decision.</p>
+  </section>
+
+  <!-- 03 palette -->
+  <section class="block">
+    <div class="sec-head"><span class="n">03</span><h2>Palette — warm, one gold at two levels</h2></div>
+
+    <p class="eyebrow" style="margin-bottom:18px;">Surfaces</p>
+    <div class="swatches" style="margin-bottom:44px;">
+      <div class="sw"><div class="sw__chip" style="background:#FAF9F6;border-bottom:1px solid var(--rule)"><span style="color:#1A1A18">Base</span></div><div class="sw__meta"><b>--bg</b><span class="hex">#FAF9F6</span><span class="ratio">Warm off-white · never pure white</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#F2F0EB"><span style="color:#1A1A18">Tint</span></div><div class="sw__meta"><b>--bg-tint</b><span class="hex">#F2F0EB</span><span class="ratio">Section band · 1.08 luminance step</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#E8E4DB"><span style="color:#1A1A18">Deep</span></div><div class="sw__meta"><b>--bg-deep</b><span class="hex">#E8E4DB</span><span class="ratio">Input fill · press row · hover</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#221F1A"><span style="color:#EFECE4">Sell band</span></div><div class="sw__meta"><b>--dark</b><span class="hex">#221F1A</span><span class="ratio">cream text 13.91 ✓AAA</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#14120E"><span style="color:#EFECE4">Footer</span></div><div class="sw__meta"><b>--dark-deep</b><span class="hex">#14120E</span><span class="ratio">Warm near-black</span></div></div>
+    </div>
+
+    <p class="eyebrow" style="margin-bottom:18px;">Ink</p>
+    <div class="swatches" style="margin-bottom:44px;">
+      <div class="sw"><div class="sw__chip" style="background:#1A1A18"><span style="color:#FAF9F6">Primary</span></div><div class="sw__meta"><b>--ink</b><span class="hex">#1A1A18</span><span class="ratio">16.55 on --bg ✓AAA</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#46443E"><span style="color:#FAF9F6">Secondary</span></div><div class="sw__meta"><b>--ink-soft</b><span class="hex">#46443E</span><span class="ratio">9.25 on --bg ✓AAA</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#6E6B62"><span style="color:#FAF9F6">Meta</span></div><div class="sw__meta"><b>--ink-muted</b><span class="hex">#6E6B62</span><span class="ratio">5.06 on --bg ✓AA</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#A8A49B"><span style="color:#221F1A">Muted / dark</span></div><div class="sw__meta"><b>--ink-soft-on-dark</b><span class="hex">#A8A49B</span><span class="ratio">6.61 on --dark ✓AA</span></div></div>
+    </div>
+
+    <p class="eyebrow" style="margin-bottom:18px;">Accent — gold</p>
+    <div class="swatches" style="margin-bottom:44px;">
+      <div class="sw"><div class="sw__chip" style="background:#8C6D33"><span style="color:#fff">Text gold</span></div><div class="sw__meta"><b>--gold-ink</b><span class="hex">#8C6D33</span><span class="ratio">4.58 on --bg ✓AA</span><span class="tag">the only gold as text on light</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#C2A15C"><span style="color:#1A1A18">Decorative</span></div><div class="sw__meta"><b>--gold</b><span class="hex">#C2A15C</span><span class="ratio">2.33 on light · 6.68 on --dark</span><span class="tag tag--warn">not for text on light</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#EFEAE0"><span style="color:#8C6D33">Wash</span></div><div class="sw__meta"><b>--gold-wash</b><span class="hex">rgba(194,161,92,.14)</span><span class="ratio">Underline / hover wash</span></div></div>
+    </div>
+
+    <p class="eyebrow" style="margin-bottom:18px;">States &amp; brand red</p>
+    <div class="swatches">
+      <div class="sw"><div class="sw__chip" style="background:#9E2B20"><span style="color:#fff">Danger</span></div><div class="sw__meta"><b>--danger</b><span class="hex">#9E2B20</span><span class="ratio">7.07 on --bg ✓AAA</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#3F6B4A"><span style="color:#fff">Success</span></div><div class="sw__meta"><b>--success</b><span class="hex">#3F6B4A</span><span class="ratio">5.84 on --bg ✓AA</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#D31720"><span style="color:#fff">Logo red</span></div><div class="sw__meta"><b>--logo-red</b><span class="hex">#D31720</span><span class="ratio">Artwork only — never a UI token</span></div></div>
+    </div>
+    <p class="note">Red and gold are separated by <b>role, not removal</b>: red is content (the logo shield, the hero car); gold is interface (hairlines, hover, focus). They never carry the same visual weight. Gold fills always take <b>ink</b> text — white on gold is 2.46 and is banned.</p>
+  </section>
+
+  <!-- 04 buttons -->
+  <section class="block">
+    <div class="sec-head"><span class="n">04</span><h2>Buttons — square, sentence case</h2></div>
+    <div class="btnrow">
+      <button class="btn btn--gold">Sell Today</button>
+      <button class="btn btn--outline">Browse cars</button>
+      <button class="btn btn--ghost">Read Alex's story →</button>
+    </div>
+    <div class="on-dark">
+      <div class="btnrow">
+        <button class="btn btn--fill-gold">Sell Today</button>
+        <button class="btn btn--outline" style="border-color:var(--cream);color:var(--cream)">Browse inventory</button>
+      </div>
+    </div>
+    <p class="note">Radius is <b>0</b> — measured against both style anchors (Superior Motors 672 elements at 0px; Gallery Aaldering square throughout). CTAs are sentence case per the brief, not tracked caps.</p>
+  </section>
+
+  <!-- 05 card -->
+  <section class="block">
+    <div class="sec-head"><span class="n">05</span><h2>Inventory card — photography carries the weight</h2></div>
+    <div class="cards">
+      <article class="card"><figure><img src="assets/images/inventory/bentley-s2-continental.jpg?v=2" alt=""></figure><h3>1960 Bentley S2 Continental</h3><p class="price mono">$195,000</p></article>
+      <article class="card"><figure><img src="assets/images/inventory/alfa-giulietta-spider.jpg?v=2" alt=""></figure><h3>1958 Alfa Romeo Giulietta Spider</h3><p class="price mono">$116,750</p></article>
+      <article class="card"><figure><img src="assets/images/inventory/aston-martin-dbs.jpg?v=2" alt=""></figure><h3>1970 Aston Martin DBS</h3><p class="price mono">$179,950</p></article>
+    </div>
+    <p class="note">No border, no shadow — the brief bans both on inventory cards. Year + make + model in Gloock (2-line box, ceiling 20px so the longest real title stays inside); price in mono like an odometer reading; hover reveals a slight scale (1.03), it lifts nothing.</p>
+  </section>
+
+  <!-- 06 spacing -->
+  <section class="block" style="border-bottom:0;">
+    <div class="sec-head"><span class="n">06</span><h2>Spacing — 8px base, editorial ramp</h2></div>
+    <div class="spacing">
+      <div class="sp"><code>--sp-1</code><span class="val">8px</span><span class="bar" style="width:8px"></span></div>
+      <div class="sp"><code>--sp-2</code><span class="val">16px</span><span class="bar" style="width:16px"></span></div>
+      <div class="sp"><code>--sp-3</code><span class="val">24px</span><span class="bar" style="width:24px"></span></div>
+      <div class="sp"><code>--sp-4</code><span class="val">32px</span><span class="bar" style="width:32px"></span></div>
+      <div class="sp"><code>--sp-5</code><span class="val">48px</span><span class="bar" style="width:48px"></span></div>
+      <div class="sp"><code>--sp-6</code><span class="val">64px</span><span class="bar" style="width:64px"></span></div>
+      <div class="sp"><code>--sp-7</code><span class="val">96px</span><span class="bar" style="width:96px"></span></div>
+      <div class="sp"><code>--sp-8</code><span class="val">128px</span><span class="bar" style="width:128px"></span></div>
+      <div class="sp"><code>--sp-9</code><span class="val">160px</span><span class="bar" style="width:160px"></span></div>
+    </div>
+    <p class="note">Section rhythm: <code>--section-py</code> 72→128px, editorial section 160px, compact bands 40→56px. Grid gap 32px (matches Superior Motors). Steps 1–5 align to Bootstrap's spacers; 6–9 are added, not remapped.</p>
+  </section>
+
+</div>
+
+</body>
+</html>
