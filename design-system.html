@@ -83,15 +83,17 @@
 
   /* buttons */
   .btnrow { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; height: 50px; padding: 0 26px; font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body); letter-spacing: var(--ls-button); border-radius: var(--radius); border: 1px solid transparent; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
-  .btn--gold { background: var(--gold-ink); color: #fff; }
-  .btn--gold:hover { background: #765a29; }
-  .btn--outline { border-color: var(--ink); color: var(--ink); background: transparent; }
-  .btn--outline:hover { background: var(--ink); color: var(--bg); }
-  .btn--ghost { border-color: var(--rule-strong); color: var(--ink); background: transparent; }
-  .btn--ghost:hover { background: var(--gold-wash); }
-  .on-dark { background: var(--dark); padding: 28px; margin-top: 20px; }
-  .btn--fill-gold { background: var(--gold); color: var(--ink); }  /* gold fill takes ink, never white */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; padding: 0 28px; font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body); letter-spacing: var(--ls-button); border-radius: 999px; border: 1px solid transparent; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+  /* TWO TYPES — primary (main) + secondary; both pill, both with a gold hairline */
+  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); }
+  .btn--primary:hover { background: #000; border-color: #d3b775; }
+  .btn--primary.on-dark { background: var(--gold); color: var(--ink); border-color: var(--gold); }  /* gold fill takes ink (7.09) */
+  .btn--primary.on-dark:hover { background: #d3b775; }
+  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--gold); }
+  .btn--secondary:hover { background: var(--gold-wash); border-color: var(--gold-ink); }
+  .btn--secondary.on-dark { color: var(--cream); border-color: var(--gold); }
+  .btn--secondary.on-dark:hover { background: rgba(194,161,92,.16); }
+  .dark-demo { background: var(--dark); padding: 28px; margin-top: 20px; }
 
   /* inventory card sample */
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gap); }
@@ -207,19 +209,18 @@
 
   <!-- 04 buttons -->
   <section class="block">
-    <div class="sec-head"><span class="n">04</span><h2>Buttons — square, sentence case</h2></div>
+    <div class="sec-head"><span class="n">04</span><h2>Buttons — two types: primary &amp; secondary</h2></div>
     <div class="btnrow">
-      <button class="btn btn--gold">Sell Today</button>
-      <button class="btn btn--outline">Browse cars</button>
-      <button class="btn btn--ghost">Read Alex's story →</button>
+      <button class="btn btn--primary">Sell today</button>
+      <button class="btn btn--secondary">Browse cars</button>
     </div>
-    <div class="on-dark">
+    <div class="dark-demo">
       <div class="btnrow">
-        <button class="btn btn--fill-gold">Sell Today</button>
-        <button class="btn btn--outline" style="border-color:var(--cream);color:var(--cream)">Browse inventory</button>
+        <button class="btn btn--primary on-dark">Sell today</button>
+        <button class="btn btn--secondary on-dark">Browse inventory</button>
       </div>
     </div>
-    <p class="note">Radius is <b>0</b> — measured against both style anchors (Superior Motors 672 elements at 0px; Gallery Aaldering square throughout). CTAs are sentence case per the brief, not tracked caps.</p>
+    <p class="note"><b>Two types only.</b> <b>Primary (main)</b> — ink fill + a gold hairline; on a dark surface it inverts to a gold fill with ink text (7.09 ✓, never white on gold). <b>Secondary</b> — transparent + gold hairline; cream text on dark. Pill radius is the art-director exception for interactive controls — the system radius stays <b>0</b> for cards and structure. CTAs are sentence case per the brief, not tracked caps.</p>
   </section>
 
   <!-- 05 card -->
