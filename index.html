@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Beverly Hills Car Club by Alex Manos — The World's Finest Classic Automobiles</title>
 <meta name="description" content="The world's finest European and American classic automobiles, bought and sold by Alex Manos. Los Angeles. Inspected, documented and photographed in our showroom.">
+<script>document.documentElement.classList.add('js');</script>
 
 <!-- Light editorial homepage, built to refference/ref7nice.jpg:
      warm off-white base, Gloock display serif, gold accents, two dark slabs
@@ -113,6 +114,22 @@
   /* on dark surfaces (sell band): secondary inverts to cream text */
   .btn--secondary.on-dark { color: var(--cream); border-color: var(--gold); }
   .btn--secondary.on-dark:hover { background: rgba(194,161,92,.16); }
+
+  /* ============================================================
+     SCROLL REVEAL — images rise from blur, text slides in from the side.
+     Applied only under .js (progressive enhancement: no JS = all visible).
+     ============================================================ */
+  .js [data-reveal] {
+    transition: opacity .95s var(--ease), transform .95s var(--ease), filter .95s var(--ease);
+    will-change: opacity, transform, filter;
+  }
+  .js [data-reveal="img"]    { opacity: 0; transform: translateY(46px); filter: blur(12px); }
+  .js [data-reveal="text"]   { opacity: 0; transform: translateX(-46px); }
+  .js [data-reveal="text-r"] { opacity: 0; transform: translateX(46px); }
+  .js [data-reveal].is-in { opacity: 1; transform: none; filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .js [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
+  }
 
   /* ============================================================
      HEADER — light, sticky
@@ -330,11 +347,20 @@
   /* ============================================================
      TESTIMONIALS + PRESS
      ============================================================ */
-  .quotes { text-align: center; max-width: 900px; margin-inline: auto; }
+  .quotes { position: relative; text-align: center; max-width: 900px; margin-inline: auto; }
   .quotes .eyebrow { display: block; margin-bottom: 36px; }
-  .quote-track { position: relative; min-height: 1px; }
-  .quote { opacity: 0; visibility: hidden; position: absolute; inset: 0; transition: opacity var(--dur-slow) var(--ease); }
-  .quote.is-active { opacity: 1; visibility: visible; position: relative; }
+  /* stack all quotes in one grid cell → track height = tallest quote, so it
+     never jumps when you switch. Only opacity animates. */
+  .quote-track { display: grid; }
+  .quote { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity var(--dur-slow) var(--ease); }
+  .quote.is-active { opacity: 1; visibility: visible; }
+  /* elegant chevrons on the sides */
+  .quote-nav { position: absolute; top: 44%; transform: translateY(-50%); width: 46px; height: 46px; display: grid; place-items: center; border-radius: 999px; color: var(--ink-soft); background: transparent; transition: color var(--dur) var(--ease), background var(--dur) var(--ease); }
+  .quote-nav:hover { color: var(--gold-ink); background: var(--gold-wash); }
+  .quote-nav svg { width: 24px; height: 24px; }
+  .quote-nav--prev { left: clamp(-8px, -2vw, -26px); }
+  .quote-nav--next { right: clamp(-8px, -2vw, -26px); }
+  @media (max-width: 560px) { .quote-nav--prev { left: -4px; } .quote-nav--next { right: -4px; } }
   .quote__mark { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); line-height: .6; color: var(--gold); height: .5em; }
   .quote blockquote {
     font-family: var(--font-text); font-style: italic; font-weight: 400;
@@ -693,6 +719,12 @@
   <div class="shell">
     <div class="quotes">
       <span class="eyebrow" id="quotes-h">What they're saying</span>
+      <button type="button" class="quote-nav quote-nav--prev" id="quotePrev" aria-label="Previous testimonial">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="quote-nav quote-nav--next" id="quoteNext" aria-label="Next testimonial">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
       <div class="quote-track" id="quoteTrack">
         <figure class="quote is-active">
           <div class="quote__mark" aria-hidden="true">&ldquo;</div>
@@ -889,6 +921,9 @@
       dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
     }
     dots.forEach((d, k) => d.addEventListener('click', () => { go(k); restart(); }));
+    const prev = document.getElementById('quotePrev'), next = document.getElementById('quoteNext');
+    if (prev) prev.addEventListener('click', () => { go(i - 1); restart(); });
+    if (next) next.addEventListener('click', () => { go(i + 1); restart(); });
     function restart() { if (reduce) return; clearInterval(timer); timer = setInterval(() => go(i + 1), 6000); }
     restart();
   })();
@@ -942,6 +977,32 @@
 
   // News/Events is a pure CSS sticky-column now (right heading sticky, left
   // posts scroll, unsticks at section end) — no JS needed.
+
+  // Scroll reveal — images rise from blur, text slides in from the side.
+  (function () {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const imgSel  = '.card figure, .npost figure, .founder__media, .breaker, .sell__bg, .press';
+    const leftSel = '.lede, .npost__date, .npost__title, .npost__text, .npost__more, .sell__in > *';
+    const rightSel = '.founder__body > *, .news__head > *';
+    document.querySelectorAll(imgSel).forEach(el => el.setAttribute('data-reveal', 'img'));
+    document.querySelectorAll(leftSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text'); });
+    document.querySelectorAll(rightSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text-r'); });
+    const all = document.querySelectorAll('[data-reveal]');
+    if (reduce) { all.forEach(e => e.classList.add('is-in')); return; }
+    // gentle stagger within card / post groups
+    ['.cards', '.news__list'].forEach(sel => {
+      const c = document.querySelector(sel); if (!c) return;
+      [...c.children].forEach((child, i) => {
+        const d = (i * 0.07) + 's';
+        if (child.hasAttribute('data-reveal')) child.style.transitionDelay = d;
+        child.querySelectorAll('[data-reveal]').forEach(el => { el.style.transitionDelay = d; });
+      });
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+    all.forEach(el => io.observe(el));
+  })();
 </script>
 
 </body>
