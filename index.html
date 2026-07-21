@@ -316,8 +316,9 @@
      no .shell, so width:100% is already bleed — no 100vw (avoids the scrollbar
      overflow that body's overflow-x:clip would otherwise have to hide).
      ============================================================ */
-  .breaker { position: relative; overflow: hidden; width: 100%; height: clamp(300px, 46vh, 520px); background: var(--dark-deep); }
-  .breaker__bg { position: absolute; left: 0; right: 0; top: -10%; height: 120%; z-index: 0; will-change: transform; }
+  /* full-bleed dividers at the photo's own 2:1 proportion — not cropped to a fixed height */
+  .breaker { position: relative; overflow: hidden; width: 100%; aspect-ratio: 2 / 1; background: var(--dark-deep); }
+  .breaker__bg { position: absolute; inset: 0; z-index: 0; }
   .breaker__bg img { width: 100%; height: 100%; object-fit: cover; }
   .breaker__overlay { position: absolute; inset: 0; z-index: 1; }
   /* night frame → gentle vignette so the caption reads over the road/skyline */
@@ -635,7 +636,7 @@
      full-bleed divider between the inventory and the founder story
      ============================================================ -->
 <section class="breaker breaker--day">
-  <div class="breaker__bg" data-breaker>
+  <div class="breaker__bg">
     <img src="assets/images/breaker-1.jpg" alt="A yellow Alfa Romeo GTV parked beneath the arches of the Colorado Street Bridge" loading="lazy" width="2000" height="1000" style="object-position: 50% 56%;">
   </div>
 </section>
@@ -733,7 +734,7 @@
      dark divider that prepares the transition to the dark page-foot
      ============================================================ -->
 <section class="breaker breaker--night" aria-label="Los Angeles, since 2001">
-  <div class="breaker__bg" data-breaker>
+  <div class="breaker__bg">
     <img src="assets/images/breaker-2.jpg" alt="A white Datsun 240Z on a downtown Los Angeles road at dusk, skyline and light-trails behind" loading="lazy" width="2000" height="1000" style="object-position: 50% 52%;">
   </div>
   <div class="breaker__overlay" aria-hidden="true"></div>
