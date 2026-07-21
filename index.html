@@ -369,32 +369,27 @@
      LEFT: staggered/offset masonry of showroom photos.
      RIGHT: large Gloock headline + sub + ghost CTA.
      ============================================================ */
-  .news { position: relative; overflow: clip; background: var(--dark); color: var(--cream); }
+  /* Sticky-scroll: LEFT column of 4 posts scrolls; RIGHT heading is sticky and
+     unsticks when the list ends. No overflow clip on .news — it would kill sticky. */
+  .news { position: relative; background: var(--dark); color: var(--cream); }
   .news__in {
-    display: grid; grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
-    gap: clamp(24px, 3.4vw, 60px); align-items: center;
+    display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: clamp(40px, 5vw, 90px); align-items: start;
   }
 
-  /* media cluster — three vertical columns, offset for the staggered read */
-  .news__media { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 1.1vw, 16px); align-items: start; }
-  .news__col { display: flex; flex-direction: column; gap: clamp(10px, 1.1vw, 16px); will-change: transform; }
-  .news__col--a { margin-top: 0; }
-  .news__col--b { margin-top: clamp(30px, 4.4vw, 58px); }   /* pushed down */
-  .news__col--c { margin-top: clamp(12px, 2vw, 26px); }     /* half step */
+  /* LEFT — 4 stacked posts */
+  .news__list { display: flex; flex-direction: column; gap: clamp(56px, 7vw, 108px); }
+  .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; }
+  .npost img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+  .npost:hover img { transform: scale(1.03); }
+  .npost__date { display: block; margin-top: 22px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+  .npost__title { margin-top: 12px; font-family: var(--font-display); font-weight: 400; color: #fff; font-size: clamp(1.55rem, 1.05rem + 1.7vw, 2.25rem); line-height: 1.14; }
+  .npost__text { margin-top: 14px; color: var(--ink-soft-on-dark); font-size: var(--fs-body); line-height: 1.65; max-width: 54ch; }
+  .npost__more { margin-top: 16px; }
 
-  .ntile { position: relative; overflow: hidden; background: #0c0b09; aspect-ratio: 3 / 3.9; }
-  .ntile--tall  { aspect-ratio: 3 / 4.35; }
-  .ntile--short { aspect-ratio: 3 / 3.25; }
-  .ntile img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
-  .ntile::after {  /* faint inner hairline seats the photo on the near-black ground */
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    box-shadow: inset 0 0 0 1px rgba(239, 236, 228, .07);
-  }
-  .ntile:hover img { transform: scale(1.045); }
-
-  /* right column — text */
-  .news__text { max-width: 32ch; }
-  .news__text .eyebrow { display: block; color: var(--gold); margin-bottom: 20px; }
+  /* RIGHT — sticky heading */
+  .news__head { position: sticky; top: clamp(96px, 14vh, 160px); align-self: start; max-width: 32ch; }
+  .news__head .eyebrow { display: block; color: var(--gold); margin-bottom: 20px; }
   .news__title {
     font-family: var(--font-display); font-weight: 400; color: #fff;
     font-size: clamp(2.5rem, 1.62rem + 3.9vw, 4.25rem); line-height: 1.02; letter-spacing: -.02em;
@@ -479,15 +474,13 @@
 
   /* News/Events — stack: text on top, media below */
   @media (max-width: 900px) {
-    .news__in { grid-template-columns: 1fr; gap: clamp(30px, 6vw, 48px); }
-    .news__text { order: -1; max-width: none; }
-    .news__col { margin-top: 0; }        /* reset the desktop offsets */
+    .news__in { grid-template-columns: 1fr; gap: clamp(32px, 6vw, 48px); }
+    .news__head { position: static; order: -1; max-width: none; }   /* heading on top, not sticky on mobile */
+    .news__list { gap: clamp(40px, 9vw, 64px); }
   }
   /* Phone — flatten the three columns into a tidy 2-up grid */
   @media (max-width: 560px) {
-    .news__media { grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; }
-    .news__col { display: contents; }    /* let all 9 tiles reflow into 2 cols */
-    .ntile, .ntile--tall, .ntile--short { aspect-ratio: 3 / 3.7; }
+    .npost figure { aspect-ratio: 16 / 10; }
   }
 </style>
 </head>
@@ -747,47 +740,40 @@
 <section class="section news" aria-labelledby="news-h">
   <div class="shell news__in">
 
-    <!-- LEFT — offset masonry of showroom photography -->
-    <div class="news__media">
-      <div class="news__col news__col--a">
-        <figure class="ntile ntile--tall">
-          <img src="assets/images/484311173_1086990776801937_6257692236534526636_n.jpg" alt="A red Porsche 964 Turbo lit at night against a corrugated warehouse wall" loading="lazy" width="1440" height="1800">
-        </figure>
-        <figure class="ntile">
-          <img src="assets/images/519987270_18525435457061419_3631297434205938863_n.jpg" alt="A white Porsche 912 in the Beverly Hills Car Club warehouse under skylight beams" loading="lazy" width="1080" height="1440">
-        </figure>
-        <figure class="ntile ntile--short">
-          <img src="assets/images/587814785_18558784459061419_5394676057561357441_n.jpg" alt="A red BMW E12 5 Series beneath a Porsche banner on an exposed-brick wall" loading="lazy" width="1080" height="1440">
-        </figure>
-      </div>
-
-      <div class="news__col news__col--b">
-        <figure class="ntile">
-          <img src="assets/images/534388667_18531152188061419_6537802154509421778_n.jpg" alt="A blue 1965 Ford Mustang coupe spotlit on the showroom floor" loading="lazy" width="1080" height="1440">
-        </figure>
-        <figure class="ntile ntile--tall">
-          <img src="assets/images/583815906_18550719925061419_6070715814259884510_n.jpg" alt="A red Ferrari Testarossa with its hood raised inside the warehouse" loading="lazy" width="1080" height="1350">
-        </figure>
-        <figure class="ntile ntile--short">
-          <img src="assets/images/670786533_18589727464061419_8997674146565052329_n.jpg" alt="Aerial view of red and black Ferraris parked along a hedge-lined courtyard" loading="lazy" width="1440" height="1920">
-        </figure>
-      </div>
-
-      <div class="news__col news__col--c">
-        <figure class="ntile ntile--short">
-          <img src="assets/images/581092184_18550719949061419_1552739137684971603_n.jpg" alt="A row of red Ferraris with hoods raised in the collection warehouse" loading="lazy" width="1080" height="1350">
-        </figure>
-        <figure class="ntile">
-          <img src="assets/images/525623555_18527390230061419_2094267850835987314_n.jpg" alt="A yellow Volkswagen Karmann Ghia convertible among the collection" loading="lazy" width="1080" height="1440">
-        </figure>
-        <figure class="ntile ntile--tall">
-          <img src="assets/images/527678178_18528614506061419_4363549784967341934_n.jpg" alt="Two red Italian spiders parked among classics on the showroom floor" loading="lazy" width="1080" height="1440">
-        </figure>
-      </div>
+    <!-- LEFT — 4 posts that scroll past the sticky heading -->
+    <div class="news__list">
+      <article class="npost">
+        <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series 1 Roadster" loading="lazy" width="1200" height="675"></figure>
+        <span class="npost__date mono">July 12, 2026 · Journal</span>
+        <h3 class="npost__title">The E-Type at sixty — still the most beautiful car ever made</h3>
+        <p class="npost__text">Enzo Ferrari called it exactly that. Six decades on, the Series 1 roadster still stops a room — and still finds its way through our Los Angeles showroom.</p>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+      </article>
+      <article class="npost">
+        <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="675"></figure>
+        <span class="npost__date mono">June 28, 2026 · Buyer's guide</span>
+        <h3 class="npost__title">The Aston Martin DBS — what to look for before you buy</h3>
+        <p class="npost__text">The last of the six-cylinder grand tourers, and the one James Bond drove. What separates a good DBS from a great one comes down to a handful of details.</p>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+      </article>
+      <article class="npost">
+        <figure><img src="assets/images/inventory-real/1964-mercedes-230sl-pagoda.jpg" alt="1964 Mercedes-Benz 230SL Pagoda" loading="lazy" width="1200" height="675"></figure>
+        <span class="npost__date mono">June 05, 2026 · Inside the shop</span>
+        <h3 class="npost__title">Preservation over restoration — why we leave the patina</h3>
+        <p class="npost__text">A car is only original once. Increasingly, the market agrees — and the honest wear of a well-kept Pagoda tells a story no respray can.</p>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+      </article>
+      <article class="npost">
+        <figure><img src="assets/images/inventory-real/1959-porsche-356a-cabriolet.jpg" alt="1959 Porsche 356A Cabriolet" loading="lazy" width="1200" height="675"></figure>
+        <span class="npost__date mono">May 24, 2026 · Barn find</span>
+        <h3 class="npost__title">A 356 comes home — thirty years in a Pasadena garage</h3>
+        <p class="npost__text">One owner, one garage, since 1994. The story of how this 356A Cabriolet surfaced, and what it took to wake it gently back to life.</p>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+      </article>
     </div>
 
-    <!-- RIGHT — headline -->
-    <div class="news__text">
+    <!-- RIGHT — sticky heading -->
+    <div class="news__head">
       <span class="eyebrow">From the showroom</span>
       <h2 class="news__title" id="news-h">News &amp; Events</h2>
       <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
@@ -946,34 +932,8 @@
     update();
   })();
 
-  // staggered scroll-parallax on the News/Events media columns.
-  // Each column drifts at its own rate/sign so the columns pull apart as the
-  // section travels the viewport (Cayenne-style depth). Reduced-motion: off.
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const news = document.querySelector('.news');
-    if (!news) return;
-    const cols = [...news.querySelectorAll('.news__col')];
-    if (!cols.length) return;
-    const BASE = 300;                       // px travel scale
-    const coeff = [0.15, -0.10, 0.22];      // per-column rate + sign (diverge)
-    let ticking = false;
-    const update = () => {
-      const r = news.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      let prog = (r.top + r.height / 2 - vh / 2) / vh;   // ~0 centred
-      prog = Math.max(-1, Math.min(1, prog));            // clamp → bounds drift
-      for (let i = 0; i < cols.length; i++) {
-        const dy = (prog * BASE * coeff[i % coeff.length]).toFixed(1);
-        cols[i].style.transform = `translate3d(0, ${dy}px, 0)`;
-      }
-      ticking = false;
-    };
-    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-  })();
+  // News/Events is a pure CSS sticky-column now (right heading sticky, left
+  // posts scroll, unsticks at section end) — no JS needed.
 </script>
 
 </body>
