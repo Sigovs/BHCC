@@ -227,6 +227,23 @@
   .hero__ctas { display: flex; gap: 14px; margin-top: clamp(24px, 3vw, 34px); flex-wrap: wrap; justify-content: center; }
   .hero__ctas .btn--light { box-shadow: 0 1px 3px rgba(26,26,24,.06); }
 
+  /* HERO intro — title, by-line, sub, then the two CTAs rise from the bottom
+     one by one on load. .js only; reduced-motion shows them at rest. */
+  @keyframes heroRise { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }
+  .js .hero__title .hero__line { display: inline-block; }
+  .js .hero__title .hero__line,
+  .js .hero__title .by,
+  .js .hero__sub,
+  .js .hero__ctas .btn { opacity: 0; animation: heroRise .85s var(--ease) forwards; }
+  .js .hero__title .hero__line   { animation-delay: .15s; }
+  .js .hero__title .by           { animation-delay: .34s; }
+  .js .hero__sub                 { animation-delay: .52s; }
+  .js .hero__ctas .btn:nth-child(1) { animation-delay: .68s; }
+  .js .hero__ctas .btn:nth-child(2) { animation-delay: .82s; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .hero__title .hero__line, .js .hero__title .by, .js .hero__sub, .js .hero__ctas .btn { opacity: 1; animation: none; }
+  }
+
   /* search band — its own light strip under the full-screen hero */
   .searchbar { padding-block: clamp(18px, 2.4vw, 30px); border-bottom: 1px solid var(--rule); }
   .searchbar__in { display: flex; align-items: center; gap: 24px; }
@@ -405,11 +422,13 @@
       radial-gradient(64% 58% at 88% 90%, rgba(10,9,7,.60) 0%, rgba(10,9,7,0) 62%),
       var(--dark);
   }
-  /* right heading is the anchor — left posts kept smaller so they don't fight it */
+  /* heading LEFT (sticky anchor), posts RIGHT */
   .news__in {
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+    display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
     gap: clamp(40px, 5vw, 96px); align-items: start;
   }
+  .news__head { order: -1; }
+  .news__list { margin-left: auto; }   /* posts sit to the right edge of their column */
 
   /* LEFT — 4 stacked posts, held compact */
   .news__list { display: flex; flex-direction: column; gap: clamp(48px, 6vw, 84px); max-width: 500px; }
@@ -590,7 +609,7 @@
     <div class="hero__scrim"></div>
 
     <div class="hero__inner">
-      <h1 class="hero__title">Beverly Hills Car Club<span class="by">by Alex Manos</span></h1>
+      <h1 class="hero__title"><span class="hero__line">Beverly Hills Car Club</span><span class="by">by Alex Manos</span></h1>
       <p class="hero__sub">The world's finest classic automobiles, bought and sold by Alex&nbsp;Manos.</p>
       <div class="hero__ctas">
         <a class="btn btn--primary" href="/inventory.htm">Browse inventory</a>
@@ -611,7 +630,7 @@
           </button>
         </div>
       </form>
-      <a class="arrow-link" href="/inventory.htm">Browse all inventory <span class="a" aria-hidden="true">→</span></a>
+      <a class="arrow-link" href="/inventory.htm">Browse all inventory <span class="a" aria-hidden="true">›</span></a>
   </div>
 </section>
 
@@ -653,7 +672,7 @@
     </div>
 
     <div class="center-cta">
-      <a class="arrow-link arrow-link--gold" href="/inventory.htm">View all inventory <span class="a" aria-hidden="true">→</span></a>
+      <a class="arrow-link arrow-link--gold" href="/inventory.htm">View all inventory <span class="a" aria-hidden="true">›</span></a>
     </div>
   </div>
 </section>
@@ -681,7 +700,7 @@
         <p class="founder__quote" id="founder-h">I've been buying and selling the world's finest automobiles for over&nbsp;20&nbsp;years.</p>
         <p class="founder__p">What began with a single Porsche has become the largest collection of European and American classics under one roof in Los Angeles — every car inspected, documented and photographed before it ever reaches you.</p>
         <div class="founder__link">
-          <a class="arrow-link arrow-link--gold" href="/about.htm">Read Alex's story <span class="a" aria-hidden="true">→</span></a>
+          <a class="arrow-link arrow-link--gold" href="/about.htm">Read Alex's story <span class="a" aria-hidden="true">›</span></a>
         </div>
       </div>
     </div>
@@ -787,28 +806,28 @@
         <span class="npost__date mono">July 12, 2026 · Journal</span>
         <h3 class="npost__title">The E-Type at sixty — still the most beautiful car ever made</h3>
         <p class="npost__text">Enzo Ferrari called it exactly that. Six decades on, the Series 1 roadster still stops a room — and still finds its way through our Los Angeles showroom.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
       </article>
       <article class="npost">
         <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="675"></figure>
         <span class="npost__date mono">June 28, 2026 · Buyer's guide</span>
         <h3 class="npost__title">The Aston Martin DBS — what to look for before you buy</h3>
         <p class="npost__text">The last of the six-cylinder grand tourers, and the one James Bond drove. What separates a good DBS from a great one comes down to a handful of details.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
       </article>
       <article class="npost">
         <figure><img src="assets/images/inventory-real/1964-mercedes-230sl-pagoda.jpg" alt="1964 Mercedes-Benz 230SL Pagoda" loading="lazy" width="1200" height="675"></figure>
         <span class="npost__date mono">June 05, 2026 · Inside the shop</span>
         <h3 class="npost__title">Preservation over restoration — why we leave the patina</h3>
         <p class="npost__text">A car is only original once. Increasingly, the market agrees — and the honest wear of a well-kept Pagoda tells a story no respray can.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
       </article>
       <article class="npost">
         <figure><img src="assets/images/inventory-real/1959-porsche-356a-cabriolet.jpg" alt="1959 Porsche 356A Cabriolet" loading="lazy" width="1200" height="675"></figure>
         <span class="npost__date mono">May 24, 2026 · Barn find</span>
         <h3 class="npost__title">A 356 comes home — thirty years in a Pasadena garage</h3>
         <p class="npost__text">One owner, one garage, since 1994. The story of how this 356A Cabriolet surfaced, and what it took to wake it gently back to life.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">→</span></a>
+        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
       </article>
     </div>
 
@@ -818,7 +837,7 @@
       <h2 class="news__title" id="news-h">News &amp; Events</h2>
       <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
       <div class="news__cta">
-        <a class="btn btn--secondary on-dark" href="/blog.htm">See all articles <span aria-hidden="true">→</span></a>
+        <a class="btn btn--secondary on-dark" href="/blog.htm">See all articles <span aria-hidden="true">›</span></a>
       </div>
     </div>
 
@@ -989,8 +1008,8 @@
     document.querySelectorAll(rightSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text-r'); });
     const all = document.querySelectorAll('[data-reveal]');
     if (reduce) { all.forEach(e => e.classList.add('is-in')); return; }
-    // gentle stagger within card / post groups
-    ['.cards', '.news__list'].forEach(sel => {
+    // gentle stagger within card / post / sell groups (step-in one by one)
+    ['.cards', '.news__list', '.sell__in'].forEach(sel => {
       const c = document.querySelector(sel); if (!c) return;
       [...c.children].forEach((child, i) => {
         const d = (i * 0.07) + 's';
