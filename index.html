@@ -352,7 +352,8 @@
      ============================================================ */
   /* full-bleed dividers at the photo's own 2:1 proportion — not cropped to a fixed height */
   .breaker { position: relative; overflow: hidden; width: 100%; aspect-ratio: 2 / 1; background: var(--dark-deep); }
-  .breaker__bg { position: absolute; inset: 0; z-index: 0; }
+  /* over-scan gives the parallax headroom so no edge shows as the bg drifts */
+  .breaker__bg { position: absolute; left: 0; right: 0; top: -11%; height: 122%; z-index: 0; will-change: transform; }
   .breaker__bg img { width: 100%; height: 100%; object-fit: cover; }
   .breaker__overlay { position: absolute; inset: 0; z-index: 1; }
   /* night frame → gentle vignette so the caption reads over the road/skyline */
@@ -982,8 +983,8 @@
         const r = b.getBoundingClientRect();
         if (r.bottom < -120 || r.top > vh + 120) continue;   // skip off-screen
         const prog = (r.top + r.height / 2 - vh / 2) / vh;
-        let dy = prog * -30;                                  // softer than sell
-        dy = Math.max(-20, Math.min(20, dy));                 // clamp within over-scan
+        let dy = prog * -68;                                  // visible parallax drift
+        dy = Math.max(-44, Math.min(44, dy));                 // clamp within the 11% over-scan
         bg.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
       }
       ticking = false;
