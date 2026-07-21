@@ -85,7 +85,7 @@
   .btnrow { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; padding: 0 28px; font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body); letter-spacing: var(--ls-button); border-radius: 999px; border: 1px solid transparent; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease); }
   /* TWO TYPES — primary (main) + secondary; both pill, both with a gold hairline */
-  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); }
+  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); border-radius: 6px; }  /* less round than the pill secondary */
   .btn--primary:hover { background: #000; border-color: #d3b775; }
   .btn--primary.on-dark { background: var(--gold); color: var(--ink); border-color: var(--gold); }  /* gold fill takes ink (7.09) */
   .btn--primary.on-dark:hover { background: #d3b775; }

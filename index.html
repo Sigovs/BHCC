@@ -103,7 +103,7 @@
   .btn:active { transform: translateY(1px); }
   .btn--sm { height: 44px; padding: 0 22px; font-size: var(--fs-body-sm); }
   /* TWO TYPES — main (primary) + secondary. Both pill, both with a gold hairline. */
-  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); }
+  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); border-radius: 6px; }  /* less round than the pill secondary */
   .btn--primary:hover { background: #000; border-color: #d3b775; }
   /* on dark surfaces (sell band) primary inverts to a gold fill (ink text 7.09) */
   .btn--primary.on-dark { background: var(--gold); color: var(--ink); border-color: var(--gold); }
@@ -371,20 +371,28 @@
      ============================================================ */
   /* Sticky-scroll: LEFT column of 4 posts scrolls; RIGHT heading is sticky and
      unsticks when the list ends. No overflow clip on .news — it would kill sticky. */
-  .news { position: relative; background: var(--dark); color: var(--cream); }
+  .news { position: relative; color: var(--cream);
+    /* double radial gradient over the charcoal base — warm glow top-left,
+       deep pool bottom-right, for depth behind the posts */
+    background:
+      radial-gradient(58% 46% at 14% 16%, rgba(194,161,92,.13) 0%, rgba(194,161,92,0) 60%),
+      radial-gradient(64% 58% at 88% 90%, rgba(10,9,7,.60) 0%, rgba(10,9,7,0) 62%),
+      var(--dark);
+  }
+  /* right heading is the anchor — left posts kept smaller so they don't fight it */
   .news__in {
-    display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
-    gap: clamp(40px, 5vw, 90px); align-items: start;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+    gap: clamp(40px, 5vw, 96px); align-items: start;
   }
 
-  /* LEFT — 4 stacked posts */
-  .news__list { display: flex; flex-direction: column; gap: clamp(56px, 7vw, 108px); }
+  /* LEFT — 4 stacked posts, held compact */
+  .news__list { display: flex; flex-direction: column; gap: clamp(48px, 6vw, 84px); max-width: 500px; }
   .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; }
   .npost img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
   .npost:hover img { transform: scale(1.03); }
   .npost__date { display: block; margin-top: 22px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
-  .npost__title { margin-top: 12px; font-family: var(--font-display); font-weight: 400; color: #fff; font-size: clamp(1.55rem, 1.05rem + 1.7vw, 2.25rem); line-height: 1.14; }
-  .npost__text { margin-top: 14px; color: var(--ink-soft-on-dark); font-size: var(--fs-body); line-height: 1.65; max-width: 54ch; }
+  .npost__title { margin-top: 11px; font-family: var(--font-display); font-weight: 400; color: #fff; font-size: clamp(1.3rem, 1rem + 1.15vw, 1.8rem); line-height: 1.18; }
+  .npost__text { margin-top: 12px; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.6; max-width: 46ch; }
   .npost__more { margin-top: 16px; }
 
   /* RIGHT — sticky heading */
