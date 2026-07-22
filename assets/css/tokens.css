@@ -52,6 +52,13 @@
   --accent-dark-hover: #FFFFFF;
   --accent-wash:       rgba(26, 26, 24, 0.07);
   --accent-wash-dark:  rgba(239, 236, 228, 0.14);
+  /* Third fill, for a CTA sitting ON PHOTOGRAPHY. Neither of the two above
+     works there: ink disappears into a dark frame and cream reads as a hole
+     punched in the picture. Stone is warm enough to belong to the page and
+     solid enough to hold a button edge over any frame.
+       --ink on --accent-stone   11.74 ✓AAA
+       hover lifts to --bg-deep  13.60 ✓AAA */
+  --accent-stone:      #D8D4CB;
 
   /* ---------- Brand red — artwork only, NEVER a UI token --------------
      Logo shield + hero car are red; the brief bans red as an accent.

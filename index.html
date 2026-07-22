@@ -132,6 +132,9 @@
   /* on dark surfaces (sell band): secondary inverts to cream text */
   .btn--secondary.on-dark { color: var(--cream); border-color: rgba(239,236,228,.42); }
   .btn--secondary.on-dark:hover { background: var(--accent-wash-dark); border-color: var(--accent-dark); }
+  /* STONE — the light CTA for use over photography (hero). */
+  .btn--stone { background: var(--accent-stone); color: var(--ink); border-color: var(--accent-stone); border-radius: 6px; }
+  .btn--stone:hover { background: var(--bg-deep); border-color: var(--bg-deep); }
   /* cream fill — footer subscribe. Was used in the markup but never defined,
      so Subscribe was rendering as bare text on the near-black footer. */
   .btn--accent { background: var(--accent-dark); color: var(--ink); border-color: var(--accent-dark); border-radius: 6px; }
@@ -354,7 +357,8 @@
     text-shadow: 0 1px 16px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
   }
   .hero__ctas { display: flex; gap: 14px; margin-top: clamp(24px, 3vw, 34px); flex-wrap: wrap; justify-content: center; }
-  .hero__ctas .btn--light { box-shadow: 0 1px 3px rgba(26,26,24,.06); }
+  /* a whisper of shadow so the fill keeps an edge over a busy frame */
+  .hero__ctas .btn--stone { box-shadow: 0 2px 14px -4px rgba(8,7,5,.45); }
 
   /* HERO intro — title, by-line, sub, then the two CTAs rise from the bottom
      one by one on load. .js only; reduced-motion shows them at rest. */
@@ -549,6 +553,11 @@
      anchoring the window at 30% keeps him inside it across the whole
      480–760px min-height range, cropping wall above and tarmac below. */
   .founder__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; will-change: transform; }
+  /* The portrait arrives slower than the rest of the page's reveals — it pins
+     and then stays for two viewports, so a quick entrance under-sells it.
+     Longer travel too: at the default 46px a 1.7s duration just reads as lag. */
+  .js .founder__media[data-reveal] { transition-duration: 1.7s; }
+  .js .founder__media[data-reveal="img"] { transform: translateY(72px); }
 
   /* the run is PADDING on the column rather than a bottom margin on the clipping
      — a bottom margin is the kind of thing that collapses out and silently
@@ -886,7 +895,14 @@
        clear tonal step BELOW the News slab (#212528) or the sticky-reveal at the
        page end stops reading as a reveal. Measured L: News .0186 → footer .0082. */
     --fo-bg: #1A1A18;
-    position: sticky; bottom: 0; z-index: 0; background: var(--fo-bg); color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px;
+    position: sticky; bottom: 0; z-index: 0; color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px;
+    /* A soft pool of light rising from the bottom edge, so the page does not
+       end on a flat slab. Kept wide and shallow — it has to lift the base
+       without touching the News→footer tonal step that the sticky reveal
+       depends on, so it never brightens the top of the footer. */
+    background:
+      radial-gradient(120% 62% at 50% 118%, rgba(233,229,219,.12) 0%, rgba(233,229,219,.05) 42%, rgba(233,229,219,0) 72%),
+      var(--fo-bg);
   }
   .footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: clamp(32px, 4vw, 56px); }
   .footer__lockup { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 20px); }
@@ -904,8 +920,39 @@
   .footer__social a { width: 40px; height: 40px; border: 1px solid var(--rule-dark); border-radius: 999px; display: grid; place-items: center; transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
   .footer__social a:hover { border-color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
   .footer__social svg { width: 17px; height: 17px; color: var(--cream); }
+  /* signup + language switcher, centred under the columns */
+  .footer__base {
+    margin-top: clamp(44px, 5vw, 68px); padding-top: clamp(36px, 4vw, 52px);
+    border-top: 1px solid var(--rule-dark);
+    display: grid; justify-items: start; gap: clamp(20px, 2.4vw, 30px);
+  }
+  .footer__form { width: min(460px, 100%); }
   .footer__form label { display: block; font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); margin-bottom: 12px; font-weight: var(--fw-body-dark); }
   .footer__form .row { display: flex; gap: 8px; }
+
+  /* Native <select>: it inherits the OS control look, so the arrow is hidden
+     with appearance:none and drawn as our own chevron. The globe and chevron
+     are pointer-events:none so the whole pill stays clickable. */
+  .footer__lang { position: relative; display: inline-flex; align-items: center; }
+  .footer__lang select {
+    appearance: none; -webkit-appearance: none;
+    height: 42px; padding: 0 40px 0 40px; border-radius: 999px;
+    background: rgba(255,255,255,.04); border: 1px solid var(--rule-dark);
+    color: var(--cream); font-family: var(--font-sans); font-size: var(--fs-body-sm);
+    font-weight: var(--fw-body-dark); cursor: pointer;
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .footer__lang select:hover { border-color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
+  .footer__lang select:focus { outline: none; border-color: var(--fo-accent-hi); }
+  .footer__lang option { background: var(--fo-bg); color: var(--cream); }
+  .footer__lang-icon, .footer__lang-chev {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--fo-accent); pointer-events: none; display: grid; place-items: center;
+  }
+  .footer__lang-icon { left: 14px; }
+  .footer__lang-chev { right: 14px; }
+  .footer__lang-icon svg { width: 16px; height: 16px; }
+  .footer__lang-chev svg { width: 15px; height: 15px; }
   .footer__form input {
     flex: 1; min-width: 0; height: 48px; padding: 0 16px; border-radius: 999px;
     background: rgba(255,255,255,.04); border: 1px solid var(--rule-dark); color: #fff;
@@ -1088,7 +1135,7 @@
       <h1 class="hero__title"><span class="hero__line">Beverly Hills Car Club</span><span class="by">by Alex Manos</span></h1>
       <p class="hero__sub">The world's finest classic automobiles, bought and sold by Alex&nbsp;Manos.</p>
       <div class="hero__ctas">
-        <a class="btn btn--primary" href="/inventory.htm">Browse inventory</a>
+        <a class="btn btn--stone" href="/inventory.htm">Browse inventory</a>
         <a class="btn btn--secondary on-dark" href="/sell-your-car.htm">Sell your classic</a>
       </div>
     </div>
@@ -1444,13 +1491,39 @@
           <a href="https://facebook.com" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5H14z"/></svg></a>
           <a href="https://youtube.com" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></a>
         </div>
-        <form class="footer__form" action="/subscribe" method="post">
-          <label for="nl">Get new arrivals in your inbox</label>
-          <div class="row">
-            <input type="email" id="nl" name="email" placeholder="Email address" required>
-            <button class="btn btn--accent btn--sm" type="submit">Subscribe</button>
-          </div>
-        </form>
+      </div>
+    </div>
+
+    <!-- Signup and the language switcher sit below the columns, centred.
+         The brief (§09) puts the switcher in the footer because it was removed
+         from the header; the seven languages are the ones the live site
+         actually offers, not a guessed set. -->
+    <div class="footer__base">
+      <form class="footer__form" action="/subscribe" method="post">
+        <label for="nl">Get new arrivals in your inbox</label>
+        <div class="row">
+          <input type="email" id="nl" name="email" placeholder="Email address" required>
+          <button class="btn btn--accent btn--sm" type="submit">Subscribe</button>
+        </div>
+      </form>
+
+      <div class="footer__lang">
+        <label class="sr-only" for="lang">Language</label>
+        <span class="footer__lang-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg>
+        </span>
+        <select id="lang" name="lang">
+          <option value="en" selected>English</option>
+          <option value="nl">Nederlands</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+          <option value="ru">Русский</option>
+          <option value="es">Español</option>
+        </select>
+        <span class="footer__lang-chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
       </div>
     </div>
 
