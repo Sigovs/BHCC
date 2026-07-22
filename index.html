@@ -135,25 +135,30 @@
      HEADER — light, sticky
      ============================================================ */
   .hdr {
-    position: sticky; top: 0; z-index: 60; background: var(--bg);
+    position: sticky; top: 0; z-index: 60; background: transparent;
     transition: box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
   }
-  .hdr.is-scrolled { box-shadow: var(--shadow-header); }
+  .hdr.is-scrolled { background: var(--bg); box-shadow: var(--shadow-header); }
+  /* over the hero (transparent state) the header content goes light */
+  .hdr:not(.is-scrolled) .hdr__nav a,
+  .hdr:not(.is-scrolled) .hdr__phone,
+  .hdr:not(.is-scrolled) .hdr__phone-m { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.4); }
+  .hdr:not(.is-scrolled) .hdr__phone svg,
+  .hdr:not(.is-scrolled) .hdr__phone-m svg { color: #fff; }
+  .hdr:not(.is-scrolled) .hdr__burger span { background: #fff; }
   .hdr__in {
     display: flex; align-items: center; gap: 24px;
     max-width: 1320px; margin-inline: auto; padding-inline: var(--container-pad);
-    height: clamp(72px, 8vw, 88px);
+    height: clamp(60px, 5vw, 74px);   /* ~72px desktop, ~60px mobile — per brief */
   }
-  .brand { display: inline-flex; flex-direction: column; line-height: 1; }
-  .brand__name {
-    font-family: var(--font-display); font-weight: 400;
-    font-size: clamp(1.15rem, 1.4vw, 1.5rem); letter-spacing: .005em; color: var(--ink);
-  }
-  .brand__by {
-    font-family: var(--font-text); font-style: italic; font-weight: 400;
-    font-size: clamp(.78rem, .95vw, .95rem); color: var(--gold-ink); margin-top: 4px; letter-spacing: .01em;
-  }
-  .hdr__nav { margin-inline: auto; }
+  .brand { display: inline-flex; align-items: center; }
+  .brand__logo { height: clamp(42px, 4.4vw, 54px); width: auto; display: block; }
+  /* two colour states: white signature over the hero, dark once the header goes solid */
+  .brand__logo--dark { display: none; }
+  .hdr.is-scrolled .brand__logo--light { display: none; }
+  .hdr.is-scrolled .brand__logo--dark { display: block; }
+  .hdr:not(.is-scrolled) .brand__logo--light { filter: drop-shadow(0 2px 10px rgba(0,0,0,.45)); }
+  .hdr__nav { margin-left: auto; }   /* nav sits right, with the CTAs as the rightmost elements */
   .hdr__nav ul { display: flex; align-items: center; gap: clamp(20px, 2vw, 34px); }
   .hdr__nav a {
     position: relative; font-size: var(--fs-body-sm); font-weight: var(--fw-medium);
@@ -174,7 +179,10 @@
   .hdr__phone svg { width: 15px; height: 15px; color: var(--gold-ink); }
   .hdr__phone:hover { color: var(--gold-ink); }
 
-  .hdr__burger { display: none; width: 44px; height: 44px; margin-left: auto; }
+  .hdr__burger { display: none; width: 44px; height: 44px; }
+  /* mobile-only compact phone icon (right side on mobile) */
+  .hdr__phone-m { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: var(--ink); }
+  .hdr__phone-m svg { width: 20px; height: 20px; color: var(--gold-ink); }
   .hdr__burger span { display: block; width: 24px; height: 1.5px; background: var(--ink); margin: 5px auto; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
   .hdr.is-open .hdr__burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
   .hdr.is-open .hdr__burger span:nth-child(2) { opacity: 0; }
@@ -195,34 +203,32 @@
   /* ============================================================
      HERO — light inset frame (ref7)
      ============================================================ */
-  .hero { position: relative; }
+  .hero { position: relative; margin-top: calc(-1 * clamp(60px, 5vw, 74px)); }   /* slide up under the transparent header */
   .hero__frame {
     position: relative; overflow: hidden; isolation: isolate;
     height: 100svh; min-height: 560px; border-radius: 0;
   }
   .hero__media { position: absolute; inset: 0; z-index: -2; }
-  .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 62%; }
-  /* soft light scrim under the title only — lifts dark ink off the sky, keeps image dominant */
-  .hero__scrim {
-    position: absolute; inset: 0; z-index: -1;
-    background:
-      linear-gradient(to bottom, rgba(250,249,246,.42) 0%, rgba(250,249,246,.12) 30%, rgba(250,249,246,0) 52%),
-      radial-gradient(70% 44% at 50% 26%, rgba(250,249,246,.34) 0%, rgba(250,249,246,0) 72%);
-  }
+  .hero__media picture { display: block; width: 100%; height: 100%; }
+  .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 66%; }
   .hero__inner {
     position: relative; height: 100%;
     display: flex; flex-direction: column; align-items: center;
     text-align: center; padding: clamp(40px, 6vw, 84px) clamp(20px, 5vw, 64px);
+    /* push content back down below the overlapping header */
+    padding-top: calc(clamp(40px, 6vw, 84px) + clamp(60px, 5vw, 74px));
   }
   .hero__title {
-    font-family: var(--font-display); font-weight: 400; color: var(--ink);
+    font-family: var(--font-display); font-weight: 400; color: #fff;
     font-size: var(--fs-hero); line-height: 1.02; letter-spacing: var(--ls-display);
+    text-shadow: 0 2px 30px rgba(0,0,0,.42), 0 1px 4px rgba(0,0,0,.32);
   }
   .hero__title .by { display: block; font-size: .58em; margin-top: .12em; }
   .hero__sub {
     margin-top: clamp(14px, 1.6vw, 20px); max-width: 52ch;
     font-family: var(--font-text); font-style: italic; font-size: var(--fs-body-lg);
-    line-height: 1.5; color: var(--ink-soft);
+    line-height: 1.5; color: rgba(255,255,255,.92);
+    text-shadow: 0 1px 16px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
   }
   .hero__ctas { display: flex; gap: 14px; margin-top: clamp(24px, 3vw, 34px); flex-wrap: wrap; justify-content: center; }
   .hero__ctas .btn--light { box-shadow: 0 1px 3px rgba(26,26,24,.06); }
@@ -243,12 +249,25 @@
   @media (prefers-reduced-motion: reduce) {
     .js .hero__title .hero__line, .js .hero__title .by, .js .hero__sub, .js .hero__ctas .btn { opacity: 1; animation: none; }
   }
+  /* slow cinematic zoom-out on the idle hero image — perceptible but calm.
+     linear + alternate so it keeps visibly moving (no dead-zone at the ends). */
+  @keyframes heroDrift {
+    from { transform: scale(1.18) translate3d(-1.6%, -1.2%, 0); }
+    to   { transform: scale(1.04) translate3d(0, 0, 0); }
+  }
+  .js .hero__media img { transform-origin: 52% 62%; animation: heroDrift 22s linear infinite alternate; will-change: transform; }
+  @media (prefers-reduced-motion: reduce) { .hero__media img { animation: none; transform: none; } }
 
-  /* search band — its own light strip under the full-screen hero */
-  .searchbar { padding-block: clamp(18px, 2.4vw, 30px); border-bottom: 1px solid var(--rule); }
-  .searchbar__in { display: flex; align-items: center; gap: 24px; }
+  /* search band — a thin-lined card under the full-screen hero */
+  .searchbar { padding-block: clamp(26px, 3vw, 44px); }
+  .searchbar__in {
+    display: flex; align-items: center; gap: 24px;
+    border: 1px solid var(--rule); border-radius: 16px;
+    padding: clamp(16px, 1.8vw, 22px) clamp(20px, 2.2vw, 30px);
+    background: rgba(255,255,255,.35);
+  }
   .search-form { flex: 1; }
-  .search-form__field { position: relative; max-width: 560px; }
+  .search-form__field { position: relative; max-width: 100%; }   /* fill the form column — long search field */
   .search-form__field input {
     width: 100%; height: 54px; padding: 0 52px 0 22px; border-radius: 999px;
     background: var(--bg-deep); border: 1px solid rgba(26,26,24,.10);
@@ -295,9 +314,19 @@
      ============================================================ */
   /* full-bleed founder — photo runs to the left screen edge, copy sits right */
   .founder-sec { padding-block: 0; }
+
+  /* PIN STACK — founder pins to the top while the Sell slab scrolls up over it,
+     then both release together. Isolated stacking context so the pinned founder
+     never paints over the sections that follow. */
+  .pin-stack { position: relative; isolation: isolate; }
+  .pin-stack .founder-sec { position: sticky; top: 0; z-index: 0; }
+  .pin-stack .sell { position: relative; z-index: 1; }
+  @media (max-width: 860px) {
+    .pin-stack .founder-sec { position: static; }   /* no pin on small screens */
+  }
   .founder { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
   .founder__media { overflow: hidden; background: var(--bg-deep); }
-  .founder__media img { width: 100%; height: 100%; min-height: clamp(480px, 62vh, 760px); object-fit: cover; object-position: 50% 45%; }
+  .founder__media img { width: 100%; height: 100%; min-height: clamp(480px, 62vh, 760px); object-fit: cover; object-position: 50% 45%; will-change: transform; }
   .founder__body { align-self: center; max-width: 600px; padding: clamp(44px, 6vw, 96px) clamp(24px, 5vw, 84px); }
   .founder__body .eyebrow { display: block; margin-bottom: 20px; }
   .founder__quote {
@@ -425,11 +454,12 @@
   }
   /* heading LEFT (sticky anchor), posts RIGHT */
   .news__in {
-    display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
-    gap: clamp(40px, 5vw, 96px); align-items: start;
+    display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+    gap: clamp(28px, 3vw, 56px); align-items: start;
+    max-width: 1140px; margin-inline: auto;   /* pull the whole block in so columns sit together */
   }
   .news__head { order: -1; }
-  .news__list { margin-left: auto; }   /* posts sit to the right edge of their column */
+  .news__list { margin-left: 0; }   /* posts hug the left edge of their column, close to the heading */
 
   /* LEFT — 4 stacked posts, held compact */
   .news__list { display: flex; flex-direction: column; gap: clamp(48px, 6vw, 84px); max-width: 500px; }
@@ -496,10 +526,12 @@
      RESPONSIVE
      ============================================================ */
   @media (max-width: 1024px) {
+    /* per brief: hamburger left · logo centered · phone icon right */
     .hdr__nav { display: none; }
-    .hdr__actions .btn { display: none; }
-    .hdr__actions .hdr__phone { display: none; }
-    .hdr__burger { display: block; }
+    .hdr__actions { display: none; }
+    .hdr__burger { display: block; order: -1; }
+    .brand { margin-inline: auto; }        /* centre the logo */
+    .hdr__phone-m { display: inline-flex; }
     .founder { grid-template-columns: 1fr; }
     .founder__media img { min-height: 340px; }
     .founder__body { padding: 32px var(--container-pad) 8px; }
@@ -548,9 +580,12 @@
      ============================================================ -->
 <header class="hdr" id="hdr">
   <div class="hdr__in">
+    <button class="hdr__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" id="burger">
+      <span></span><span></span><span></span>
+    </button>
     <a class="brand" href="/" aria-label="Beverly Hills Car Club by Alex Manos — home">
-      <span class="brand__name">Beverly Hills Car Club</span>
-      <span class="brand__by">by Alex Manos</span>
+      <img class="brand__logo brand__logo--light" src="assets/images/logo-lockup-light.png?v=1" alt="Beverly Hills Car Club by Alex Manos" width="280" height="123" fetchpriority="high">
+      <img class="brand__logo brand__logo--dark" src="assets/images/logo-lockup.png?v=1" alt="" aria-hidden="true" width="280" height="123">
     </a>
 
     <nav class="hdr__nav" aria-label="Primary">
@@ -559,21 +594,20 @@
         <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
         <li><a href="/about.htm">About</a></li>
         <li><a href="/blog.htm">Blog</a></li>
+        <li><a href="/how-to-buy.htm">How To Buy</a></li>
         <li><a href="/contact.htm">Contact</a></li>
       </ul>
     </nav>
 
     <div class="hdr__actions">
-      <a class="btn btn--outline btn--sm" href="/inventory.htm">Browse cars</a>
-      <a class="btn btn--dark btn--sm" href="/sell-your-car.htm">Sell your car</a>
       <a class="hdr__phone" href="tel:+13109750272">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         (310) 975-0272
       </a>
-      <button class="hdr__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" id="burger">
-        <span></span><span></span><span></span>
-      </button>
     </div>
+    <a class="hdr__phone-m" href="tel:+13109750272" aria-label="Call (310) 975-0272">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </a>
   </div>
 
   <!-- mobile drawer -->
@@ -583,12 +617,9 @@
       <li><a class="mlink" href="/sell-your-car.htm">Sell Your Car</a></li>
       <li><a class="mlink" href="/about.htm">About</a></li>
       <li><a class="mlink" href="/blog.htm">Blog</a></li>
+      <li><a class="mlink" href="/how-to-buy.htm">How To Buy</a></li>
       <li><a class="mlink" href="/contact.htm">Contact</a></li>
     </ul>
-    <div class="mcta">
-      <a class="btn btn--primary" href="/sell-your-car.htm">Sell your car</a>
-      <a class="btn btn--secondary" href="/inventory.htm">Browse cars</a>
-    </div>
     <a class="hdr__phone" href="tel:+13109750272">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       (310) 975-0272
@@ -603,18 +634,17 @@
   <div class="hero__frame">
     <div class="hero__media">
       <picture>
-        <source media="(max-width: 760px)" srcset="assets/images/hero-pch-sm.jpg?v=1">
-        <img src="assets/images/hero-pch.jpg?v=1" alt="A classic Mercedes-Benz 300SL roadster on the Pacific Coast Highway at golden hour" fetchpriority="high" width="2048" height="1024">
+        <source media="(max-width: 760px)" srcset="assets/images/hero-drive-sm.jpg?v=1">
+        <img src="assets/images/hero-drive.jpg?v=1" alt="A red Mercedes-Benz 300SL roadster on a coastal canyon road at dusk" fetchpriority="high" width="2400" height="1716">
       </picture>
     </div>
-    <div class="hero__scrim"></div>
 
     <div class="hero__inner">
       <h1 class="hero__title"><span class="hero__line">Beverly Hills Car Club</span><span class="by">by Alex Manos</span></h1>
       <p class="hero__sub">The world's finest classic automobiles, bought and sold by Alex&nbsp;Manos.</p>
       <div class="hero__ctas">
         <a class="btn btn--primary" href="/inventory.htm">Browse inventory</a>
-        <a class="btn btn--secondary" href="/sell-your-car.htm">Sell your classic</a>
+        <a class="btn btn--secondary on-dark" href="/sell-your-car.htm">Sell your classic</a>
       </div>
     </div>
   </div>
@@ -689,6 +719,12 @@
 </section>
 
 <!-- ============================================================
+     PIN STACK — the Founder story stays sticky while the Sell slab
+     scrolls up and over it, then both release together.
+     ============================================================ -->
+<div class="pin-stack">
+
+<!-- ============================================================
      FOUNDER
      ============================================================ -->
 <section class="founder-sec section--tint" aria-labelledby="founder-h">
@@ -731,6 +767,8 @@
     </div>
   </div>
 </section>
+
+</div><!-- /.pin-stack -->
 
 <!-- ============================================================
      TESTIMONIALS + PRESS
@@ -800,7 +838,7 @@
 <section class="section news" aria-labelledby="news-h">
   <div class="shell news__in">
 
-    <!-- LEFT — 4 posts that scroll past the sticky heading -->
+    <!-- LEFT — 3 posts that scroll past the sticky heading -->
     <div class="news__list">
       <article class="npost">
         <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series 1 Roadster" loading="lazy" width="1200" height="675"></figure>
@@ -821,13 +859,6 @@
         <span class="npost__date mono">June 05, 2026 · Inside the shop</span>
         <h3 class="npost__title">Preservation over restoration — why we leave the patina</h3>
         <p class="npost__text">A car is only original once. Increasingly, the market agrees — and the honest wear of a well-kept Pagoda tells a story no respray can.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
-      </article>
-      <article class="npost">
-        <figure><img src="assets/images/inventory-real/1959-porsche-356a-cabriolet.jpg" alt="1959 Porsche 356A Cabriolet" loading="lazy" width="1200" height="675"></figure>
-        <span class="npost__date mono">May 24, 2026 · Barn find</span>
-        <h3 class="npost__title">A 356 comes home — thirty years in a Pasadena garage</h3>
-        <p class="npost__text">One owner, one garage, since 1994. The story of how this 356A Cabriolet surfaced, and what it took to wake it gently back to life.</p>
         <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
       </article>
     </div>
@@ -914,7 +945,12 @@
 <script>
   // sticky header shadow
   const hdr = document.getElementById('hdr');
-  const onScroll = () => hdr.classList.toggle('is-scrolled', window.scrollY > 8);
+  const heroEl = document.querySelector('.hero');
+  // stay transparent while the hero is the backdrop; go solid once it scrolls out
+  const onScroll = () => {
+    const trigger = heroEl ? heroEl.offsetHeight - 80 : 8;
+    hdr.classList.toggle('is-scrolled', window.scrollY > trigger);
+  };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -995,6 +1031,29 @@
     update();
   })();
 
+  // scroll-linked zoom + drift on the founder portrait — slow push-in as it passes
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const media = document.querySelector('.founder__media');
+    const img = media && media.querySelector('img');
+    if (!img) return;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      const r = media.getBoundingClientRect();
+      if (r.bottom < -160 || r.top > vh + 160) { ticking = false; return; }
+      const prog = (r.top + r.height / 2 - vh / 2) / vh;   // + above centre, − below
+      const scale = 1.09 + prog * 0.07;                    // ~1.04–1.15, never below 1
+      let dy = prog * -24; dy = Math.max(-18, Math.min(18, dy));
+      img.style.transform = `scale(${scale.toFixed(3)}) translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
   // News/Events is a pure CSS sticky-column now (right heading sticky, left
   // posts scroll, unsticks at section end) — no JS needed.
 
@@ -1018,6 +1077,13 @@
         child.querySelectorAll('[data-reveal]').forEach(el => { el.style.transitionDelay = d; });
       });
     });
+    // founder — the portrait reveals first, then the quote/body slide in one by one
+    const founderBody = document.querySelector('.founder__body');
+    if (founderBody) {
+      [...founderBody.children].forEach((child, i) => {
+        if (child.hasAttribute('data-reveal')) child.style.transitionDelay = (0.32 + i * 0.1).toFixed(2) + 's';
+      });
+    }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
