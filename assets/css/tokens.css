@@ -141,16 +141,19 @@
      hero is only 720 − 72 = 648px tall, and a hero H1 sized off 1280px of
      width pushes the CTAs under the fold. min() lets whichever axis is
      scarcer win:
-       1280×720  → min(6.6vw=84.5, 12vh=86.4) = 84.5px   ← width binds
-       1366×768  → min(90.2, 92.2)            = 90.2px
-       1440×900  → min(95.0, 108.0)           = 95.0px
-       2560×1440 → min(169, 173)  → clamped   = 96px
+       1280×720  → min(5.9vw=75.5, 10.8vh=77.8) = 75.5px  ← width binds
+       1366×768  → min(80.6, 82.9)              = 80.6px
+       1440×900  → min(85.0, 97.2)   → clamped  = 84px
+       2560×1440 → min(151, 155)     → clamped  = 84px
      vmin was rejected: it is min(vw,vh) with ONE shared coefficient, so it
      cannot be tuned per axis — at 2560×1440 vmin tracks height and would
      under-size the H1 on the very screen with the most room.
-     Ceiling 96px: Gloock's measured limit at 1440 is ~140px (line 1 = 1337px),
-     but this lockup is left-aligned and must clear the car at x 40%. */
-  --fs-hero:     clamp(1.875rem, min(6.6vw, 12vh), 6rem);          /* 30 → 96 */
+     Ceiling 84px (was 96): the lockup now sits over a full-bleed photograph
+     with a scrim rather than clearing the car by position alone, so it does
+     not need to run the full width to hold the frame. Gloock's measured limit
+     at 1440 is ~140px (line 1 = 1337px) — this is well inside it.
+     Floor 28px: at 390 the title sets to ~320px inside a 350px column. */
+  --fs-hero:     clamp(1.75rem, min(5.9vw, 10.8vh), 5.25rem);      /* 28 → 84 */
 
   /* §05 editorial headline. NOT --fs-h1 — brief §05 says "2–3 lines maximum",
      and that has to hold at BOTH ends, so both ends were solved in-browser

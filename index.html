@@ -788,11 +788,14 @@
   .npost__text { margin-top: 12px; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.6; max-width: 46ch; }
   .npost__more { margin-top: 16px; }
 
-  /* Sticky heading, parked at the VERTICAL MIDDLE of the viewport rather than
-     near the top: top:50vh puts its own top edge at centre, the translate pulls
-     it back by half its height, so the block rides level with the tiles as they
-     scroll past it. */
-  .news__head { position: sticky; top: 50vh; transform: translateY(-50%); align-self: start; max-width: 32ch; }
+  /* Sticky heading, parked at the vertical middle of the viewport.
+     NOT `top:50vh` + `translateY(-50%)`: a transform moves the block off its
+     flow position, so at the start of the section it rendered half its own
+     height ABOVE the section and bled over the breaker above it. A sticky
+     element never rises above its flow position, so the centring has to come
+     from `top` alone — the JS below sets it to (viewportH − headingH) / 2.
+     This value is the no-JS fallback. */
+  .news__head { position: sticky; top: clamp(24px, 22vh, 200px); align-self: start; max-width: 32ch; }
   .news__head .eyebrow { display: block; color: var(--gold); margin-bottom: 20px; }
   .news__title {
     font-family: var(--font-display); font-weight: 400; color: #fff;
@@ -1537,6 +1540,20 @@
       }
       const run = Math.max(0, Math.round(window.innerHeight / 2 - press.offsetHeight / 2));
       founder.style.setProperty('--founder-run', run + 'px');
+    };
+    calibrate();
+    window.addEventListener('resize', calibrate);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
+  })();
+
+  // News heading — centre it by offset, not by transform (see the CSS note).
+  // Recomputed on resize and once webfonts land, since Gloock changes its height.
+  (function () {
+    const head = document.querySelector('.news__head');
+    if (!head) return;
+    const calibrate = () => {
+      if (window.matchMedia('(max-width: 900px)').matches) { head.style.top = ''; return; }
+      head.style.top = Math.max(24, Math.round((window.innerHeight - head.offsetHeight) / 2)) + 'px';
     };
     calibrate();
     window.addEventListener('resize', calibrate);
