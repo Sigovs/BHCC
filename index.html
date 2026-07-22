@@ -220,7 +220,61 @@
   .hdr__nav a:hover { color: var(--ink); background: rgba(26,26,24,.07); }
   /* over the hero the bar is glass on a photograph, so the pill inverts */
   .hdr:not(.is-scrolled) .hdr__nav a:hover { color: #fff; background: rgba(255,255,255,.18); }
-  .hdr__actions { display: flex; align-items: center; gap: 14px; justify-self: end; }
+  .hdr__actions { display: flex; align-items: center; gap: 8px; justify-self: end; min-width: 0; }
+
+  /* ------------------------------------------------------------------
+     HEADER ACTIONS — circle grows into a pill on hover / focus.
+     The reveal animates grid-template-columns 0fr → 1fr rather than
+     max-width: 0fr collapses to the content's real width, so the open
+     state is never a guessed number and never clips a longer label.
+     ------------------------------------------------------------------ */
+  .hact {
+    display: inline-flex; align-items: center; flex-direction: row-reverse;
+    padding: 4px; border-radius: 999px;
+    border: 1px solid transparent; background: transparent;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .hact:hover, .hact:focus-within { background: rgba(26,26,24,.06); border-color: rgba(26,26,24,.10); }
+  .hact__btn {
+    flex: none; width: 40px; height: 40px; border-radius: 999px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(26,26,24,.16); color: var(--ink-soft); background: transparent;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .hact__btn svg { width: 17px; height: 17px; }
+  .hact:hover .hact__btn, .hact:focus-within .hact__btn { color: var(--ink); border-color: rgba(26,26,24,.28); }
+  /* minmax(0, …) is load-bearing: a bare 0fr track keeps an auto MINIMUM, so it
+     never shrinks past min-content and the first glyph of each label leaks out
+     of the closed circle. */
+  .hact__reveal { display: grid; grid-template-columns: minmax(0, 0fr); transition: grid-template-columns .36s var(--ease); }
+  /* the clipping wrapper must be padding-free: overflow:hidden clips to the
+     PADDING box, so padding on the clipped element itself leaves a sliver of
+     the first glyph showing out of the closed circle. Padding lives on the
+     label inside it. */
+  .hact__reveal > * { overflow: hidden; min-width: 0; }
+  .hact:hover .hact__reveal, .hact:focus-within .hact__reveal { grid-template-columns: minmax(0, 1fr); }
+  .hact__label {
+    display: block; white-space: nowrap; padding-inline: 14px 6px;
+    font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
+  }
+  .hact__count { color: var(--gold-ink); }
+  .hact__field {
+    display: block; width: 190px; height: 34px; margin-inline: 12px 4px;
+    border: 0; background: transparent; outline: none;
+    font-family: var(--font-sans); font-size: var(--fs-body-sm); color: var(--ink);
+  }
+  .hact__field::placeholder { color: var(--ink-muted); }
+
+  /* over the hero the bar is transparent — the whole set inverts to white */
+  .hdr:not(.is-scrolled) .hact:hover,
+  .hdr:not(.is-scrolled) .hact:focus-within { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.26); }
+  .hdr:not(.is-scrolled) .hact__btn { border-color: rgba(255,255,255,.42); color: #fff; }
+  .hdr:not(.is-scrolled) .hact:hover .hact__btn,
+  .hdr:not(.is-scrolled) .hact:focus-within .hact__btn { border-color: #fff; color: #fff; }
+  .hdr:not(.is-scrolled) .hact__label,
+  .hdr:not(.is-scrolled) .hact__field { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.45); }
+  .hdr:not(.is-scrolled) .hact__count { color: var(--gold); }
+  .hdr:not(.is-scrolled) .hact__field::placeholder { color: rgba(255,255,255,.72); }
   .hdr__phone {
     display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
     font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
@@ -960,9 +1014,31 @@
     </nav>
 
     <div class="hdr__actions">
-      <a class="hdr__phone" href="tel:+13109750272">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        (310) 975-0272
+      <!-- Three circles that grow into their content on hover / keyboard focus.
+           The labels are always in the DOM — only visually collapsed — so a
+           screen reader gets "Search inventory", the number and "My Garage, 5
+           saved" without needing the hover state. -->
+      <form class="hact hact--search" role="search" action="/inventory.htm">
+        <span class="hact__reveal"><span>
+          <input class="hact__field" type="search" name="q" placeholder="Make, model or year…" aria-label="Search inventory">
+        </span></span>
+        <button class="hact__btn" type="submit" aria-label="Search inventory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </form>
+
+      <a class="hact hact--phone" href="tel:+13109750272">
+        <span class="hact__reveal"><span><span class="hact__label">(310) 975-0272</span></span></span>
+        <span class="hact__btn" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </span>
+      </a>
+
+      <a class="hact hact--member" href="/account.htm">
+        <span class="hact__reveal"><span><span class="hact__label">My&nbsp;Garage <span class="hact__count">(5)</span></span></span></span>
+        <span class="hact__btn" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>
+        </span>
       </a>
     </div>
     <a class="hdr__phone-m" href="tel:+13109750272" aria-label="Call (310) 975-0272">
@@ -1544,6 +1620,17 @@
     calibrate();
     window.addEventListener('resize', calibrate);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
+  })();
+
+  // Search circle: first click opens the field and focuses it rather than
+  // submitting an empty query — on touch there is no hover to open it with.
+  (function () {
+    const form = document.querySelector('.hact--search');
+    if (!form) return;
+    const field = form.querySelector('.hact__field');
+    form.querySelector('.hact__btn').addEventListener('click', e => {
+      if (!field.value.trim()) { e.preventDefault(); field.focus(); }
+    });
   })();
 
   // News heading — centre it by offset, not by transform (see the CSS note).
