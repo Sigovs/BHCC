@@ -30,6 +30,7 @@
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
   body {
     background: var(--bg);
@@ -44,6 +45,15 @@
     /* clip (not hidden): stops off-canvas x-overflow WITHOUT making <body> a
        scroll container — keeps the footer's position:sticky reveal working. */
     overflow-x: clip;
+  }
+
+  /* Header height lives here (not inline in three places) because the hero
+     has to cancel it with a negative margin and pay it back as padding.
+     Two values: the tall transparent state over the hero, and the shorter
+     bar that slides in on scroll. */
+  :root {
+    --hdr-h:          clamp(72px, 6vw, 100px);
+    --hdr-h-scrolled: clamp(60px, 4.6vw, 72px);
   }
 
   /* ============================================================
@@ -114,6 +124,10 @@
   /* on dark surfaces (sell band): secondary inverts to cream text */
   .btn--secondary.on-dark { color: var(--cream); border-color: var(--gold); }
   .btn--secondary.on-dark:hover { background: rgba(194,161,92,.16); }
+  /* gold fill — footer subscribe. Was used in the markup but never defined,
+     so Subscribe was rendering as bare text on the near-black footer. */
+  .btn--gold { background: var(--gold); color: var(--ink); border-color: var(--gold); border-radius: 6px; }
+  .btn--gold:hover { background: #d3b775; border-color: #d3b775; }
 
   /* ============================================================
      SCROLL REVEAL — images rise from blur, text slides in from the side.
@@ -126,6 +140,7 @@
   .js [data-reveal="img"]    { opacity: 0; transform: translateY(46px); filter: blur(12px); }
   .js [data-reveal="text"]   { opacity: 0; transform: translateX(-46px); }
   .js [data-reveal="text-r"] { opacity: 0; transform: translateX(46px); }
+  .js [data-reveal="up"]     { opacity: 0; transform: translateY(30px); }
   .js [data-reveal].is-in { opacity: 1; transform: none; filter: blur(0); }
   @media (prefers-reduced-motion: reduce) {
     .js [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
@@ -134,11 +149,33 @@
   /* ============================================================
      HEADER — light, sticky
      ============================================================ */
-  .hdr {
-    position: sticky; top: 0; z-index: 60; background: transparent;
-    transition: box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
+  .hdr { position: sticky; top: 0; z-index: 60; background: transparent; }
+
+  /* Over the hero: NO bar — just a top-down scrim so the white nav and the
+     logo pop off whatever the hero photo is doing up there (sky, chrome,
+     blown highlights). Fades out once the real bar takes over. */
+  .hdr::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 220%;
+    pointer-events: none; z-index: 0;
+    background: linear-gradient(180deg,
+      rgba(10,9,7,.66) 0%, rgba(10,9,7,.42) 34%, rgba(10,9,7,.16) 66%, rgba(10,9,7,0) 100%);
+    transition: opacity var(--dur) var(--ease);
   }
-  .hdr.is-scrolled { background: var(--bg); box-shadow: var(--shadow-header); }
+  /* On scroll the bar itself SLIDES DOWN into place — it arrives, it doesn't
+     just cross-fade. ::after is the bar; ::before (the scrim) leaves. */
+  .hdr::after {
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background: var(--bg);
+    /* soft shallow drop only — no hairline rule under the bar */
+    box-shadow: 0 6px 18px -8px rgba(26,26,24,.24);
+    transform: translateY(-101%);
+    transition: transform .42s var(--ease);
+  }
+  .hdr.is-scrolled::before { opacity: 0; }
+  .hdr.is-scrolled::after  { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .hdr::after { transition: none; } }
+  /* content rides above both pseudo-layers */
+  .hdr__in, .hdr__mobile { position: relative; z-index: 1; }
   /* over the hero (transparent state) the header content goes light */
   .hdr:not(.is-scrolled) .hdr__nav a,
   .hdr:not(.is-scrolled) .hdr__phone,
@@ -147,18 +184,31 @@
   .hdr:not(.is-scrolled) .hdr__phone-m svg { color: #fff; }
   .hdr:not(.is-scrolled) .hdr__burger span { background: #fff; }
   .hdr__in {
-    display: flex; align-items: center; gap: 24px;
-    max-width: 1320px; margin-inline: auto; padding-inline: var(--container-pad);
-    height: clamp(60px, 5vw, 74px);   /* ~72px desktop, ~60px mobile — per brief */
+    /* 1fr | auto | 1fr keeps the nav optically centred in the bar no matter how
+       wide the mark or the phone number get. It also does the right thing on
+       mobile, where the visible children become burger | logo | phone. */
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
+    /* wider than the 1320 content shell — the bar spans the full container so
+       the mark and the nav sit closer to the screen edges than the copy does */
+    max-width: var(--container-max); margin-inline: auto; padding-inline: var(--container-pad);
+    height: var(--hdr-h);
+    transition: height var(--dur) var(--ease);
   }
-  .brand { display: inline-flex; align-items: center; }
-  .brand__logo { height: clamp(42px, 4.4vw, 54px); width: auto; display: block; }
-  /* two colour states: white signature over the hero, dark once the header goes solid */
-  .brand__logo--dark { display: none; }
-  .hdr.is-scrolled .brand__logo--light { display: none; }
-  .hdr.is-scrolled .brand__logo--dark { display: block; }
-  .hdr:not(.is-scrolled) .brand__logo--light { filter: drop-shadow(0 2px 10px rgba(0,0,0,.45)); }
-  .hdr__nav { margin-left: auto; }   /* nav sits right, with the CTAs as the rightmost elements */
+  .hdr.is-scrolled .hdr__in { height: var(--hdr-h-scrolled); }
+  .brand { display: inline-flex; align-items: center; justify-self: start; }
+  /* The shield is the brand — it gets room to be a mark, not a favicon.
+     Shrinks with the bar on scroll so the sticky state stays compact. */
+  .brand__logo { height: clamp(52px, 5.6vw, 82px); width: auto; display: block; transition: height var(--dur) var(--ease); }
+  .hdr.is-scrolled .brand__logo { height: clamp(42px, 3.6vw, 54px); }
+  /* Two lockups, swapped by state — not two colours of one lockup:
+     over the hero the full shield + signature (329×123); once the bar slides in
+     and the header shrinks, the signature would be unreadable at that size, so
+     it drops to the shield alone (123×123 square). */
+  .brand__logo--bar { display: none; }
+  .hdr.is-scrolled .brand__logo--hero { display: none; }
+  .hdr.is-scrolled .brand__logo--bar { display: block; }
+  .hdr:not(.is-scrolled) .brand__logo--hero { filter: drop-shadow(0 2px 10px rgba(0,0,0,.45)); }
+  .hdr__nav { justify-self: center; }
   .hdr__nav ul { display: flex; align-items: center; gap: clamp(20px, 2vw, 34px); }
   .hdr__nav a {
     position: relative; font-size: var(--fs-body-sm); font-weight: var(--fw-medium);
@@ -171,7 +221,7 @@
   }
   .hdr__nav a:hover { color: var(--ink); }
   .hdr__nav a:hover::after { transform: scaleX(1); }
-  .hdr__actions { display: flex; align-items: center; gap: 14px; }
+  .hdr__actions { display: flex; align-items: center; gap: 14px; justify-self: end; }
   .hdr__phone {
     display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
     font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
@@ -181,7 +231,7 @@
 
   .hdr__burger { display: none; width: 44px; height: 44px; }
   /* mobile-only compact phone icon (right side on mobile) */
-  .hdr__phone-m { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: var(--ink); }
+  .hdr__phone-m { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: var(--ink); justify-self: end; }
   .hdr__phone-m svg { width: 20px; height: 20px; color: var(--gold-ink); }
   .hdr__burger span { display: block; width: 24px; height: 1.5px; background: var(--ink); margin: 5px auto; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
   .hdr.is-open .hdr__burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
@@ -203,10 +253,22 @@
   /* ============================================================
      HERO — light inset frame (ref7)
      ============================================================ */
-  .hero { position: relative; margin-top: calc(-1 * clamp(60px, 5vw, 74px)); }   /* slide up under the transparent header */
+  .hero { position: relative; margin-top: calc(-1 * var(--hdr-h)); }   /* slide up under the transparent header */
   .hero__frame {
     position: relative; overflow: hidden; isolation: isolate;
     height: 100svh; min-height: 560px; border-radius: 0;
+  }
+  /* SCRIM — the H1 was sitting unprotected on a blown-out sky.
+     NOT tokens.css's --hero-overlay: that one is a radial weighted to the
+     CENTRE, written for a centred lockup. This lockup is top-anchored, so the
+     protection is top-weighted instead — it holds the type down to ~55% and
+     then gets out of the way, which keeps the car bright rather than muddying
+     the whole frame. The last stop seats the hero into the search band. */
+  .hero__frame::after {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(180deg,
+      rgba(10,9,7,.30) 0%, rgba(10,9,7,.38) 22%, rgba(10,9,7,.30) 44%,
+      rgba(10,9,7,.06) 62%, rgba(10,9,7,0) 76%, rgba(10,9,7,.32) 100%);
   }
   .hero__media { position: absolute; inset: 0; z-index: -2; }
   .hero__media picture { display: block; width: 100%; height: 100%; }
@@ -216,7 +278,7 @@
     display: flex; flex-direction: column; align-items: center;
     text-align: center; padding: clamp(40px, 6vw, 84px) clamp(20px, 5vw, 64px);
     /* push content back down below the overlapping header */
-    padding-top: calc(clamp(40px, 6vw, 84px) + clamp(60px, 5vw, 74px));
+    padding-top: calc(clamp(40px, 6vw, 84px) + var(--hdr-h));
   }
   .hero__title {
     font-family: var(--font-display); font-weight: 400; color: #fff;
@@ -257,6 +319,75 @@
   }
   .js .hero__media img { transform-origin: 52% 62%; animation: heroDrift 22s linear infinite alternate; will-change: transform; }
   @media (prefers-reduced-motion: reduce) { .hero__media img { animation: none; transform: none; } }
+
+  /* ============================================================
+     HERO — WATCH THE FILM CARD (bottom-right)
+     Glass card so it reads on any frame of the photograph, gold hairline to
+     tie it to the chrome, and it is a real button — the film opens in a
+     lightbox rather than autoplaying behind the type.
+     ============================================================ */
+  /* Grey-blue, not gold — same slate family as the footer accent and the News
+     haze. Measured over the card ground (rgba(16,14,10,.42) on the hero's dark
+     road ≈ #1b1815): label #B3C1CD = 9.5, and the hover fill #8D9AA6 carries
+     --ink at 6.4. Both clear AA, which the 11px uppercase label needs. */
+  .hero__play {
+    --pc-line:    rgba(141,154,166,.45);
+    --pc-line-hi: #B3C1CD;
+    --pc-label:   #B3C1CD;
+    --pc-fill:    #8D9AA6;
+    position: absolute; z-index: 3;
+    right: clamp(20px, 5vw, 64px); bottom: clamp(24px, 5vh, 56px);
+    display: inline-flex; align-items: center; gap: 16px;
+    padding: 14px 26px 14px 16px; border-radius: 999px;
+    background: rgba(16,14,10,.42); border: 1px solid var(--pc-line);
+    -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%);
+    color: #fff; text-align: left;
+    box-shadow: 0 18px 44px -18px rgba(0,0,0,.7);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .hero__play:hover { background: rgba(16,14,10,.58); border-color: var(--pc-line-hi); transform: translateY(-2px); }
+  .hero__play-icon {
+    flex: none; width: 46px; height: 46px; border-radius: 999px;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,.10); border: 1px solid var(--pc-line-hi); color: #fff;
+    transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .hero__play-icon svg { width: 22px; height: 22px; margin-left: 2px; }   /* optical centring of a triangle */
+  .hero__play:hover .hero__play-icon { background: var(--pc-fill); border-color: var(--pc-fill); color: var(--ink); }
+  .hero__play-txt { display: grid; gap: 3px; }
+  .hero__play-k { font-size: var(--fs-body-sm); font-weight: var(--fw-medium); letter-spacing: .01em; }
+  .hero__play-v {
+    font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase;
+    color: var(--pc-label);
+  }
+  /* pulse ring — one slow beat, enough to be noticed, not enough to nag */
+  @keyframes playPulse { 0% { box-shadow: 0 0 0 0 rgba(141,154,166,.45); } 70%, 100% { box-shadow: 0 0 0 16px rgba(141,154,166,0); } }
+  .js .hero__play-icon { animation: playPulse 3.4s var(--ease) infinite; }
+  @media (prefers-reduced-motion: reduce) { .js .hero__play-icon { animation: none; } }
+  @media (max-width: 560px) {
+    .hero__play { padding: 10px 18px 10px 10px; gap: 12px; }
+    .hero__play-icon { width: 38px; height: 38px; }
+    .hero__play-icon svg { width: 18px; height: 18px; }
+    .hero__play-v { display: none; }
+  }
+
+  /* video lightbox */
+  .vbox {
+    position: fixed; inset: 0; z-index: 200; display: grid; place-items: center;
+    padding: clamp(16px, 4vw, 56px); background: rgba(8,7,5,.90);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  }
+  .vbox[hidden] { display: none; }
+  .vbox__frame { width: min(1180px, 100%); }
+  .vbox video { width: 100%; height: auto; max-height: 82vh; background: #000; border-radius: 6px; display: block; }
+  .vbox__close {
+    position: absolute; top: clamp(12px, 2.4vw, 28px); right: clamp(12px, 2.4vw, 28px);
+    width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center;
+    color: var(--cream); border: 1px solid var(--rule-dark);
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .vbox__close:hover { border-color: var(--gold); background: rgba(194,161,92,.14); }
+  .vbox__close svg { width: 20px; height: 20px; }
 
   /* search band — a thin-lined card under the full-screen hero */
   .searchbar { padding-block: clamp(26px, 3vw, 44px); }
@@ -306,6 +437,10 @@
   .card__title {
     font-family: var(--font-display); font-weight: var(--fw-card);
     font-size: var(--fs-h4); line-height: var(--lh-card); color: var(--ink);
+    /* tokens.css sizes this face so the worst real title (75ch) fits TWO lines.
+       Reserve that box: without it a wrapping title pushes its own row down and
+       the grid's baselines go ragged — visible today on the 230SL card. */
+    min-height: calc(2em * var(--lh-card));
   }
   .card__price { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); color: var(--gold-ink); letter-spacing: .02em; white-space: nowrap; }
 
@@ -315,19 +450,94 @@
   /* full-bleed founder — photo runs to the left screen edge, copy sits right */
   .founder-sec { padding-block: 0; }
 
-  /* PIN STACK — founder pins to the top while the Sell slab scrolls up over it,
-     then both release together. Isolated stacking context so the pinned founder
-     never paints over the sections that follow. */
+  /* PIN STACK — three beats, in this order:
+       1. the portrait pins to the left and stays,
+       2. the copy scrolls up past it and dissolves into a blur at the top,
+       3. only then does the Sell slab ride up over the whole thing.
+     Beat 3 needs the section to hold still at the end, and `top: 0` cannot do
+     that for a section taller than the viewport — it would freeze the section
+     immediately and the copy would never scroll. `bottom: 0` is the inverse: the
+     section scrolls normally until its BOTTOM edge reaches the viewport bottom,
+     then pins. That is exactly the moment the copy has finished leaving.
+     --founder-run tunes how much scroll the copy gets. */
   .pin-stack { position: relative; isolation: isolate; }
-  .pin-stack .founder-sec { position: sticky; top: 0; z-index: 0; }
+  .pin-stack .founder-sec { position: sticky; bottom: 0; z-index: 0; }
   .pin-stack .sell { position: relative; z-index: 1; }
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
     .pin-stack .founder-sec { position: static; }   /* no pin on small screens */
   }
-  .founder { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
-  .founder__media { overflow: hidden; background: var(--bg-deep); }
-  .founder__media img { width: 100%; height: 100%; min-height: clamp(480px, 62vh, 760px); object-fit: cover; object-position: 50% 45%; will-change: transform; }
-  .founder__body { align-self: center; max-width: 600px; padding: clamp(44px, 6vw, 96px) clamp(24px, 5vw, 84px); }
+  /* align-items:start, not stretch — a stretched grid item fills the row and has
+     nowhere to travel, so the portrait could not stick. */
+  /* The section now pins the moment the press clipping is centred on screen —
+     that is what --founder-run solves for. Derivation: the clipping's centre
+     sits (86vh + copy + gap + h/2) below the section top; it is centred when
+     scrolled by that minus 50vh; the section pins when scrolled by its own
+     height minus 100vh. Setting the two equal leaves run = 50vh - h/2.
+     The gap above the clipping is sized so the copy has fully left the top
+     before that moment arrives. */
+  .founder {
+    --press-clip-w: 300px;                                  /* native 263×350 — a clipping, not a hero */
+    --press-clip-h: 399px;                                  /* 300 ÷ 263 × 350 */
+    --founder-run: calc(50vh - (var(--press-clip-h) / 2));
+    display: grid; grid-template-columns: 1fr 1fr; align-items: start;
+  }
+  .founder__media { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--bg-deep); }
+  /* Portrait source (860×1179) in a landscape-ish half-column: `cover` has to
+  /* Source is a tall 2580×4050 (0.64) in a column that runs 0.95–1.5, so `cover`
+     keeps only a horizontal band of it. Alex's head sits at ~28% of the frame;
+     anchoring the window at 30% keeps him inside it across the whole
+     480–760px min-height range, cropping wall above and tarmac below. */
+  .founder__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; will-change: transform; }
+
+  /* the run is PADDING on the column rather than a bottom margin on the clipping
+     — a bottom margin is the kind of thing that collapses out and silently
+     shortens the section, and this section's height IS the hand-off timing */
+  .founder__col { position: relative; padding-bottom: var(--founder-run); }
+  /* 86vh of lead-in puts the copy down at the BOTTOM edge of the frame the
+     moment the portrait pins, so its whole movement is a climb from there out
+     of the top. The bottom pad is the pause after it has gone, before Sell. */
+  .founder__body { max-width: 600px; padding: 86vh clamp(24px, 5vw, 84px) 0; }
+  .founder__press {
+    width: var(--press-clip-w); max-width: 100%;
+    margin: clamp(36px, 6vh, 64px) clamp(24px, 5vw, 84px) 0;
+  }
+  /* Three nested transforms, one per job, so none of them fights the others:
+       figure — the reveal (rise out of blur), and the layout anchor for timing
+       .tilt  — the resting angle + hover
+       img    — the parallax drift
+     It arrives square and settles into the angle: .tilt only takes its rotation
+     once the figure is revealed, so the movement reads as a cutting being
+     dropped onto the page rather than one that was always crooked. */
+  .founder__press-tilt {
+    display: block; transform: rotate(0deg); transform-origin: 50% 60%;
+    box-shadow: 0 16px 38px -18px rgba(26,26,24,.42);
+    transition: transform .9s var(--ease) .22s, box-shadow var(--dur-slow) var(--ease);
+  }
+  .founder__press.is-in .founder__press-tilt { transform: rotate(-3.4deg); }
+  .founder__press:hover .founder__press-tilt {
+    transform: rotate(0deg) translateY(-8px) scale(1.025);
+    box-shadow: 0 30px 62px -20px rgba(26,26,24,.55);
+    transition-delay: 0s;
+  }
+  .founder__press img { width: 100%; height: auto; border-radius: 4px; will-change: transform; }
+  @media (prefers-reduced-motion: reduce) {
+    .founder__press-tilt { transition: none; }
+  }
+  /* Blur window pinned to the top of the copy column. mask-image ramps the blur
+     from full at the very top to nothing 45% down, so the text does not hit a
+     hard edge — it thickens, goes soft, and is gone. The tint gradient underneath
+     finishes the dissolve, and it is what carries the effect on browsers with no
+     backdrop-filter (the copy still fades out, just without the blur). */
+  .founder__fade {
+    position: sticky; top: 0; height: 30vh; margin-bottom: -30vh; z-index: 3;
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    background: linear-gradient(180deg,
+      var(--bg-tint) 0%, rgba(242,240,235,.92) 34%, rgba(242,240,235,.55) 62%, rgba(242,240,235,0) 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
+  }
+  @media (prefers-reduced-motion: reduce) { .founder__fade { display: none; } }
   .founder__body .eyebrow { display: block; margin-bottom: 20px; }
   .founder__quote {
     font-family: var(--font-display); font-weight: 400; color: var(--ink);
@@ -381,21 +591,97 @@
      ============================================================ */
   /* full-bleed dividers at the photo's own 2:1 proportion — not cropped to a fixed height */
   .breaker { position: relative; overflow: hidden; width: 100%; aspect-ratio: 2 / 1; background: var(--dark-deep); }
-  /* over-scan gives the parallax headroom so no edge shows as the bg drifts */
-  .breaker__bg { position: absolute; left: 0; right: 0; top: -11%; height: 122%; z-index: 0; will-change: transform; }
+  /* Over-scan gives the parallax headroom so no edge shows as the bg drifts.
+     The JS clamps that drift to ±44px, so ±7% (≈50px at 1440) covers it — the
+     old ±11% threw away 22% of frames that were composed at 2:1 for this slot. */
+  .breaker__bg { position: absolute; left: 0; right: 0; top: -7%; height: 114%; z-index: 0; will-change: transform; }
   .breaker__bg img { width: 100%; height: 100%; object-fit: cover; }
   .breaker__overlay { position: absolute; inset: 0; z-index: 1; }
-  /* night frame → gentle vignette so the caption reads over the road/skyline */
+  /* ============================================================
+     NIGHT BREAKER — pinned panel with a travelling heading.
+     Same three beats as the founder: the frame pins, the heading rises from the
+     bottom over it and dissolves into blur at the top, then News rides over.
+     `.breaker` sets overflow:hidden, which would make itself the nearest scroll
+     container and kill the sticky children — so the clipping moves to the stage.
+     ============================================================ */
+  .pin-stack--night .breaker--night { position: sticky; bottom: 0; z-index: 0; }
+  .pin-stack--night .news { position: relative; z-index: 1; }
+  .breaker--night {
+    --night-run: 112vh;
+    position: relative; aspect-ratio: auto; overflow: visible; background: var(--dark-deep);
+  }
+  /* zero flow height (margin cancels it) so the fade and the runway both start
+     at the section top — a sticky element still sticks from its flow position */
+  .breaker__stage { position: sticky; top: 0; height: 100svh; margin-bottom: -100svh; overflow: hidden; z-index: 0; }
+  .breaker--night .breaker__bg { position: absolute; inset: 0; height: 100%; }
   .breaker--night .breaker__overlay { background:
-    linear-gradient(180deg, rgba(8,7,5,.34) 0%, rgba(8,7,5,.10) 40%, rgba(8,7,5,.16) 62%, rgba(8,7,5,.60) 100%); }
+    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.12) 40%, rgba(8,7,5,.20) 62%, rgba(8,7,5,.62) 100%); }
+  .breaker__fade {
+    position: sticky; top: 0; height: 30vh; margin-bottom: -30vh; z-index: 2; pointer-events: none;
+    -webkit-backdrop-filter: blur(11px); backdrop-filter: blur(11px);
+    background: linear-gradient(180deg, rgba(8,7,5,.88) 0%, rgba(8,7,5,.56) 42%, rgba(8,7,5,0) 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
+  }
+  @media (prefers-reduced-motion: reduce) { .breaker__fade { display: none; } }
+  .breaker__runway { position: relative; z-index: 1; padding: 86vh var(--container-pad) var(--night-run); }
+  .breaker__h {
+    text-align: center; max-width: 18ch; margin-inline: auto;
+    font-family: var(--font-display); font-weight: 400; color: #fff;
+    font-size: clamp(2rem, 1.1rem + 4vw, 4.75rem); line-height: 1.05; letter-spacing: -.02em;
+    text-shadow: 0 2px 34px rgba(6,5,3,.72);
+  }
+  .breaker__h .dot { color: var(--gold); }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
   .breaker__cap .eyebrow { display: inline-block; color: var(--gold); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
+
+  /* DAY BREAKER = the proof band.
+     It used to be a mute full-screen photograph carrying no information, which
+     is the one thing a 700px slab cannot afford. The photo is now the ground
+     and the claims sit on it — and every claim is the client's own copy, lifted
+     verbatim from the founder paragraph and the footer, not new marketing. */
+  /* Stays at the delivered 2:1 — this frame is composed for the slot (subject
+     spotlit in the upper half, unlit floor below for the copy), so cropping it
+     to a wider band would cut the roofline off the top.
+     The photo is already near-black where the copy lands, so the scrim only has
+     to firm up the bottom rather than flood the whole frame. */
+  .breaker--day .breaker__overlay { background:
+    linear-gradient(180deg, rgba(8,7,5,0) 0%, rgba(8,7,5,.08) 46%, rgba(8,7,5,.40) 76%, rgba(8,7,5,.66) 100%); }
+  /* Offset is a share of the BAND, not of the viewport: the band is a fixed 2:1,
+     so it grows with page width while vh does not — a vh-based offset drifted
+     off the floor of the photograph on wide screens. */
+  .breaker__cap--proof { bottom: clamp(88px, 24%, 220px); }
+  .proof {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 3vw, 48px); text-align: center;
+  }
+  .proof li { padding-left: 0; }
+  .proof__k {
+    display: block; font-family: var(--font-display); font-weight: 400; color: #fff;
+    font-size: clamp(1.25rem, .95rem + 1.2vw, 1.9rem); line-height: 1.1;
+    text-shadow: 0 2px 18px rgba(6,5,3,.75);
+    min-height: 2.2em;   /* 2 lines reserved — "Inspected & documented" wraps and
+                            would otherwise drop its own body copy out of line */
+  }
+  .proof__v {
+    /* no margin: the key's reserved second line already supplies the gap */
+    display: block; color: var(--cream); font-weight: var(--fw-body-dark);
+    font-size: var(--fs-body-sm); line-height: 1.5; max-width: 32ch; margin-inline: auto;
+    text-shadow: 0 1px 10px rgba(6,5,3,.85);
+  }
 
   /* ============================================================
      TESTIMONIALS + PRESS
      ============================================================ */
   .quotes { position: relative; text-align: center; max-width: 900px; margin-inline: auto; }
-  .quotes .eyebrow { display: block; margin-bottom: 36px; }
+  /* Was a gold uppercase eyebrow in the UI sans. Now the display face, at the
+     same size as every other section heading — and a real <h2>, so the section's
+     aria-labelledby points at a heading instead of a <span>. */
+  .quotes__h {
+    font-family: var(--font-display); font-weight: var(--fw-heading);
+    font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2);
+    color: var(--ink); margin-bottom: clamp(30px, 4vw, 46px);
+  }
   /* stack all quotes in one grid cell → track height = tallest quote, so it
      never jumps when you switch. Only opacity animates. */
   .quote-track { display: grid; }
@@ -412,7 +698,9 @@
   .quote blockquote {
     font-family: var(--font-text); font-style: italic; font-weight: 400;
     font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--ink);
-    max-width: 26ch; margin: 22px auto 0;
+    /* 26ch put a 4-line rag in a 900px block and orphaned the last word.
+       33ch lands the real quotes on 3 lines with a proper editorial measure. */
+    max-width: 33ch; margin: 22px auto 0;
   }
   .quote__by { display: block; margin-top: 26px; font-family: var(--font-sans); font-style: normal; font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink-muted); letter-spacing: .04em; }
   .quote-dots { display: flex; justify-content: center; gap: 10px; margin-top: 36px; }
@@ -425,17 +713,20 @@
      mono tone: brightness(0) flattens every fill to black, opacity mutes it to
      a grey ≈ --ink-muted on the cream ground. Hover lifts to near-solid. */
   .press__logo {
-    width: auto; height: 24px; filter: brightness(0); opacity: .55;
+    width: auto; filter: brightness(0); opacity: .55;
     transition: opacity var(--dur) var(--ease);
   }
   .press__logo:hover { opacity: .95; }
-  /* equal OPTICAL height — badges read larger than wide wordmarks at same px */
-  .press__logo--hemmings { height: 19px; }
-  .press__logo--thr      { height: 20px; }
-  .press__logo--t911     { height: 34px; }
-  .press__logo--ebay     { height: 23px; }
-  .press__logo--google   { height: 22px; }
-  .press__logo--yelp     { height: 23px; }
+  /* Equal OPTICAL height — badges read larger than wide wordmarks at the same px.
+     The whole set scales off one number, so the optical balance survives a size
+     change: --press-h is the base, each logo keeps its own ratio to it. */
+  .press__row { --press-h: clamp(26px, 2.4vw, 34px); }
+  .press__logo--hemmings { height: calc(var(--press-h) * .79); }
+  .press__logo--thr      { height: calc(var(--press-h) * .83); }
+  .press__logo--t911     { height: calc(var(--press-h) * 1.42); }
+  .press__logo--ebay     { height: calc(var(--press-h) * .96); }
+  .press__logo--google   { height: calc(var(--press-h) * .92); }
+  .press__logo--yelp     { height: calc(var(--press-h) * .96); }
 
   /* ============================================================
      NEWS / EVENTS — dark section, Cayenne composition
@@ -444,14 +735,29 @@
      ============================================================ */
   /* Sticky-scroll: LEFT column of 4 posts scrolls; RIGHT heading is sticky and
      unsticks when the list ends. No overflow clip on .news — it would kill sticky. */
-  .news { position: relative; color: var(--cream);
-    /* double radial gradient over the charcoal base — warm glow top-left,
-       deep pool bottom-right, for depth behind the posts */
+  /* Cool grey ground with a dirty slate-blue wash, instead of the warm charcoal
+     + gold glow it had. Reads as one piece with the showroom breaker above it,
+     and the warm gold accents (eyebrow, dates, Read more) sit better on a cool
+     ground than on a warm one. Contrast holds: cream 12.8, muted 6.3, gold 6.2. */
+  .news {
+    --news-bg:    #212528;                 /* cool dark grey base          */
+    --news-haze:  rgba(108,126,142,.20);   /* dirty slate-blue, top-left   */
+    --news-pool:  rgba(11,13,15,.66);      /* deep pool, bottom-right      */
+    position: relative; color: var(--cream);
     background:
-      radial-gradient(58% 46% at 14% 16%, rgba(194,161,92,.13) 0%, rgba(194,161,92,0) 60%),
-      radial-gradient(64% 58% at 88% 90%, rgba(10,9,7,.60) 0%, rgba(10,9,7,0) 62%),
-      var(--dark);
+      radial-gradient(58% 46% at 14% 16%, var(--news-haze) 0%, rgba(108,126,142,0) 62%),
+      radial-gradient(64% 58% at 88% 90%, var(--news-pool) 0%, rgba(11,13,15,0) 62%),
+      var(--news-bg);
   }
+  /* Film grain over the flat gradient. Generated in-place with feTurbulence —
+     no asset to ship, tiles seamlessly (stitchTiles), and scales with the
+     section. Kept under 7% so it is texture, not visible dirt. */
+  .news::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    opacity: .062;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .news > .shell { position: relative; z-index: 1; }
   /* heading LEFT (sticky anchor), posts RIGHT */
   .news__in {
     display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
@@ -463,16 +769,31 @@
 
   /* LEFT — 4 stacked posts, held compact */
   .news__list { display: flex; flex-direction: column; gap: clamp(48px, 6vw, 84px); max-width: 500px; }
+  /* whole tile is the link (was: only "Read more" was clickable) */
+  .npost { display: block; }
   .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; border-radius: 6px; }
   .npost img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
   .npost:hover img { transform: scale(1.03); }
+  .npost:hover .npost__more { color: #dcc384; }
+  .npost:hover .npost__more .a { transform: translateX(4px); }
   .npost__date { display: block; margin-top: 22px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
-  .npost__title { margin-top: 11px; font-family: var(--font-display); font-weight: 400; color: #fff; font-size: clamp(1.3rem, 1rem + 1.15vw, 1.8rem); line-height: 1.18; }
+  /* Post titles in the UI sans, not the display serif: with the section heading
+     ("News & Events") already in Gloock, three more serif headlines below it read
+     as competing titles rather than as a list. Size dropped a step and weight
+     lifted to medium — the sans needs that to hold the same rank the serif held. */
+  .npost__title {
+    margin-top: 11px; font-family: var(--font-sans); font-weight: var(--fw-medium);
+    color: #fff; font-size: clamp(1.15rem, .96rem + .74vw, 1.5rem);
+    line-height: 1.3; letter-spacing: -.01em;
+  }
   .npost__text { margin-top: 12px; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.6; max-width: 46ch; }
   .npost__more { margin-top: 16px; }
 
-  /* RIGHT — sticky heading */
-  .news__head { position: sticky; top: clamp(96px, 14vh, 160px); align-self: start; max-width: 32ch; }
+  /* Sticky heading, parked at the VERTICAL MIDDLE of the viewport rather than
+     near the top: top:50vh puts its own top edge at centre, the translate pulls
+     it back by half its height, so the block rides level with the tiles as they
+     scroll past it. */
+  .news__head { position: sticky; top: 50vh; transform: translateY(-50%); align-self: start; max-width: 32ch; }
   .news__head .eyebrow { display: block; color: var(--gold); margin-bottom: 20px; }
   .news__title {
     font-family: var(--font-display); font-weight: 400; color: #fff;
@@ -489,21 +810,34 @@
      uncovering the footer from beneath. Layout only — survives no-JS + reduced
      motion. Near-black footer under the warm-charcoal News = a tonal step at
      the seam so the reveal reads. */
-  .footer { position: sticky; bottom: 0; z-index: 0; background: var(--dark-deep); color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px; }
+  /* Footer accent is a dirty slate-blue instead of the gold used everywhere else.
+     Measured on --dark-deep (#14120E, relative luminance 0.0063):
+       --fo-accent    #8D9AA6 → 6.48  ✓AA  (used at 11–12px, so AA is the bar)
+       --fo-accent-hi #B3C1CD → 10.2  ✓AAA (hover has to read as a lift)
+     Body copy stays --cream and --ink-soft-on-dark; only the accent changed. */
+  .footer {
+    --fo-accent:    #8D9AA6;
+    --fo-accent-hi: #B3C1CD;
+    /* Dark dirty blue, not the warm near-black --dark-deep. It still has to sit a
+       clear tonal step BELOW the News slab (#212528) or the sticky-reveal at the
+       page end stops reading as a reveal. Measured L: News .0186 → footer .0082. */
+    --fo-bg: #141A1F;
+    position: sticky; bottom: 0; z-index: 0; background: var(--fo-bg); color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px;
+  }
   .footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: clamp(32px, 4vw, 56px); }
   .footer__brand-name { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: #fff; }
-  .footer__brand-by { font-family: var(--font-text); font-style: italic; color: var(--gold); font-size: .95rem; margin-top: 4px; }
+  .footer__brand-by { font-family: var(--font-text); font-style: italic; color: var(--fo-accent); font-size: .95rem; margin-top: 4px; }
   .footer__brand p { margin-top: 22px; max-width: 34ch; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.7; font-weight: var(--fw-body-dark); }
-  .footer__col h3 { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .footer__col h3 { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--fo-accent); margin-bottom: 18px; }
   .footer__col ul { display: grid; gap: 12px; }
   .footer__col a { font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); transition: color var(--dur) var(--ease); }
-  .footer__col a:hover { color: var(--gold); }
+  .footer__col a:hover { color: var(--fo-accent-hi); }
   .footer__connect .contact { display: grid; gap: 12px; margin-bottom: 22px; font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); }
   .footer__connect .contact a { display: inline-flex; align-items: center; gap: 9px; }
-  .footer__connect .contact svg { width: 14px; height: 14px; color: var(--gold); flex: none; }
+  .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
   .footer__social { display: flex; gap: 12px; margin-bottom: 26px; }
   .footer__social a { width: 40px; height: 40px; border: 1px solid var(--rule-dark); border-radius: 999px; display: grid; place-items: center; transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
-  .footer__social a:hover { border-color: var(--gold); background: rgba(194,161,92,.12); }
+  .footer__social a:hover { border-color: var(--fo-accent-hi); background: rgba(141,154,166,.16); }
   .footer__social svg { width: 17px; height: 17px; color: var(--cream); }
   .footer__form label { display: block; font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); margin-bottom: 12px; font-weight: var(--fw-body-dark); }
   .footer__form .row { display: flex; gap: 8px; }
@@ -513,14 +847,14 @@
     font-family: var(--font-sans); font-size: var(--fs-body-sm);
   }
   .footer__form input::placeholder { color: var(--ink-soft-on-dark); }
-  .footer__form input:focus { outline: none; border-color: var(--gold); }
+  .footer__form input:focus { outline: none; border-color: var(--fo-accent-hi); }
   .footer__bottom {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
     margin-top: clamp(48px, 6vw, 72px); padding-top: 28px; border-top: 1px solid var(--rule-dark);
     font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); font-weight: var(--fw-body-dark);
   }
   .footer__bottom nav { display: flex; flex-wrap: wrap; gap: 22px; }
-  .footer__bottom a:hover { color: var(--gold); }
+  .footer__bottom a:hover { color: var(--fo-accent-hi); }
 
   /* ============================================================
      RESPONSIVE
@@ -530,11 +864,17 @@
     .hdr__nav { display: none; }
     .hdr__actions { display: none; }
     .hdr__burger { display: block; order: -1; }
-    .brand { margin-inline: auto; }        /* centre the logo */
+    .brand { justify-self: center; }        /* centre the logo */
     .hdr__phone-m { display: inline-flex; }
+    /* one column — nothing to pin against, so the whole choreography is off */
     .founder { grid-template-columns: 1fr; }
-    .founder__media img { min-height: 340px; }
+    .founder__media { position: static; height: auto; }
+    /* 340px of a 0.64 portrait is a letterbox slice — give it height to read */
+    .founder__media img { min-height: 460px; }
+    .founder__fade { display: none; }
     .founder__body { padding: 32px var(--container-pad) 8px; }
+    .founder__col { padding-bottom: 0; }
+    .founder__press { margin: 28px var(--container-pad) 8px; }
     .footer__grid { grid-template-columns: 1fr 1fr; gap: 40px 32px; }
     .footer__brand { grid-column: 1 / -1; }
   }
@@ -542,6 +882,9 @@
     .hero__frame { min-height: 0; height: 86svh; max-height: none; }
     .hero__inner { justify-content: flex-start; }
     .cards { grid-template-columns: 1fr; gap: 40px; }
+    /* single column — there is no row to keep in line, so the reserved
+       two-line title box is just a gap under every one-line title */
+    .card__title { min-height: 0; }
     .searchbar__in { flex-direction: column; align-items: stretch; gap: 16px; }
     .search-form__field { max-width: none; }
     .footer__grid { grid-template-columns: 1fr; }
@@ -556,12 +899,26 @@
     .sell__overlay { background:
       linear-gradient(90deg, rgba(18,16,12,.90) 0%, rgba(18,16,12,.85) 62%, rgba(18,16,12,.56) 84%, rgba(18,16,12,.32) 100%),
       linear-gradient(180deg, rgba(18,16,12,.34) 0%, rgba(18,16,12,.24) 45%, rgba(18,16,12,.48) 100%); }
+
+    /* PROOF BAND on phone — three 1fr columns cannot hold "Delivered worldwide"
+       at 390px: grid items default to min-width:auto, so the min-content width
+       of the longest key pushed the whole grid — and with it the document —
+       past the viewport. Stack it, and let the band grow to its content
+       instead of staying a 167px-tall 21:9 sliver. */
+    .breaker--day { aspect-ratio: auto; display: grid; align-items: end; }
+    .breaker--day .breaker__bg { position: absolute; inset: 0; top: 0; height: 100%; }
+    .breaker__cap--proof { position: static; grid-area: 1 / 1; padding-block: clamp(40px, 11vw, 64px); }
+    .breaker--day .breaker__overlay { background:
+      linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.72) 40%, rgba(8,7,5,.90) 100%); }
+    .proof { grid-template-columns: 1fr; gap: 26px; }
+    .proof__k { min-height: 0; }
+    .proof__v { max-width: none; }
   }
 
   /* News/Events — stack: text on top, media below */
   @media (max-width: 900px) {
     .news__in { grid-template-columns: 1fr; gap: clamp(32px, 6vw, 48px); }
-    .news__head { position: static; order: -1; max-width: none; }   /* heading on top, not sticky on mobile */
+    .news__head { position: static; transform: none; order: -1; max-width: none; }   /* heading on top, not sticky on mobile */
     .news__list { gap: clamp(40px, 9vw, 64px); }
   }
   /* Phone — flatten the three columns into a tidy 2-up grid */
@@ -584,8 +941,9 @@
       <span></span><span></span><span></span>
     </button>
     <a class="brand" href="/" aria-label="Beverly Hills Car Club by Alex Manos — home">
-      <img class="brand__logo brand__logo--light" src="assets/images/logo-lockup-light.png?v=1" alt="Beverly Hills Car Club by Alex Manos" width="280" height="123" fetchpriority="high">
-      <img class="brand__logo brand__logo--dark" src="assets/images/logo-lockup.png?v=1" alt="" aria-hidden="true" width="280" height="123">
+      <!-- full lockup over the hero; shield alone once the bar comes in -->
+      <img class="brand__logo brand__logo--hero" src="assets/images/hero/logo.png?v=2" alt="Beverly Hills Car Club by Alex Manos" width="329" height="123" fetchpriority="high">
+      <img class="brand__logo brand__logo--bar" src="assets/images/hero/logo_onscroll.png?v=2" alt="" aria-hidden="true" width="123" height="123">
     </a>
 
     <nav class="hdr__nav" aria-label="Primary">
@@ -647,8 +1005,31 @@
         <a class="btn btn--secondary on-dark" href="/sell-your-car.htm">Sell your classic</a>
       </div>
     </div>
+
+    <!-- Click-to-play, not an autoplaying background loop. README explains why the
+         loop is deliberately not wired in: its frame fights the poster and drops
+         type onto the car. A film the visitor chooses to open has neither problem. -->
+    <button class="hero__play" type="button" data-video="assets/video/home.mp4" aria-haspopup="dialog">
+      <span class="hero__play-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 6.5v11l9-5.5z"/></svg>
+      </span>
+      <span class="hero__play-txt">
+        <span class="hero__play-k">Watch the film</span>
+        <span class="hero__play-v">Inside the showroom</span>
+      </span>
+    </button>
   </div>
 </section>
+
+<!-- video lightbox -->
+<div class="vbox" id="vbox" role="dialog" aria-modal="true" aria-label="Beverly Hills Car Club film" hidden>
+  <button class="vbox__close" type="button" id="vboxClose" aria-label="Close video">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="vbox__frame">
+    <video id="vboxPlayer" controls playsinline preload="none"></video>
+  </div>
+</div>
 
 <!-- search band -->
 <section class="searchbar shell" aria-label="Search inventory">
@@ -671,7 +1052,8 @@
 <section class="section" aria-labelledby="feat-h">
   <div class="shell">
     <div class="lede">
-      <span class="eyebrow">The Collection</span>
+      <!-- eyebrows switched off across the page — restore by uncommenting
+      <span class="eyebrow">The Collection</span> -->
       <h2 id="feat-h">Featured classics</h2>
     </div>
 
@@ -703,7 +1085,7 @@
     </div>
 
     <div class="center-cta">
-      <a class="arrow-link arrow-link--gold" href="/inventory.htm">View all inventory <span class="a" aria-hidden="true">›</span></a>
+      <a class="btn btn--primary" href="/inventory.htm">View all inventory</a>
     </div>
   </div>
 </section>
@@ -712,9 +1094,31 @@
      BREAKER 1 — Alfa Romeo GTV under the Colorado St. Bridge (daytime)
      full-bleed divider between the inventory and the founder story
      ============================================================ -->
-<section class="breaker breaker--day">
+<section class="breaker breaker--day" aria-labelledby="proof-h">
   <div class="breaker__bg">
-    <img src="assets/images/breaker-1.jpg" alt="A yellow Alfa Romeo GTV parked beneath the arches of the Colorado Street Bridge" loading="lazy" width="2000" height="1000" style="object-position: 50% 56%;">
+    <!-- Composed for this slot: subject spotlit in the upper half, the lower
+         half is empty unlit floor — which is where the proof copy sits. -->
+    <img src="assets/images/visbrake_1.jpg" alt="A blue pre-war speedster under a spotlight on the showroom floor, the rest of the collection in shadow behind it" loading="lazy" width="1920" height="960">
+  </div>
+  <div class="breaker__overlay" aria-hidden="true"></div>
+  <div class="breaker__cap breaker__cap--proof">
+    <h2 id="proof-h" class="sr-only">Why Beverly Hills Car Club</h2>
+    <div class="shell">
+    <ul class="proof">
+      <li>
+        <span class="proof__k">Since 2001</span>
+        <span class="proof__v">Two decades buying and selling European and American classics in Los Angeles.</span>
+      </li>
+      <li>
+        <span class="proof__k">Inspected &amp; documented</span>
+        <span class="proof__v">Every car inspected, documented and photographed before it reaches you.</span>
+      </li>
+      <li>
+        <span class="proof__k">Delivered worldwide</span>
+        <span class="proof__v">From our Los Angeles showroom to anywhere in the world.</span>
+      </li>
+    </ul>
+    </div>
   </div>
 </section>
 
@@ -730,15 +1134,26 @@
 <section class="founder-sec section--tint" aria-labelledby="founder-h">
     <div class="founder">
       <figure class="founder__media">
-        <img src="assets/images/founder-ferrari.jpg" alt="Alex Manos beside a red Ferrari 308 GTS" loading="lazy" width="1200" height="1077">
+        <img src="assets/images/Alex_Manos_Founder.jpg" alt="Alex Manos leaning against a red Ferrari Testarossa" loading="lazy" width="2580" height="4050">
       </figure>
+      <div class="founder__col">
+      <!-- the blur window the copy dissolves into as it reaches the top -->
+      <div class="founder__fade" aria-hidden="true"></div>
       <div class="founder__body">
-        <span class="eyebrow">Alex Manos, Founder</span>
+        <!-- <span class="eyebrow">Alex Manos, Founder</span> -->
         <p class="founder__quote" id="founder-h">I've been buying and selling the world's finest automobiles for over&nbsp;20&nbsp;years.</p>
-        <p class="founder__p">What began with a single Porsche has become the largest collection of European and American classics under one roof in Los Angeles — every car inspected, documented and photographed before it ever reaches you.</p>
+        <p class="founder__p">What began with a single Porsche has become the largest collection of European and American classics under one roof in Los Angeles.</p>
         <div class="founder__link">
           <a class="arrow-link arrow-link--gold" href="/about.htm">Read Alex's story <span class="a" aria-hidden="true">›</span></a>
         </div>
+      </div>
+      <!-- press clipping — trails the copy up the column; the Sell slab is
+           timed to start the moment this reaches the middle of the screen -->
+      <figure class="founder__press">
+        <span class="founder__press-tilt">
+          <img src="assets/images/Alex_Manos_support_image.png" alt="The Hollywood Reporter feature on Alex Manos of Beverly Hills Car Club" loading="lazy" width="263" height="350">
+        </span>
+      </figure>
       </div>
     </div>
 </section>
@@ -753,7 +1168,7 @@
   <div class="sell__overlay" aria-hidden="true"></div>
   <div class="shell">
     <div class="sell__in">
-      <span class="eyebrow">Sell your classic</span>
+      <!-- <span class="eyebrow">Sell your classic</span> -->
       <h2 id="sell-h">We buy classic cars.</h2>
       <p class="sell__sub">Any condition. Nationwide. Immediate payment.</p>
       <div class="sell__actions">
@@ -776,7 +1191,7 @@
 <section class="section" aria-labelledby="quotes-h">
   <div class="shell">
     <div class="quotes">
-      <span class="eyebrow" id="quotes-h">What they're saying</span>
+      <h2 class="quotes__h" id="quotes-h">What they're saying</h2>
       <button type="button" class="quote-nav quote-nav--prev" id="quotePrev" aria-label="Previous testimonial">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
       </button>
@@ -806,15 +1221,18 @@
         <button type="button" aria-label="Testimonial 3"></button>
       </div>
 
-      <div class="press">
-        <div class="press__row" aria-label="As featured in">
-          <img class="press__logo press__logo--hemmings" src="assets/images/press/hemmings.svg" alt="Hemmings" loading="lazy">
-          <img class="press__logo press__logo--thr" src="assets/images/press/hollywood-reporter.svg" alt="The Hollywood Reporter" loading="lazy">
-          <img class="press__logo press__logo--t911" src="assets/images/press/total911.svg" alt="Total 911" loading="lazy">
-          <img class="press__logo press__logo--ebay" src="assets/images/press/ebay.svg" alt="eBay" loading="lazy">
-          <img class="press__logo press__logo--google" src="assets/images/press/google.svg" alt="Google" loading="lazy">
-          <img class="press__logo press__logo--yelp" src="assets/images/press/yelp.svg" alt="Yelp" loading="lazy">
-        </div>
+    </div>
+
+    <!-- outside .quotes: the 900px measure that suits a pull-quote is too
+         narrow to carry the logo row at this size without wrapping -->
+    <div class="press">
+      <div class="press__row" aria-label="As featured in">
+        <img class="press__logo press__logo--hemmings" src="assets/images/press/hemmings.svg" alt="Hemmings" loading="lazy">
+        <img class="press__logo press__logo--thr" src="assets/images/press/hollywood-reporter.svg" alt="The Hollywood Reporter" loading="lazy">
+        <img class="press__logo press__logo--t911" src="assets/images/press/total911.svg" alt="Total 911" loading="lazy">
+        <img class="press__logo press__logo--ebay" src="assets/images/press/ebay.svg" alt="eBay" loading="lazy">
+        <img class="press__logo press__logo--google" src="assets/images/press/google.svg" alt="Google" loading="lazy">
+        <img class="press__logo press__logo--yelp" src="assets/images/press/yelp.svg" alt="Yelp" loading="lazy">
       </div>
     </div>
   </div>
@@ -824,12 +1242,20 @@
      BREAKER 2 — Datsun 240Z at dusk, downtown LA skyline (night)
      dark divider that prepares the transition to the dark page-foot
      ============================================================ -->
-<section class="breaker breaker--night" aria-label="Los Angeles, since 2001">
-  <div class="breaker__bg">
-    <img src="assets/images/breaker-2.jpg" alt="A white Datsun 240Z on a downtown Los Angeles road at dusk, skyline and light-trails behind" loading="lazy" width="2000" height="1000" style="object-position: 50% 52%;">
+<div class="pin-stack pin-stack--night">
+
+<section class="breaker breaker--night" aria-labelledby="la-h">
+  <!-- stage pins for the whole run; the heading travels over it -->
+  <div class="breaker__stage">
+    <div class="breaker__bg">
+      <img src="assets/images/visbrake_2.jpg" alt="A blue Ford Mustang Mach 1 under a spotlight on the showroom floor, the collection in shadow around it" loading="lazy" width="1920" height="960">
+    </div>
+    <div class="breaker__overlay" aria-hidden="true"></div>
   </div>
-  <div class="breaker__overlay" aria-hidden="true"></div>
-  <div class="breaker__cap"><span class="eyebrow">Los Angeles · Since 2001</span></div>
+  <div class="breaker__fade" aria-hidden="true"></div>
+  <div class="breaker__runway">
+    <h2 class="breaker__h" id="la-h">Los Angeles <span class="dot" aria-hidden="true">/</span> Since 2001</h2>
+  </div>
 </section>
 
 <!-- ============================================================
@@ -838,43 +1264,48 @@
 <section class="section news" aria-labelledby="news-h">
   <div class="shell news__in">
 
-    <!-- LEFT — 3 posts that scroll past the sticky heading -->
+    <!-- LEFT — real posts from beverlyhillscarclub.com/blog.htm. Titles, links
+         and pull-quotes are the live ones; the site publishes no visible dates,
+         so the meta line carries the section instead of an invented date.
+         Photography is deliberately NOT reused from Featured above. -->
     <div class="news__list">
-      <article class="npost">
-        <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series 1 Roadster" loading="lazy" width="1200" height="675"></figure>
-        <span class="npost__date mono">July 12, 2026 · Journal</span>
-        <h3 class="npost__title">The E-Type at sixty — still the most beautiful car ever made</h3>
-        <p class="npost__text">Enzo Ferrari called it exactly that. Six decades on, the Series 1 roadster still stops a room — and still finds its way through our Los Angeles showroom.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
-      </article>
-      <article class="npost">
-        <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="675"></figure>
-        <span class="npost__date mono">June 28, 2026 · Buyer's guide</span>
-        <h3 class="npost__title">The Aston Martin DBS — what to look for before you buy</h3>
-        <p class="npost__text">The last of the six-cylinder grand tourers, and the one James Bond drove. What separates a good DBS from a great one comes down to a handful of details.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
-      </article>
-      <article class="npost">
-        <figure><img src="assets/images/inventory-real/1964-mercedes-230sl-pagoda.jpg" alt="1964 Mercedes-Benz 230SL Pagoda" loading="lazy" width="1200" height="675"></figure>
-        <span class="npost__date mono">June 05, 2026 · Inside the shop</span>
-        <h3 class="npost__title">Preservation over restoration — why we leave the patina</h3>
-        <p class="npost__text">A car is only original once. Increasingly, the market agrees — and the honest wear of a well-kept Pagoda tells a story no respray can.</p>
-        <a class="arrow-link arrow-link--dark npost__more" href="/blog.htm">Read more <span class="a" aria-hidden="true">›</span></a>
-      </article>
+      <a class="npost" href="https://www.beverlyhillscarclub.com/dscene-editor-in-chief-interviews-alex-manos.htm">
+        <figure><img src="assets/images/alex-editorial.jpg" alt="Alex Manos in the Beverly Hills Car Club showroom" loading="lazy" width="1280" height="553"></figure>
+        <span class="npost__date mono">Press · DSCENE</span>
+        <h3 class="npost__title">DSCENE Editor-in-Chief Interviews Alex Manos</h3>
+        <p class="npost__text">“Compare a 1958 Corvette to a Tesla. There's no passion, no emotion. When you sit in that Corvette, you smell the leather.”</p>
+        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
+      </a>
+      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-refined-brute-ferrari-330gtc.htm">
+        <figure><img src="assets/images/583815906_18550719925061419_6070715814259884510_n.jpg" alt="A red Ferrari on the floor of the Beverly Hills Car Club showroom" loading="lazy" width="1080" height="1350"></figure>
+        <span class="npost__date mono">Car Tales · Ferrari</span>
+        <h3 class="npost__title">Refined Brute, Ferrari 330GTC</h3>
+        <p class="npost__text">“A racing brute in a fine suit” is how the 330GTC was once described — one of the most elegantly beautiful, as well as puissant, cars ever built.</p>
+        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
+      </a>
+      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-ultimately-unique-mercedes-benz-280sl-california-special.htm">
+        <figure><img src="assets/images/503657635_18516614353061419_7590410718349528124_n.jpg" alt="A black Mercedes-Benz SL parked inside the showroom" loading="lazy" width="1080" height="1350"></figure>
+        <span class="npost__date mono">Car Tales · Mercedes-Benz</span>
+        <h3 class="npost__title">Ultimately Unique, Mercedes-Benz 280SL California Special</h3>
+        <p class="npost__text">“There are around 900 million cars in the world, and thousands of models,” remarked Dr. Dieter Zetsche. “But there are only a handful of automotive icons: our SL is one of them.”</p>
+        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
+      </a>
     </div>
 
     <!-- RIGHT — sticky heading -->
     <div class="news__head">
-      <span class="eyebrow">From the showroom</span>
+      <!-- <span class="eyebrow">From the showroom</span> -->
       <h2 class="news__title" id="news-h">News &amp; Events</h2>
       <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
       <div class="news__cta">
-        <a class="btn btn--secondary on-dark" href="/blog.htm">See all articles <span aria-hidden="true">›</span></a>
+        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See all articles <span aria-hidden="true">›</span></a>
       </div>
     </div>
 
   </div>
 </section>
+
+</div><!-- /.pin-stack--night -->
 
 </div><!-- /.page -->
 
@@ -887,7 +1318,7 @@
       <div class="footer__brand">
         <div class="footer__brand-name">Beverly Hills Car Club</div>
         <div class="footer__brand-by">by Alex Manos</div>
-        <p>The world's finest European and American classic automobiles — inspected, documented and photographed in our Los Angeles showroom, and delivered anywhere in the world.</p>
+        <p>The world's finest European and American classic automobiles, bought and sold from Los Angeles since 2001.</p>
       </div>
 
       <div class="footer__col">
@@ -1009,7 +1440,9 @@
   // gentle parallax on the full-bleed breaker dividers (softer than the sell band)
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const items = [...document.querySelectorAll('.breaker')]
+    // night breaker excluded: its bg lives inside a pinned stage, so drifting it
+    // against the (now multi-viewport) section rect would swing wildly
+    const items = [...document.querySelectorAll('.breaker:not(.breaker--night)')]
       .map(b => ({ b, bg: b.querySelector('.breaker__bg') })).filter(x => x.bg);
     if (!items.length) return;
     let ticking = false;
@@ -1057,12 +1490,95 @@
   // News/Events is a pure CSS sticky-column now (right heading sticky, left
   // posts scroll, unsticks at section end) — no JS needed.
 
+  // Watch-the-film lightbox. The <video> src is only attached on open and
+  // stripped on close, so a 49MB file is never fetched by a visitor who does
+  // not ask for it, and it stops dead when the box is dismissed.
+  (function () {
+    const btn = document.querySelector('.hero__play');
+    const box = document.getElementById('vbox');
+    const player = document.getElementById('vboxPlayer');
+    const closeBtn = document.getElementById('vboxClose');
+    if (!btn || !box || !player) return;
+    let lastFocus = null;
+    const open = () => {
+      lastFocus = document.activeElement;
+      player.src = btn.dataset.video;
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+      player.play().catch(() => {});   // a blocked autoplay just leaves the controls ready
+    };
+    const close = () => {
+      player.pause();
+      player.removeAttribute('src');
+      player.load();
+      box.hidden = true;
+      document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    };
+    btn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    box.addEventListener('click', e => { if (e.target === box) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
+  })();
+
+  // Founder hand-off timing. The CSS solves --founder-run as 50vh − h/2 so the
+  // Sell slab starts exactly as the clipping reaches mid-screen, but `vh`, `svh`
+  // and the real viewport disagree by the scrollbar width (measured: 45px off).
+  // Measuring beats predicting — recompute from the live numbers, and the CSS
+  // value stays as the no-JS fallback.
+  (function () {
+    const founder = document.querySelector('.founder');
+    const press = document.querySelector('.founder__press');
+    if (!founder || !press) return;
+    const calibrate = () => {
+      if (window.matchMedia('(max-width: 1024px)').matches) {
+        founder.style.removeProperty('--founder-run');
+        return;
+      }
+      const run = Math.max(0, Math.round(window.innerHeight / 2 - press.offsetHeight / 2));
+      founder.style.setProperty('--founder-run', run + 'px');
+    };
+    calibrate();
+    window.addEventListener('resize', calibrate);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
+  })();
+
+  // Founder press clipping — drifts at its own rate so it reads as a separate
+  // element travelling past, not as part of the copy block. Translates the img,
+  // never the figure, so the Sell hand-off timing is untouched.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const fig = document.querySelector('.founder__press');
+    const img = fig && fig.querySelector('img');
+    if (!img) return;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      const r = fig.getBoundingClientRect();
+      if (r.bottom > -200 && r.top < vh + 200) {
+        const prog = (r.top + r.height / 2 - vh / 2) / vh;
+        const dy = Math.max(-52, Math.min(52, prog * -64));
+        img.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      }
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
   // Scroll reveal — images rise from blur, text slides in from the side.
   (function () {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const imgSel  = '.card figure, .npost figure, .founder__media, .breaker, .sell__bg, .press';
+    // the night breaker is a pinned stage now — revealing it as one block would
+    // fight its own sticky children, so only the day breaker rises
+    const imgSel  = '.card figure, .npost figure, .founder__media, .founder__press, .breaker--day, .sell__bg, .press';
     const leftSel = '.lede, .npost__date, .npost__title, .npost__text, .npost__more, .sell__in > *';
     const rightSel = '.founder__body > *, .news__head > *';
+    const upSel   = '.proof li, .breaker__h';
+    document.querySelectorAll(upSel).forEach(el => el.setAttribute('data-reveal', 'up'));
     document.querySelectorAll(imgSel).forEach(el => el.setAttribute('data-reveal', 'img'));
     document.querySelectorAll(leftSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text'); });
     document.querySelectorAll(rightSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text-r'); });
@@ -1083,6 +1599,13 @@
       [...founderBody.children].forEach((child, i) => {
         if (child.hasAttribute('data-reveal')) child.style.transitionDelay = (0.32 + i * 0.1).toFixed(2) + 's';
       });
+    }
+    // proof band — the three claims rise in one after another, not together.
+    // 0.16s apart is wide enough to read as a sequence, short enough that the
+    // last one is not still arriving after the eye has moved on.
+    const proof = document.querySelector('.proof');
+    if (proof) {
+      [...proof.children].forEach((li, i) => { li.style.transitionDelay = (i * 0.16).toFixed(2) + 's'; });
     }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
