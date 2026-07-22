@@ -28,7 +28,7 @@
   .wrap { max-width: 1200px; margin-inline: auto; padding-inline: clamp(24px, 5vw, 64px); }
 
   /* eyebrow / meta */
-  .eyebrow { font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold-ink); }
+  .eyebrow { font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--accent); }
   .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 
   /* page head */
@@ -40,7 +40,7 @@
   /* section shell */
   section.block { padding-block: clamp(56px, 8vw, 112px); border-bottom: 1px solid var(--rule); }
   .sec-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: clamp(32px, 4vw, 56px); }
-  .sec-head .n { font-family: var(--font-display); font-size: var(--fs-h3); color: var(--gold-ink); }
+  .sec-head .n { font-family: var(--font-display); font-size: var(--fs-h3); color: var(--accent); }
   .sec-head h2 { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); }
 
   /* type specimens */
@@ -84,15 +84,15 @@
   /* buttons */
   .btnrow { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; padding: 0 28px; font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body); letter-spacing: var(--ls-button); border-radius: 999px; border: 1px solid transparent; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease); }
-  /* TWO TYPES — primary (main) + secondary; both pill, both with a gold hairline */
-  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); border-radius: 6px; }  /* less round than the pill secondary */
-  .btn--primary:hover { background: #000; border-color: #d3b775; }
-  .btn--primary.on-dark { background: var(--gold); color: var(--ink); border-color: var(--gold); }  /* gold fill takes ink (7.09) */
-  .btn--primary.on-dark:hover { background: #d3b775; }
-  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--gold); }
-  .btn--secondary:hover { background: var(--gold-wash); border-color: var(--gold-ink); }
-  .btn--secondary.on-dark { color: var(--cream); border-color: var(--gold); }
-  .btn--secondary.on-dark:hover { background: rgba(194,161,92,.16); }
+  /* TWO TYPES — primary (main) is a solid ink pill; secondary carries the hairline */
+  .btn--primary { background: var(--ink); color: #fff; border-color: transparent; border-radius: 6px; }  /* less round than the pill secondary */
+  .btn--primary:hover { background: #000; border-color: transparent; }
+  .btn--primary.on-dark { background: var(--accent-dark); color: var(--ink); border-color: var(--accent-dark); }  /* cream fill takes ink (14.76) */
+  .btn--primary.on-dark:hover { background: var(--accent-dark-hover); }
+  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--rule-strong); }
+  .btn--secondary:hover { background: var(--accent-wash); border-color: var(--accent); }
+  .btn--secondary.on-dark { color: var(--cream); border-color: rgba(239,236,228,.42); }
+  .btn--secondary.on-dark:hover { background: var(--accent-wash-dark); }
   .dark-demo { background: var(--dark); padding: 28px; margin-top: 20px; }
 
   /* inventory card sample */
@@ -101,14 +101,14 @@
   .card img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
   .card:hover img { transform: scale(var(--img-hover-scale)); }
   .card h3 { margin-top: 16px; font-family: var(--font-display); font-weight: var(--fw-card); font-size: var(--fs-h4); line-height: var(--lh-card); }
-  .card .price { margin-top: 6px; font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--gold-ink); letter-spacing: .02em; }
+  .card .price { margin-top: 6px; font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--ink-muted); letter-spacing: .02em; }
 
   /* spacing scale */
   .spacing { display: grid; gap: 12px; }
   .sp { display: grid; grid-template-columns: 90px 70px 1fr; gap: 16px; align-items: center; }
   .sp code { font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--ink); }
   .sp .val { font-family: ui-monospace, Menlo, monospace; font-size: var(--fs-body-sm); color: var(--ink-muted); }
-  .sp .bar { height: 16px; background: var(--gold-wash); border-left: 2px solid var(--gold-ink); }
+  .sp .bar { height: 16px; background: var(--accent-wash); border-left: 2px solid var(--accent); }
 
   .note { margin-top: 20px; font-size: var(--fs-body-sm); color: var(--ink-muted); max-width: 70ch; line-height: 1.6; }
 
@@ -172,7 +172,7 @@
 
   <!-- 03 palette -->
   <section class="block">
-    <div class="sec-head"><span class="n">03</span><h2>Palette — warm, one gold at two levels</h2></div>
+    <div class="sec-head"><span class="n">03</span><h2>Palette — warm neutral, accent split by surface</h2></div>
 
     <p class="eyebrow" style="margin-bottom:18px;">Surfaces</p>
     <div class="swatches" style="margin-bottom:44px;">
@@ -191,11 +191,11 @@
       <div class="sw"><div class="sw__chip" style="background:#A8A49B"><span style="color:#221F1A">Muted / dark</span></div><div class="sw__meta"><b>--ink-soft-on-dark</b><span class="hex">#A8A49B</span><span class="ratio">6.61 on --dark ✓AA</span></div></div>
     </div>
 
-    <p class="eyebrow" style="margin-bottom:18px;">Accent — gold</p>
+    <p class="eyebrow" style="margin-bottom:18px;">Accent — neutral</p>
     <div class="swatches" style="margin-bottom:44px;">
-      <div class="sw"><div class="sw__chip" style="background:#8C6D33"><span style="color:#fff">Text gold</span></div><div class="sw__meta"><b>--gold-ink</b><span class="hex">#8C6D33</span><span class="ratio">4.58 on --bg ✓AA</span><span class="tag">the only gold as text on light</span></div></div>
-      <div class="sw"><div class="sw__chip" style="background:#C2A15C"><span style="color:#1A1A18">Decorative</span></div><div class="sw__meta"><b>--gold</b><span class="hex">#C2A15C</span><span class="ratio">2.33 on light · 6.68 on --dark</span><span class="tag tag--warn">not for text on light</span></div></div>
-      <div class="sw"><div class="sw__chip" style="background:#EFEAE0"><span style="color:#8C6D33">Wash</span></div><div class="sw__meta"><b>--gold-wash</b><span class="hex">rgba(194,161,92,.14)</span><span class="ratio">Underline / hover wash</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#2B2A27"><span style="color:#fff">On light</span></div><div class="sw__meta"><b>--accent</b><span class="hex">#2B2A27</span><span class="ratio">13.63 on --bg ✓AAA</span><span class="tag">text, icons, fills on light</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#EFECE4"><span style="color:#1A1A18">On dark</span></div><div class="sw__meta"><b>--accent-dark</b><span class="hex">#EFECE4</span><span class="ratio">14.76 on --dark-deep ✓AAA</span><span class="tag tag--warn">invisible on light — dark surfaces only</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#EFEEEA"><span style="color:#2B2A27">Wash</span></div><div class="sw__meta"><b>--accent-wash</b><span class="hex">rgba(26,26,24,.07)</span><span class="ratio">Pill hover — nav and tertiary CTAs</span></div></div>
     </div>
 
     <p class="eyebrow" style="margin-bottom:18px;">States &amp; brand red</p>
@@ -204,7 +204,7 @@
       <div class="sw"><div class="sw__chip" style="background:#3F6B4A"><span style="color:#fff">Success</span></div><div class="sw__meta"><b>--success</b><span class="hex">#3F6B4A</span><span class="ratio">5.84 on --bg ✓AA</span></div></div>
       <div class="sw"><div class="sw__chip" style="background:#D31720"><span style="color:#fff">Logo red</span></div><div class="sw__meta"><b>--logo-red</b><span class="hex">#D31720</span><span class="ratio">Artwork only — never a UI token</span></div></div>
     </div>
-    <p class="note">Red and gold are separated by <b>role, not removal</b>: red is content (the logo shield, the hero car); gold is interface (hairlines, hover, focus). They never carry the same visual weight. Gold fills always take <b>ink</b> text — white on gold is 2.46 and is banned.</p>
+    <p class="note">The champagne gold was retired (2026-07). A neutral has no hue to carry a mid tone, so the accent splits by <b>surface</b>, not by lightness: <b>--accent</b> near-black on light, <b>--accent-dark</b> near-white on dark. There is no value that works on both — a mid grey measures ~1.2 on one of them. Red stays what it always was: content (the shield, the hero car), never interface.</p>
   </section>
 
   <!-- 04 buttons -->
@@ -220,7 +220,7 @@
         <button class="btn btn--secondary on-dark">Browse inventory</button>
       </div>
     </div>
-    <p class="note"><b>Two types only.</b> <b>Primary (main)</b> — ink fill + a gold hairline; on a dark surface it inverts to a gold fill with ink text (7.09 ✓, never white on gold). <b>Secondary</b> — transparent + gold hairline; cream text on dark. Pill radius is the art-director exception for interactive controls — the system radius stays <b>0</b> for cards and structure. CTAs are sentence case per the brief, not tracked caps.</p>
+    <p class="note"><b>Two types only.</b> <b>Primary (main)</b> — a solid ink pill; on a dark surface it inverts to a cream fill with ink text (14.76 ✓). <b>Secondary</b> — transparent + a neutral hairline; cream text on dark. Pill radius is the art-director exception for interactive controls — the system radius stays <b>0</b> for cards and structure. CTAs are sentence case per the brief, not tracked caps.</p>
   </section>
 
   <!-- 05 card -->

@@ -35,16 +35,23 @@
   --ink-on-dark:      #FFFFFF; /* headings on dark   16.42 on --dark ✓AAA */
   --ink-soft-on-dark: #A8A49B; /* muted on dark       6.61 on --dark ✓AA  */
 
-  /* ---------- Accent — gold at two lightness levels -------------------
-     ONE gold (hue 41° vs 39° = same family), TWO levels, because a single
-     gold cannot serve both roles:
-       --gold      2.33 on --bg  ✗ unusable as text on light
-                   6.68 on --dark / 7.61 on --dark-deep ✓ excellent
-       --gold-ink  4.58 on --bg  ✓AA — the ONLY gold allowed as text on light
-     RULE: gold fills take --ink text (7.09 ✓), never white (2.46 ✗). */
-  --gold:        #C2A15C;   /* decorative: hairlines, gold ON DARK, hover */
-  --gold-ink:    #8C6D33;   /* gold as TEXT/ICON on light surfaces */
-  --gold-wash:   rgba(194, 161, 92, 0.14);  /* underline/hover wash */
+  /* ---------- Accent — neutral. The champagne gold is gone (2026-07) ----
+     A monochrome system still needs two accent values, but the split is a
+     different one. Gold split by LIGHTNESS: one value dark enough to read as
+     text on cream, one light enough to show on charcoal — both the same hue.
+     A neutral has no hue to carry a mid tone, so it splits by SURFACE:
+     near-black on light, near-white on dark. There is no single value that
+     works on both, and reaching for a mid grey gets you 1.2:1 on one of them.
+       --accent       #2B2A27  13.63 on --bg         ✓AAA
+       --accent-dark  #EFECE4  14.76 on --dark-deep  ✓AAA
+     Hover is one step of lightness, never a hue change.
+     RULE: --accent fills take #fff text; --accent-dark fills take --ink. */
+  --accent:            #2B2A27;
+  --accent-hover:      #46443E;
+  --accent-dark:       #EFECE4;
+  --accent-dark-hover: #FFFFFF;
+  --accent-wash:       rgba(26, 26, 24, 0.07);
+  --accent-wash-dark:  rgba(239, 236, 228, 0.14);
 
   /* ---------- Brand red — artwork only, NEVER a UI token --------------
      Logo shield + hero car are red; the brief bans red as an accent.
@@ -59,13 +66,14 @@
   --danger-bg:   #FBF0EE;
   --success:     #3F6B4A;   /* 5.84 on --bg ✓AA  */
   --success-bg:  #EFF4F0;
-  --focus:       #8C6D33;   /* focus ring on light — 4.58 ✓ (>3:1 non-text) */
-  --focus-dark:  #C2A15C;   /* focus ring on dark  — 6.68 ✓ */
+  --focus:       #2B2A27;   /* focus ring on light — 13.63 ✓ */
+  --focus-dark:  #EFECE4;   /* focus ring on dark  — 14.76 ✓ */
 
   /* ---------- Hairlines — used sparingly.
      Brief: "Avoid heavy ruled lines between sections." Sections separate
      by tint. Rules exist only inside components (form fields, footer). */
   --rule:        rgba(26, 26, 24, 0.12);
+  --rule-solid:  #D8D4CB;   /* opaque hairline where a wash would show the layer beneath */
   --rule-strong: rgba(26, 26, 24, 0.24);
   --rule-dark:   rgba(239, 236, 228, 0.16);
 

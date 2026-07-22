@@ -8,7 +8,7 @@
 <script>document.documentElement.classList.add('js');</script>
 
 <!-- Light editorial homepage, built to refference/ref7nice.jpg:
-     warm off-white base, Gloock display serif, gold accents, two dark slabs
+     warm off-white base, Gloock display serif, neutral accents, two dark slabs
      (Sell + Footer). All type & colour from assets/css/tokens.css. -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,7 +70,7 @@
 
   .eyebrow {
     font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold);
-    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold-ink);
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--accent);
   }
   .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 
@@ -84,17 +84,23 @@
   .lede p { margin-top: 18px; color: var(--ink-soft); font-size: var(--fs-body-lg); line-height: 1.6; }
 
   /* text link with arrow */
+  /* Tertiary CTA — same pill hover as the main nav, so every non-button link
+     in the page reacts the same way. The negative start margin cancels the
+     pill's own padding, so the text still lines up with the grid it sits in;
+     without it every arrow link would jump 14px right of its column. */
   .arrow-link {
     display: inline-flex; align-items: center; gap: 9px;
+    padding: 9px 14px; margin-inline-start: -14px; border-radius: 999px;
     font-size: var(--fs-body-sm); font-weight: var(--fw-medium); letter-spacing: .01em;
-    color: var(--ink); transition: color var(--dur) var(--ease);
+    color: var(--ink);
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
   .arrow-link .a { transition: transform var(--dur) var(--ease); }
-  .arrow-link:hover { color: var(--gold-ink); }
+  .arrow-link:hover { color: var(--accent); background: var(--accent-wash); }
   .arrow-link:hover .a { transform: translateX(4px); }
-  .arrow-link--gold { color: var(--gold-ink); }
-  .arrow-link--dark { color: var(--gold); }
-  .arrow-link--dark:hover { color: #dcc384; }
+  .arrow-link--accent { color: var(--accent); }
+  .arrow-link--dark { color: var(--accent-dark); }
+  .arrow-link--dark:hover { color: var(--accent-dark-hover); background: var(--accent-wash-dark); }
 
   .center-cta { text-align: center; margin-top: clamp(40px, 5vw, 60px); }
 
@@ -113,21 +119,23 @@
   }
   .btn:active { transform: translateY(1px); }
   .btn--sm { height: 44px; padding: 0 22px; font-size: var(--fs-body-sm); }
-  /* TWO TYPES — main (primary) + secondary. Both pill, both with a gold hairline. */
-  .btn--primary { background: var(--ink); color: #fff; border-color: var(--gold); border-radius: 6px; }  /* less round than the pill secondary */
-  .btn--primary:hover { background: #000; border-color: #d3b775; }
-  /* on dark surfaces (sell band) primary inverts to a gold fill (ink text 7.09) */
-  .btn--primary.on-dark { background: var(--gold); color: var(--ink); border-color: var(--gold); }
-  .btn--primary.on-dark:hover { background: #d3b775; }
-  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--gold); }
-  .btn--secondary:hover { background: var(--gold-wash); border-color: var(--gold-ink); }
+  /* TWO TYPES — main (primary) + secondary. Primary is a solid ink pill (a
+     hairline on it was only ever visible because it was gold); secondary
+     carries the hairline. */
+  .btn--primary { background: var(--ink); color: #fff; border-color: transparent; border-radius: 6px; }  /* less round than the pill secondary */
+  .btn--primary:hover { background: #000; border-color: transparent; }
+  /* on dark surfaces (sell band) primary inverts to a cream fill (ink text 14.76) */
+  .btn--primary.on-dark { background: var(--accent-dark); color: var(--ink); border-color: var(--accent-dark); }
+  .btn--primary.on-dark:hover { background: var(--accent-dark-hover); border-color: var(--accent-dark-hover); }
+  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--rule-strong); }
+  .btn--secondary:hover { background: var(--accent-wash); border-color: var(--accent); }
   /* on dark surfaces (sell band): secondary inverts to cream text */
-  .btn--secondary.on-dark { color: var(--cream); border-color: var(--gold); }
-  .btn--secondary.on-dark:hover { background: rgba(194,161,92,.16); }
-  /* gold fill — footer subscribe. Was used in the markup but never defined,
+  .btn--secondary.on-dark { color: var(--cream); border-color: rgba(239,236,228,.42); }
+  .btn--secondary.on-dark:hover { background: var(--accent-wash-dark); border-color: var(--accent-dark); }
+  /* cream fill — footer subscribe. Was used in the markup but never defined,
      so Subscribe was rendering as bare text on the near-black footer. */
-  .btn--gold { background: var(--gold); color: var(--ink); border-color: var(--gold); border-radius: 6px; }
-  .btn--gold:hover { background: #d3b775; border-color: #d3b775; }
+  .btn--accent { background: var(--accent-dark); color: var(--ink); border-color: var(--accent-dark); border-radius: 6px; }
+  .btn--accent:hover { background: var(--accent-dark-hover); border-color: var(--accent-dark-hover); }
 
   /* ============================================================
      SCROLL REVEAL — images rise from blur, text slides in from the side.
@@ -257,7 +265,7 @@
     display: block; white-space: nowrap; padding-inline: 14px 6px;
     font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
   }
-  .hact__count { color: var(--gold-ink); }
+  .hact__count { color: var(--ink-muted); }
   .hact__field {
     display: block; width: 190px; height: 34px; margin-inline: 12px 4px;
     border: 0; background: transparent; outline: none;
@@ -273,19 +281,19 @@
   .hdr:not(.is-scrolled) .hact:focus-within .hact__btn { border-color: #fff; color: #fff; }
   .hdr:not(.is-scrolled) .hact__label,
   .hdr:not(.is-scrolled) .hact__field { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.45); }
-  .hdr:not(.is-scrolled) .hact__count { color: var(--gold); }
+  .hdr:not(.is-scrolled) .hact__count { color: rgba(255,255,255,.72); }
   .hdr:not(.is-scrolled) .hact__field::placeholder { color: rgba(255,255,255,.72); }
   .hdr__phone {
     display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
     font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
   }
-  .hdr__phone svg { width: 15px; height: 15px; color: var(--gold-ink); }
-  .hdr__phone:hover { color: var(--gold-ink); }
+  .hdr__phone svg { width: 15px; height: 15px; color: var(--ink-muted); }
+  .hdr__phone:hover { color: var(--ink); }
 
   .hdr__burger { display: none; width: 44px; height: 44px; }
   /* mobile-only compact phone icon (right side on mobile) */
   .hdr__phone-m { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: var(--ink); justify-self: end; }
-  .hdr__phone-m svg { width: 20px; height: 20px; color: var(--gold-ink); }
+  .hdr__phone-m svg { width: 20px; height: 20px; color: var(--ink-muted); }
   .hdr__burger span { display: block; width: 24px; height: 1.5px; background: var(--ink); margin: 5px auto; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
   .hdr.is-open .hdr__burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
   .hdr.is-open .hdr__burger span:nth-child(2) { opacity: 0; }
@@ -375,9 +383,9 @@
 
   /* ============================================================
      HERO — WATCH THE FILM CARD (bottom-right)
-     Glass card so it reads on any frame of the photograph, gold hairline to
-     tie it to the chrome, and it is a real button — the film opens in a
-     lightbox rather than autoplaying behind the type.
+     Glass card so it reads on any frame of the photograph, and it is a real
+     button — the film opens in a lightbox rather than autoplaying behind the
+     type.
      ============================================================ */
   /* Grey-blue, not gold — same slate family as the footer accent and the News
      haze. Measured over the card ground (rgba(16,14,10,.42) on the hero's dark
@@ -439,7 +447,7 @@
     color: var(--cream); border: 1px solid var(--rule-dark);
     transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
-  .vbox__close:hover { border-color: var(--gold); background: rgba(194,161,92,.14); }
+  .vbox__close:hover { border-color: rgba(239,236,228,.55); background: var(--accent-wash-dark); }
   .vbox__close svg { width: 20px; height: 20px; }
 
   /* search band — a thin-lined card under the full-screen hero */
@@ -459,13 +467,13 @@
     transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
   .search-form__field input::placeholder { color: var(--ink-muted); }
-  .search-form__field input:focus { outline: none; border-color: var(--gold-ink); background: #fff; }
+  .search-form__field input:focus { outline: none; border-color: var(--accent); background: #fff; }
   .search-form__btn {
     position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
     width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center;
     background: var(--ink); color: #fff; transition: background var(--dur) var(--ease);
   }
-  .search-form__btn:hover { background: var(--gold-ink); }
+  .search-form__btn:hover { background: var(--accent-hover); }
   .search-form__btn svg { width: 17px; height: 17px; }
 
   /* ============================================================
@@ -483,7 +491,7 @@
   .card--h .card__meta { flex-direction: column; align-items: flex-start; justify-content: center; gap: 7px; margin-top: 0; }
   .card--h .card__view { display: inline-flex; align-items: center; gap: 7px; margin-top: 6px; font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink-soft); }
   .card--h .card__view .a { transition: transform var(--dur) var(--ease); }
-  .card--h:hover .card__view { color: var(--gold-ink); }
+  .card--h:hover .card__view { color: var(--accent); }
   .card--h:hover .card__view .a { transform: translateX(4px); }
   .card:hover img { transform: scale(var(--img-hover-scale)); }
   .card__meta { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 18px; }
@@ -495,7 +503,7 @@
        the grid's baselines go ragged — visible today on the 230SL card. */
     min-height: calc(2em * var(--lh-card));
   }
-  .card__price { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); color: var(--gold-ink); letter-spacing: .02em; white-space: nowrap; }
+  .card__price { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); color: var(--ink-muted); letter-spacing: .02em; white-space: nowrap; }
 
   /* ============================================================
      FOUNDER — split
@@ -622,7 +630,7 @@
       linear-gradient(180deg, rgba(18,16,12,.52) 0%, rgba(18,16,12,.34) 46%, rgba(18,16,12,.62) 100%); }
   .sell .shell { position: relative; z-index: 2; width: 100%; }
   .sell__in { max-width: 620px; margin-inline: 0; }
-  .sell .eyebrow { color: var(--gold); display: block; margin-bottom: 18px; }
+  .sell .eyebrow { color: var(--accent-dark); display: block; margin-bottom: 18px; }
   .sell h2 {
     font-family: var(--font-display); font-weight: 400; color: #fff;
     font-size: var(--fs-h1); line-height: 1.06; letter-spacing: -.01em;
@@ -630,8 +638,8 @@
   .sell__sub { margin-top: 18px; font-size: var(--fs-body-lg); color: var(--cream); }
   .sell__actions { display: flex; align-items: center; justify-content: flex-start; gap: 26px; margin-top: 34px; flex-wrap: wrap; }
   .sell__phone { display: inline-flex; align-items: center; gap: 9px; font-weight: var(--fw-medium); color: #fff; font-size: var(--fs-body-lg); }
-  .sell__phone svg { width: 17px; height: 17px; color: var(--gold); }
-  .sell__phone:hover { color: var(--gold); }
+  .sell__phone svg { width: 17px; height: 17px; color: var(--cream); }
+  .sell__phone:hover { color: var(--accent-dark-hover); }
   /* muted caption can fall over the sunlit floor of the new showroom photo —
      a soft shadow keeps it ≥AA there without changing colour or the overlay */
   .sell__trust { margin-top: 26px; font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); letter-spacing: .03em; text-shadow: 0 1px 7px rgba(8, 6, 4, .78); }
@@ -684,9 +692,9 @@
     font-size: clamp(2rem, 1.1rem + 4vw, 4.75rem); line-height: 1.05; letter-spacing: -.02em;
     text-shadow: 0 2px 34px rgba(6,5,3,.72);
   }
-  .breaker__h .dot { color: var(--gold); }
+  .breaker__h .dot { color: rgba(239,236,228,.5); }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
-  .breaker__cap .eyebrow { display: inline-block; color: var(--gold); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
+  .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
 
   /* DAY BREAKER = the proof band.
      It used to be a mute full-screen photograph carrying no information, which
@@ -742,12 +750,12 @@
   .quote.is-active { opacity: 1; visibility: visible; }
   /* elegant chevrons on the sides */
   .quote-nav { position: absolute; top: 44%; transform: translateY(-50%); width: 46px; height: 46px; display: grid; place-items: center; border-radius: 999px; color: var(--ink-soft); background: transparent; transition: color var(--dur) var(--ease), background var(--dur) var(--ease); }
-  .quote-nav:hover { color: var(--gold-ink); background: var(--gold-wash); }
+  .quote-nav:hover { color: var(--accent); background: var(--accent-wash); }
   .quote-nav svg { width: 24px; height: 24px; }
   .quote-nav--prev { left: clamp(-8px, -2vw, -26px); }
   .quote-nav--next { right: clamp(-8px, -2vw, -26px); }
   @media (max-width: 560px) { .quote-nav--prev { left: -4px; } .quote-nav--next { right: -4px; } }
-  .quote__mark { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); line-height: .6; color: var(--gold); height: .5em; }
+  .quote__mark { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); line-height: .6; color: var(--rule-solid); height: .5em; }
   .quote blockquote {
     font-family: var(--font-text); font-style: italic; font-weight: 400;
     font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--ink);
@@ -758,7 +766,7 @@
   .quote__by { display: block; margin-top: 26px; font-family: var(--font-sans); font-style: normal; font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink-muted); letter-spacing: .04em; }
   .quote-dots { display: flex; justify-content: center; gap: 10px; margin-top: 36px; }
   .quote-dots button { width: 8px; height: 8px; border-radius: 999px; background: rgba(26,26,24,.18); transition: background var(--dur) var(--ease), transform var(--dur) var(--ease); }
-  .quote-dots button.is-active { background: var(--gold-ink); transform: scale(1.35); }
+  .quote-dots button.is-active { background: var(--accent); transform: scale(1.35); }
 
   .press { margin-top: clamp(48px, 6vw, 72px); border-top: 1px solid var(--rule); padding-top: clamp(32px, 4vw, 44px); }
   .press__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(22px, 3.6vw, 52px); }
@@ -827,9 +835,9 @@
   .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; border-radius: 6px; }
   .npost img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
   .npost:hover img { transform: scale(1.03); }
-  .npost:hover .npost__more { color: #dcc384; }
+  .npost:hover .npost__more { color: var(--accent-dark-hover); background: var(--accent-wash-dark); }
   .npost:hover .npost__more .a { transform: translateX(4px); }
-  .npost__date { display: block; margin-top: 22px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+  .npost__date { display: block; margin-top: 22px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft-on-dark); }
   /* Post titles in the UI sans, not the display serif: with the section heading
      ("News & Events") already in Gloock, three more serif headlines below it read
      as competing titles rather than as a list. Size dropped a step and weight
@@ -850,7 +858,7 @@
      from `top` alone — the JS below sets it to (viewportH − headingH) / 2.
      This value is the no-JS fallback. */
   .news__head { position: sticky; top: clamp(24px, 22vh, 200px); align-self: start; max-width: 32ch; }
-  .news__head .eyebrow { display: block; color: var(--gold); margin-bottom: 20px; }
+  .news__head .eyebrow { display: block; color: var(--accent-dark); margin-bottom: 20px; }
   .news__title {
     font-family: var(--font-display); font-weight: 400; color: #fff;
     font-size: clamp(2.5rem, 1.62rem + 3.9vw, 4.25rem); line-height: 1.02; letter-spacing: -.02em;
@@ -872,17 +880,18 @@
        --fo-accent-hi #B3C1CD → 10.2  ✓AAA (hover has to read as a lift)
      Body copy stays --cream and --ink-soft-on-dark; only the accent changed. */
   .footer {
-    --fo-accent:    #8D9AA6;
-    --fo-accent-hi: #B3C1CD;
+    --fo-accent:    var(--ink-soft-on-dark);
+    --fo-accent-hi: var(--cream);
     /* Dark dirty blue, not the warm near-black --dark-deep. It still has to sit a
        clear tonal step BELOW the News slab (#212528) or the sticky-reveal at the
        page end stops reading as a reveal. Measured L: News .0186 → footer .0082. */
-    --fo-bg: #141A1F;
+    --fo-bg: #1A1A18;
     position: sticky; bottom: 0; z-index: 0; background: var(--fo-bg); color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px;
   }
   .footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: clamp(32px, 4vw, 56px); }
-  .footer__brand-name { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: #fff; }
-  .footer__brand-by { font-family: var(--font-text); font-style: italic; color: var(--fo-accent); font-size: .95rem; margin-top: 4px; }
+  .footer__lockup { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 20px); }
+  .footer__shield { height: clamp(58px, 5vw, 74px); width: auto; }
+  .footer__sig { height: clamp(19px, 1.7vw, 25px); width: auto; }
   .footer__brand p { margin-top: 22px; max-width: 34ch; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.7; font-weight: var(--fw-body-dark); }
   .footer__col h3 { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--fo-accent); margin-bottom: 18px; }
   .footer__col ul { display: grid; gap: 12px; }
@@ -893,7 +902,7 @@
   .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
   .footer__social { display: flex; gap: 12px; margin-bottom: 26px; }
   .footer__social a { width: 40px; height: 40px; border: 1px solid var(--rule-dark); border-radius: 999px; display: grid; place-items: center; transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
-  .footer__social a:hover { border-color: var(--fo-accent-hi); background: rgba(141,154,166,.16); }
+  .footer__social a:hover { border-color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
   .footer__social svg { width: 17px; height: 17px; color: var(--cream); }
   .footer__form label { display: block; font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); margin-bottom: 12px; font-weight: var(--fw-body-dark); }
   .footer__form .row { display: flex; gap: 8px; }
@@ -1222,7 +1231,7 @@
         <p class="founder__quote" id="founder-h">I've been buying and selling the world's finest automobiles for over&nbsp;20&nbsp;years.</p>
         <p class="founder__p">What began with a single Porsche has become the largest collection of European and American classics under one roof in Los Angeles.</p>
         <div class="founder__link">
-          <a class="arrow-link arrow-link--gold" href="/about.htm">Read Alex's story <span class="a" aria-hidden="true">›</span></a>
+          <a class="arrow-link arrow-link--accent" href="/about.htm">Read Alex's story <span class="a" aria-hidden="true">›</span></a>
         </div>
       </div>
       <!-- press clipping — trails the copy up the column; the Sell slab is
@@ -1394,8 +1403,13 @@
   <div class="shell">
     <div class="footer__grid">
       <div class="footer__brand">
-        <div class="footer__brand-name">Beverly Hills Car Club</div>
-        <div class="footer__brand-by">by Alex Manos</div>
+        <!-- the real mark, not a text stand-in. logo-signature-cream.png exists
+             precisely for this surface: its ink is flipped to --cream because the
+             master signature is pure black and would vanish here. -->
+        <div class="footer__lockup">
+          <img class="footer__shield" src="assets/images/logo-shield-hi.png" alt="Beverly Hills Car Club" width="260" height="262" loading="lazy">
+          <img class="footer__sig" src="assets/images/logo-signature-cream.png" alt="by Alex Manos" width="155" height="34" loading="lazy">
+        </div>
         <p>The world's finest European and American classic automobiles, bought and sold from Los Angeles since 2001.</p>
       </div>
 
@@ -1434,7 +1448,7 @@
           <label for="nl">Get new arrivals in your inbox</label>
           <div class="row">
             <input type="email" id="nl" name="email" placeholder="Email address" required>
-            <button class="btn btn--gold btn--sm" type="submit">Subscribe</button>
+            <button class="btn btn--accent btn--sm" type="submit">Subscribe</button>
           </div>
         </form>
       </div>
