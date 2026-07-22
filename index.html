@@ -525,9 +525,12 @@
      section scrolls normally until its BOTTOM edge reaches the viewport bottom,
      then pins. That is exactly the moment the copy has finished leaving.
      --founder-run tunes how much scroll the copy gets. */
-  .pin-stack { position: relative; isolation: isolate; }
-  .pin-stack .founder-sec { position: sticky; bottom: 0; z-index: 0; }
-  .pin-stack .sell { position: relative; z-index: 1; }
+  /* --overlap is the distance the NEXT section travels over the pinned one.
+     It is bought with matching trailing padding inside the pinned section, so
+     the page is no taller than before. */
+  .pin-stack { position: relative; isolation: isolate; --overlap: 100svh; }
+  .pin-stack .founder-sec { position: relative; z-index: 0; }
+  .pin-stack .sell { position: relative; z-index: 1; margin-top: calc(-1 * var(--overlap)); }
   @media (max-width: 1024px) {
     .pin-stack .founder-sec { position: static; }   /* no pin on small screens */
   }
@@ -562,7 +565,7 @@
   /* the run is PADDING on the column rather than a bottom margin on the clipping
      — a bottom margin is the kind of thing that collapses out and silently
      shortens the section, and this section's height IS the hand-off timing */
-  .founder__col { position: relative; padding-bottom: var(--founder-run); }
+  .founder__col { position: relative; padding-bottom: calc(var(--founder-run) + var(--overlap)); }
   /* 86vh of lead-in puts the copy down at the BOTTOM edge of the frame the
      moment the portrait pins, so its whole movement is a climb from there out
      of the top. The bottom pad is the pause after it has gone, before Sell. */
@@ -674,10 +677,13 @@
      `.breaker` sets overflow:hidden, which would make itself the nearest scroll
      container and kill the sticky children — so the clipping moves to the stage.
      ============================================================ */
-  .pin-stack--night .breaker--night { position: sticky; bottom: 0; z-index: 0; }
-  .pin-stack--night .news { position: relative; z-index: 1; }
+  .pin-stack--night .breaker--night { position: relative; z-index: 0; }
+  .pin-stack--night .news { position: relative; z-index: 1; margin-top: calc(-1 * var(--overlap)); }
   .breaker--night {
-    --night-run: 112vh;
+    /* Runway must stay above 100vh: News needs a full viewport of overlap, and
+       the gap between the heading leaving and News arriving is (run - 100vh).
+       108 leaves ~8vh of daylight — enough to read as a beat, not as a stall. */
+    --night-run: 108vh;
     position: relative; aspect-ratio: auto; overflow: visible; background: var(--dark-deep);
   }
   /* zero flow height (margin cancels it) so the fade and the runway both start
@@ -694,7 +700,9 @@
             mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
   }
   @media (prefers-reduced-motion: reduce) { .breaker__fade { display: none; } }
-  .breaker__runway { position: relative; z-index: 1; padding: 86vh var(--container-pad) var(--night-run); }
+  /* 45vh of lead-in, not 86: one line of type does not need a full viewport of
+     travel before it starts leaving. */
+  .breaker__runway { position: relative; z-index: 1; padding: 45vh var(--container-pad) calc(var(--night-run) + var(--overlap)); }
   .breaker__h {
     text-align: center; max-width: 18ch; margin-inline: auto;
     font-family: var(--font-display); font-weight: 400; color: #fff;
