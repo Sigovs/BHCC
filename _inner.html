@@ -922,14 +922,6 @@
        page end stops reading as a reveal. Measured L: News .0186 → footer .0082. */
     --fo-bg: #1A1A18;
     position: sticky; bottom: 0; z-index: 0; color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px;
-    /* A sticky-reveal footer MUST be at least a viewport tall. Its content is
-       ~744px; on a 900px screen the reveal left the bottom 156px of the page
-       (the end of News) stranded above it, because the footer simply could not
-       cover the screen. min-height:100svh guarantees it fills the viewport at
-       the end of the scroll; the content sits at the top and the base gradient
-       fills the slack below. */
-    min-height: 100svh;
-    display: flex; flex-direction: column;
     /* A soft pool of light rising from the bottom edge, so the page does not
        end on a flat slab. Kept wide and shallow — it has to lift the base
        without touching the News→footer tonal step that the sticky reveal
@@ -1072,7 +1064,7 @@
     .npost figure { aspect-ratio: 16 / 10; }
   }
 </style>
-</head>
+<style>html{scroll-behavior:auto!important}</style></head>
 <body>
 
 <!-- .page = the layer that scrolls up and over the sticky footer at page end -->

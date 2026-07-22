@@ -565,12 +565,18 @@
      keeps only a horizontal band of it. Alex's head sits at ~28% of the frame;
      anchoring the window at 30% keeps him inside it across the whole
      480–760px min-height range, cropping wall above and tarmac below. */
-  .founder__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; will-change: transform; }
-  /* The portrait arrives slower than the rest of the page's reveals — it pins
-     and then stays for two viewports, so a quick entrance under-sells it.
-     Longer travel too: at the default 46px a 1.7s duration just reads as lag. */
-  .js .founder__media[data-reveal] { transition-duration: 1.7s; }
-  .js .founder__media[data-reveal="img"] { transform: translateY(72px); }
+  /* Over-scanned so the drift has somewhere to travel: at height 100% any
+     translate would expose the figure background at one edge. 124% with a -12%
+     offset gives ~96px of headroom each way for a ±80px drift. */
+  .founder__media img {
+    position: absolute; left: 0; top: -12%; width: 100%; height: 124%;
+    object-fit: cover; object-position: 50% 30%; will-change: transform;
+  }
+  /* The vertical motion is scroll-linked (see JS) rather than a one-shot
+     transition, so the entrance only fades the blur off — a transform here
+     would fight the drift for the same axis. */
+  .js .founder__media[data-reveal] { transition-duration: 1.6s; }
+  .js .founder__media[data-reveal="img"] { transform: none; }
 
   /* the run is PADDING on the column rather than a bottom margin on the clipping
      — a bottom margin is the kind of thing that collapses out and silently
@@ -916,6 +922,14 @@
        page end stops reading as a reveal. Measured L: News .0186 → footer .0082. */
     --fo-bg: #1A1A18;
     position: sticky; bottom: 0; z-index: 0; color: var(--cream); padding-block: clamp(64px, 8vw, 104px) 40px;
+    /* A sticky-reveal footer MUST be at least a viewport tall. Its content is
+       ~744px; on a 900px screen the reveal left the bottom 156px of the page
+       (the end of News) stranded above it, because the footer simply could not
+       cover the screen. min-height:100svh guarantees it fills the viewport at
+       the end of the scroll; the content sits at the top and the base gradient
+       fills the slack below. */
+    min-height: 100svh;
+    display: flex; flex-direction: column;
     /* A soft pool of light rising from the bottom edge, so the page does not
        end on a flat slab. Kept wide and shallow — it has to lift the base
        without touching the News→footer tonal step that the sticky reveal
@@ -1755,6 +1769,36 @@
     calibrate();
     window.addEventListener('resize', calibrate);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
+  })();
+
+  // Founder portrait — scroll-linked drift, not a one-shot entrance. It is
+  // pinned for most of the section, so without this it is the one still frame
+  // on a page that is otherwise all motion. Rides from +80px to -80px across
+  // the whole section: slow, but continuous, so it reads as floating up with
+  // the scroll rather than as an animation that has already finished.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sec = document.querySelector('.founder-sec');
+    const img = sec && sec.querySelector('.founder__media img');
+    if (!img) return;
+    const AMP = 80;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      const r = sec.getBoundingClientRect();
+      if (r.bottom > -200 && r.top < vh + 200) {
+        // 0 when the section's top meets the viewport top, 1 when its bottom
+        // meets the viewport bottom — i.e. the whole time it is on screen
+        const span = Math.max(1, r.height - vh);
+        const p = Math.min(1, Math.max(0, -r.top / span));
+        img.style.transform = `translate3d(0, ${(AMP - p * AMP * 2).toFixed(1)}px, 0)`;
+      }
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
   })();
 
   // Founder press clipping — drifts at its own rate so it reads as a separate
