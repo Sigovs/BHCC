@@ -67,6 +67,11 @@
      opaque layer (z-index 1) that scrolls up and over the footer (z-index 0),
      which is pinned to the viewport bottom. Pure layout, no JS. */
   .page { position: relative; z-index: 1; background: var(--bg); }
+  /* A pin stack is positioned, so it paints above any STATIC sibling that
+     follows it — a pinned element overhanging by even a pixel would show
+     through the next section. Positioning the siblings puts DOM order back in
+     charge. Belt and braces alongside the --overlap cap above. */
+  .page > section { position: relative; }
 
   .eyebrow {
     font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold);
@@ -528,7 +533,12 @@
   /* --overlap is the distance the NEXT section travels over the pinned one.
      It is bought with matching trailing padding inside the pinned section, so
      the page is no taller than before. */
-  .pin-stack { position: relative; isolation: isolate; --overlap: 100svh; }
+  /* --overlap can never exceed the height of the section that does the
+     covering, or the pinned section hangs out of the stack and paints over
+     whatever follows. Sell is aspect-ratio 2/1, so its height tracks viewport
+     WIDTH while svh tracks HEIGHT — they do not agree on their own. 46vw keeps
+     it under Sell (50vw) at every width. */
+  .pin-stack { position: relative; isolation: isolate; --overlap: min(100svh, 46vw); }
   .pin-stack .founder-sec { position: relative; z-index: 0; }
   .pin-stack .sell { position: relative; z-index: 1; margin-top: calc(-1 * var(--overlap)); }
   @media (max-width: 1024px) {
@@ -677,6 +687,8 @@
      `.breaker` sets overflow:hidden, which would make itself the nearest scroll
      container and kill the sticky children — so the clipping moves to the stage.
      ============================================================ */
+  /* News is several viewports tall, so the cap is not needed here */
+  .pin-stack--night { --overlap: 100svh; }
   .pin-stack--night .breaker--night { position: relative; z-index: 0; }
   .pin-stack--night .news { position: relative; z-index: 1; margin-top: calc(-1 * var(--overlap)); }
   .breaker--night {
