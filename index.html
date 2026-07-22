@@ -1142,8 +1142,11 @@
 
     <!-- Click-to-play, not an autoplaying background loop. README explains why the
          loop is deliberately not wired in: its frame fights the poster and drops
-         type onto the car. A film the visitor chooses to open has neither problem. -->
-    <button class="hero__play" type="button" data-video="assets/video/home.mp4" aria-haspopup="dialog">
+         type onto the car. A film the visitor chooses to open has neither problem.
+         bhcc-film.mp4 is the committed derivative: 1280×608 (letterbox bars cropped
+         per README), CRF 31, 18MB. home.mp4 stays gitignored — a 51MB master does
+         not belong in git history. -->
+    <button class="hero__play" type="button" data-video="assets/video/bhcc-film.mp4" aria-haspopup="dialog">
       <span class="hero__play-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 6.5v11l9-5.5z"/></svg>
       </span>
@@ -1161,7 +1164,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
   <div class="vbox__frame">
-    <video id="vboxPlayer" controls playsinline preload="none"></video>
+    <video id="vboxPlayer" controls playsinline preload="none" poster="assets/images/film-poster.jpg"></video>
   </div>
 </div>
 
