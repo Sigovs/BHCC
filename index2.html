@@ -696,21 +696,22 @@
      into the ground where they meet and the seam into News is seamless. The
      darkening gradient is pushed up into the top half only, so it never tints
      that flat colour: solid #212528 from 72% down, no scrim over it. */
-  /* Gentle top-down darkening only; the photo runs clean to the bottom edge. */
+  /* Even darken so the heading reads at centre over the lit floor. */
   .breaker--night .breaker__overlay { background:
-    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.14) 34%, rgba(8,7,5,0) 62%); }
-  /* Watermark: one oversized line across the full width, sitting on the floor.
-     It reads fully — a tone just DARKER than the #212528 plate it lies on, so
-     the whole line is legible as a quiet engraving, not blended away. nowrap +
-     vw sizing spans the width; the section's overflow:hidden trims the descenders. */
-  .breaker__mark {
-    position: absolute; z-index: 2; left: 0; right: 0; bottom: -.02em;
-    margin: 0; text-align: center; white-space: nowrap;
-    font-family: var(--font-display); font-weight: 400;
-    font-size: clamp(2.5rem, 12.6vw, 15rem); line-height: .9; letter-spacing: -.01em;
-    color: #191c1f;
+    linear-gradient(180deg, rgba(8,7,5,.44) 0%, rgba(8,7,5,.22) 45%, rgba(8,7,5,.40) 100%); }
+  /* Heading centred over the frame — same size and same slide-up-on-scroll as
+     the proof band's keys (it borrows [data-reveal="up"]). */
+  .breaker--night .breaker__cap {
+    position: absolute; inset: 0; z-index: 2;
+    display: grid; place-items: center; padding-inline: var(--container-pad);
   }
-  .breaker__mark .s { color: #23272c; }
+  .breaker__mark {
+    margin: 0; text-align: center;
+    font-family: var(--font-display); font-weight: 400; color: #fff;
+    font-size: clamp(1.25rem, .95rem + 1.2vw, 1.9rem); line-height: 1.1; letter-spacing: -.005em;
+    text-shadow: 0 2px 24px rgba(6,5,3,.7);
+  }
+  .breaker__mark .s { color: rgba(239,236,228,.55); }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
   .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
 
@@ -1418,13 +1419,15 @@
      BREAKER 2 — Datsun 240Z at dusk, downtown LA skyline (night)
      dark divider that prepares the transition to the dark page-foot
      ============================================================ -->
-<!-- Oversized watermark caption bled off the bottom edge of the frame. -->
+<!-- Centred caption, rises from blur on scroll like the proof band. -->
 <section class="breaker breaker--night" aria-labelledby="la-h">
   <div class="breaker__bg">
     <img src="assets/images/visbrake_2.jpg" alt="A blue Ford Mustang Mach 1 under a spotlight on the showroom floor, the collection in shadow around it" loading="lazy" width="1920" height="960">
   </div>
   <div class="breaker__overlay" aria-hidden="true"></div>
-  <h2 class="breaker__mark" id="la-h">Los Angeles <span class="s" aria-hidden="true">/</span> Since 2001</h2>
+  <div class="breaker__cap">
+    <h2 class="breaker__mark" id="la-h">Los Angeles <span class="s" aria-hidden="true">/</span> Since 2001</h2>
+  </div>
 </section>
 
 <!-- ============================================================
@@ -1833,7 +1836,7 @@
     const imgSel  = '.card figure, .npost figure, .founder__media, .founder__press, .breaker--day, .sell__bg, .press';
     const leftSel = '.lede, .npost__date, .npost__title, .npost__text, .npost__more, .sell__in > *';
     const rightSel = '.founder__body > *, .news__head > *';
-    const upSel   = '.proof li';
+    const upSel   = '.proof li, .breaker__mark';
     document.querySelectorAll(upSel).forEach(el => el.setAttribute('data-reveal', 'up'));
     document.querySelectorAll(imgSel).forEach(el => el.setAttribute('data-reveal', 'img'));
     document.querySelectorAll(leftSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text'); });
