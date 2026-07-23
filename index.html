@@ -705,6 +705,12 @@
     text-shadow: 0 2px 34px rgba(6,5,3,.72);
   }
   .breaker__h .dot { color: rgba(239,236,228,.5); }
+  /* Blur/opacity are scroll-linked from JS (opacity + filter set inline as the
+     section crosses). This is NOT the old pinned reveal: the section is a plain
+     2:1 divider, only the heading's own filter animates — no sticky layers, so
+     none of the paint-order bugs the pinned version had. No-JS shows it at rest. */
+  .js .breaker__h { will-change: opacity, filter, transform; }
+  @media (prefers-reduced-motion: reduce) { .js .breaker__h { opacity: 1 !important; filter: none !important; } }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
   .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
 
@@ -909,12 +915,15 @@
        slab; the base gradient then reads as a deliberate floor beneath it. */
     min-height: 100svh;
     display: flex; flex-direction: column; justify-content: center;
-    /* A soft pool of light rising from the bottom edge, so the page does not
-       end on a flat slab. Kept wide and shallow — it has to lift the base
-       without touching the News→footer tonal step that the sticky reveal
-       depends on, so it never brightens the top of the footer. */
+    /* LA-skyline photograph as the ground, held down by a heavy scrim so the
+       cream text keeps AA over it. The photo is already near-black at top and
+       bottom (where the copy sits) — the scrim only firms that up. A soft pool
+       of light at the very bottom stops the page ending on a flat slab, without
+       lifting the top where the News→footer tonal step lives. */
     background:
-      radial-gradient(120% 62% at 50% 118%, rgba(233,229,219,.12) 0%, rgba(233,229,219,.05) 42%, rgba(233,229,219,0) 72%),
+      radial-gradient(120% 52% at 50% 118%, rgba(233,229,219,.10) 0%, rgba(233,229,219,.04) 42%, rgba(233,229,219,0) 72%),
+      linear-gradient(180deg, rgba(20,18,16,.80) 0%, rgba(20,18,16,.62) 42%, rgba(20,18,16,.74) 100%),
+      url("assets/images/footer/footer_background.png") center / cover no-repeat,
       var(--fo-bg);
   }
   .footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: clamp(32px, 4vw, 56px); }
@@ -923,9 +932,17 @@
   .footer__sig { height: clamp(19px, 1.7vw, 25px); width: auto; }
   .footer__brand p { margin-top: 22px; max-width: 34ch; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.7; font-weight: var(--fw-body-dark); }
   .footer__col h3 { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--fo-accent); margin-bottom: 18px; }
-  .footer__col ul { display: grid; gap: 12px; }
-  .footer__col a { font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); transition: color var(--dur) var(--ease); }
-  .footer__col a:hover { color: var(--fo-accent-hi); }
+  .footer__col ul { display: grid; gap: 6px; }
+  /* pill hover, same idiom as the header nav. Inline-block + self-start so the
+     pill hugs the text rather than filling the column; negative inline margin
+     cancels the pill's own padding so the labels stay flush to the column edge. */
+  .footer__col a {
+    display: inline-block; justify-self: start;
+    padding: 7px 13px; margin-inline-start: -13px; border-radius: 999px;
+    font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark);
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .footer__col a:hover { color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
   .footer__connect .contact { display: grid; gap: 12px; margin-bottom: 22px; font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); }
   .footer__connect .contact a { display: inline-flex; align-items: center; gap: 9px; }
   .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
@@ -1748,6 +1765,39 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
   })();
 
+  // Night breaker heading — rises out of blur as the section enters and melts
+  // back into blur as it leaves, tied to scroll position. Plain divider, no
+  // sticky: only this heading's opacity/filter move, so no paint-order risk.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sec = document.querySelector('.breaker--night');
+    const h = sec && sec.querySelector('.breaker__h');
+    if (!h) return;
+    const MAX_BLUR = 16, RISE = 90;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      const r = sec.getBoundingClientRect();
+      // p = 0 when the section's top hits the viewport bottom, 1 when its bottom
+      // hits the viewport top — the whole time any part of it is on screen
+      const p = (vh - r.top) / (vh + r.height);
+      // bell: crisp at the middle of that pass, blurred+faded at both ends
+      const vis = Math.max(0, 1 - Math.abs(p - 0.5) * 2.4);
+      // rise: starts below (enters from the bottom of the section), passes
+      // through its resting spot at the middle, keeps travelling up on exit.
+      // Clamped so it never flies off before/after the section is on screen.
+      const dy = Math.max(-RISE, Math.min(RISE, (0.5 - p) * RISE * 2));
+      h.style.opacity = vis.toFixed(3);
+      h.style.filter = `blur(${((1 - vis) * MAX_BLUR).toFixed(1)}px)`;
+      h.style.transform = `translateY(${dy.toFixed(1)}px)`;
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
   // Founder portrait — scroll-linked drift, not a one-shot entrance. It is
   // pinned for most of the section, so without this it is the one still frame
   // on a page that is otherwise all motion. Rides from +80px to -80px across
@@ -1811,7 +1861,7 @@
     const imgSel  = '.card figure, .npost figure, .founder__media, .founder__press, .breaker--day, .sell__bg, .press';
     const leftSel = '.lede, .npost__date, .npost__title, .npost__text, .npost__more, .sell__in > *';
     const rightSel = '.founder__body > *, .news__head > *';
-    const upSel   = '.proof li, .breaker__h';
+    const upSel   = '.proof li';
     document.querySelectorAll(upSel).forEach(el => el.setAttribute('data-reveal', 'up'));
     document.querySelectorAll(imgSel).forEach(el => el.setAttribute('data-reveal', 'img'));
     document.querySelectorAll(leftSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text'); });
