@@ -696,20 +696,24 @@
      into the ground where they meet and the seam into News is seamless. The
      darkening gradient is pushed up into the top half only, so it never tints
      that flat colour: solid #212528 from 72% down, no scrim over it. */
+  /* Bottom third of the frame resolves to a flat #212528 (same colour as the
+     News section below → invisible seam). The darkening gradient stays in the
+     top half so it never tints that flat floor, which is the plate the
+     watermark reads against. */
   .breaker--night .breaker__overlay { background:
-    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.10) 34%, rgba(33,37,40,0) 58%, #212528 88%, #212528 100%); }
-  /* Watermark: one oversized line seated on the floor of the frame and clipped
-     by the section's bottom edge (the .breaker's overflow:hidden does the clip).
-     nowrap + a vw-scaled size makes it span the full width; the muted cream over
-     the near-black floor keeps it a texture, not a headline shouting over the car. */
+    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.10) 34%, rgba(33,37,40,0) 52%, #212528 66%, #212528 100%); }
+  /* Watermark: one oversized line across the full width, sitting on the floor.
+     It reads fully — a tone just DARKER than the #212528 plate it lies on, so
+     the whole line is legible as a quiet engraving, not blended away. nowrap +
+     vw sizing spans the width; the section's overflow:hidden trims the descenders. */
   .breaker__mark {
-    position: absolute; z-index: 2; left: 0; right: 0; bottom: -.16em;
+    position: absolute; z-index: 2; left: 0; right: 0; bottom: -.02em;
     margin: 0; text-align: center; white-space: nowrap;
     font-family: var(--font-display); font-weight: 400;
     font-size: clamp(2.5rem, 12.6vw, 15rem); line-height: .9; letter-spacing: -.01em;
-    color: #212528;
+    color: #191c1f;
   }
-  .breaker__mark .s { color: #2d333a; }
+  .breaker__mark .s { color: #23272c; }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
   .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
 
