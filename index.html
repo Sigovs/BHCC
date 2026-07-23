@@ -692,25 +692,19 @@
      producing (see the note in the markup). A static section cannot pin wrong.
      ============================================================ */
   .breaker--night .breaker__overlay { background:
-    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.16) 42%, rgba(8,7,5,.30) 66%, rgba(8,7,5,.66) 100%); }
-  /* heading centred over the frame, not pinned to the bottom like the eyebrow cap */
-  .breaker--night .breaker__cap {
-    position: absolute; inset: 0; z-index: 2; bottom: auto;
-    display: grid; place-items: center; padding-inline: var(--container-pad);
+    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.16) 42%, rgba(8,7,5,.30) 66%, rgba(8,7,5,.60) 100%); }
+  /* Watermark: one oversized line seated on the floor of the frame and clipped
+     by the section's bottom edge (the .breaker's overflow:hidden does the clip).
+     nowrap + a vw-scaled size makes it span the full width; the muted cream over
+     the near-black floor keeps it a texture, not a headline shouting over the car. */
+  .breaker__mark {
+    position: absolute; z-index: 2; left: 0; right: 0; bottom: -.06em;
+    margin: 0; text-align: center; white-space: nowrap;
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(2.5rem, 12.6vw, 15rem); line-height: .9; letter-spacing: -.01em;
+    color: #212528;
   }
-  .breaker__h {
-    text-align: center; max-width: 18ch; margin-inline: auto;
-    font-family: var(--font-display); font-weight: 400; color: #fff;
-    font-size: clamp(2rem, 1.1rem + 4vw, 4.75rem); line-height: 1.05; letter-spacing: -.02em;
-    text-shadow: 0 2px 34px rgba(6,5,3,.72);
-  }
-  .breaker__h .dot { color: rgba(239,236,228,.5); }
-  /* Blur/opacity are scroll-linked from JS (opacity + filter set inline as the
-     section crosses). This is NOT the old pinned reveal: the section is a plain
-     2:1 divider, only the heading's own filter animates — no sticky layers, so
-     none of the paint-order bugs the pinned version had. No-JS shows it at rest. */
-  .js .breaker__h { will-change: opacity, filter, transform; }
-  @media (prefers-reduced-motion: reduce) { .js .breaker__h { opacity: 1 !important; filter: none !important; } }
+  .breaker__mark .s { color: #2d333a; }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
   .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
 
@@ -926,7 +920,9 @@
       url("assets/images/footer/footer_background.png") center / cover no-repeat,
       var(--fo-bg);
   }
-  .footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: clamp(32px, 4vw, 56px); }
+  /* Connect column widened (and the inter-column gap tightened) so the six
+     social glyphs sit on one line at a larger size */
+  .footer__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.6fr; gap: clamp(24px, 2.8vw, 44px); }
   .footer__lockup { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 20px); }
   .footer__shield { height: clamp(58px, 5vw, 74px); width: auto; }
   .footer__sig { height: clamp(19px, 1.7vw, 25px); width: auto; }
@@ -948,10 +944,10 @@
   .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
   /* bare glyphs, no circles — one line. Without the 48px chips six icons fit
      the column easily, so they can be larger and generously spaced. */
-  .footer__social { display: flex; flex-wrap: nowrap; gap: clamp(18px, 2vw, 28px); margin-top: 28px; margin-bottom: 26px; }
+  .footer__social { display: flex; flex-wrap: nowrap; gap: clamp(16px, 1.6vw, 22px); margin-top: 28px; margin-bottom: 26px; }
   .footer__social a { display: grid; place-items: center; color: var(--cream); transition: color var(--dur) var(--ease); }
   .footer__social a:hover { color: var(--fo-accent-hi); }
-  .footer__social svg { width: 24px; height: 24px; }
+  .footer__social svg { width: 30px; height: 30px; }
   /* signup on the left, language switcher opposite on the right, on one row */
   .footer__base {
     margin-top: clamp(44px, 5vw, 68px); padding-top: clamp(36px, 4vw, 52px);
@@ -1416,19 +1412,13 @@
      BREAKER 2 — Datsun 240Z at dusk, downtown LA skyline (night)
      dark divider that prepares the transition to the dark page-foot
      ============================================================ -->
-<!-- Plain full-bleed divider — heading centred over the photograph. The pinned
-     scroll-reveal version was replaced (2026-07): it was three viewports tall
-     with a sticky stage, a negative-margin overlap and a blur window, and it
-     produced a recurring class of paint-order bugs that could not be debugged
-     in a headless (no-scroll) environment. A static divider cannot have them. -->
+<!-- Oversized watermark caption bled off the bottom edge of the frame. -->
 <section class="breaker breaker--night" aria-labelledby="la-h">
   <div class="breaker__bg">
     <img src="assets/images/visbrake_2.jpg" alt="A blue Ford Mustang Mach 1 under a spotlight on the showroom floor, the collection in shadow around it" loading="lazy" width="1920" height="960">
   </div>
   <div class="breaker__overlay" aria-hidden="true"></div>
-  <div class="breaker__cap">
-    <h2 class="breaker__h" id="la-h">Los Angeles <span class="dot" aria-hidden="true">/</span> Since 2001</h2>
-  </div>
+  <h2 class="breaker__mark" id="la-h">Los Angeles <span class="s" aria-hidden="true">/</span> Since 2001</h2>
 </section>
 
 <!-- ============================================================
@@ -1772,39 +1762,6 @@
     calibrate();
     window.addEventListener('resize', calibrate);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
-  })();
-
-  // Night breaker heading — rises out of blur as the section enters and melts
-  // back into blur as it leaves, tied to scroll position. Plain divider, no
-  // sticky: only this heading's opacity/filter move, so no paint-order risk.
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const sec = document.querySelector('.breaker--night');
-    const h = sec && sec.querySelector('.breaker__h');
-    if (!h) return;
-    const MAX_BLUR = 16, RISE = 90;
-    let ticking = false;
-    const update = () => {
-      const vh = window.innerHeight;
-      const r = sec.getBoundingClientRect();
-      // p = 0 when the section's top hits the viewport bottom, 1 when its bottom
-      // hits the viewport top — the whole time any part of it is on screen
-      const p = (vh - r.top) / (vh + r.height);
-      // bell: crisp at the middle of that pass, blurred+faded at both ends
-      const vis = Math.max(0, 1 - Math.abs(p - 0.5) * 2.4);
-      // rise: starts below (enters from the bottom of the section), passes
-      // through its resting spot at the middle, keeps travelling up on exit.
-      // Clamped so it never flies off before/after the section is on screen.
-      const dy = Math.max(-RISE, Math.min(RISE, (0.5 - p) * RISE * 2));
-      h.style.opacity = vis.toFixed(3);
-      h.style.filter = `blur(${((1 - vis) * MAX_BLUR).toFixed(1)}px)`;
-      h.style.transform = `translateY(${dy.toFixed(1)}px)`;
-      ticking = false;
-    };
-    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
   })();
 
   // Founder portrait — scroll-linked drift, not a one-shot entrance. It is
