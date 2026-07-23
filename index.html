@@ -691,8 +691,13 @@
      Was a pinned scroll-reveal panel; removed for the paint-order bugs it kept
      producing (see the note in the markup). A static section cannot pin wrong.
      ============================================================ */
+  /* The bottom of the frame resolves to a flat #212528 — the SAME colour as the
+     watermark text and as the News section that follows — so the caption melts
+     into the ground where they meet and the seam into News is seamless. The
+     darkening gradient is pushed up into the top half only, so it never tints
+     that flat colour: solid #212528 from 72% down, no scrim over it. */
   .breaker--night .breaker__overlay { background:
-    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.16) 42%, rgba(8,7,5,.30) 66%, rgba(8,7,5,.60) 100%); }
+    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.10) 34%, rgba(33,37,40,0) 58%, #212528 88%, #212528 100%); }
   /* Watermark: one oversized line seated on the floor of the frame and clipped
      by the section's bottom edge (the .breaker's overflow:hidden does the clip).
      nowrap + a vw-scaled size makes it span the full width; the muted cream over
