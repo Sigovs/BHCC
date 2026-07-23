@@ -946,7 +946,9 @@
   .footer__connect .contact { display: grid; gap: 12px; margin-bottom: 22px; font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); }
   .footer__connect .contact a { display: inline-flex; align-items: center; gap: 9px; }
   .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
-  .footer__social { display: flex; gap: 12px; margin-bottom: 26px; }
+  /* breathing room above the row, and wrap so six circles never overflow the
+     Connect column on a narrow desktop */
+  .footer__social { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; margin-bottom: 26px; }
   .footer__social a { width: 40px; height: 40px; border: 1px solid var(--rule-dark); border-radius: 999px; display: grid; place-items: center; transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
   .footer__social a:hover { border-color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
   .footer__social svg { width: 17px; height: 17px; color: var(--cream); }
@@ -1518,10 +1520,14 @@
           <a href="tel:+13109750272"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(310) 975-0272</a>
           <span>4576½ Worcester Drive, Los Angeles, CA</span>
         </div>
+        <!-- all six networks the live site links, per brief §09 -->
         <div class="footer__social">
-          <a href="https://instagram.com" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-          <a href="https://facebook.com" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5H14z"/></svg></a>
-          <a href="https://youtube.com" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.facebook.com/beverlyhillscarclub" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5H14z"/></svg></a>
+          <a href="https://www.youtube.com/user/beverlyhillscarclub" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://twitter.com/BevHillsCC" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h3l-6.6 7.5L21.7 21h-6l-4.7-6.1L5.6 21h-3l7.1-8.1L2.6 3h6.1l4.2 5.6zm-1.1 16h1.7L7.7 4.7H5.9z"/></svg></a>
+          <a href="https://www.instagram.com/beverlyhillscarclub" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.pinterest.com/beverlyhillscc" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.08-.8-.15-2 .03-2.9l1.16-4.9s-.3-.6-.3-1.47c0-1.38.8-2.4 1.8-2.4.85 0 1.26.64 1.26 1.4 0 .86-.55 2.14-.83 3.33-.24 1 .5 1.8 1.48 1.8 1.77 0 3.13-1.87 3.13-4.57 0-2.39-1.72-4.06-4.17-4.06-2.84 0-4.5 2.13-4.5 4.33 0 .86.33 1.78.74 2.28a.3.3 0 0 1 .07.28l-.28 1.15c-.05.18-.15.22-.34.13-1.25-.58-2.03-2.4-2.03-3.87 0-3.15 2.29-6.04 6.6-6.04 3.46 0 6.15 2.47 6.15 5.77 0 3.44-2.17 6.2-5.18 6.2-1.01 0-1.96-.52-2.29-1.15l-.62 2.37c-.22.86-.83 1.94-1.24 2.6A10 10 0 1 0 12 2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/beverly-hills-car-club" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0zM3.3 8.4h3.28V21H3.3zM9.34 8.4h3.14v1.72h.05c.44-.83 1.5-1.7 3.1-1.7 3.31 0 3.92 2.18 3.92 5.02V21h-3.27v-4.9c0-1.17-.02-2.67-1.63-2.67-1.63 0-1.88 1.27-1.88 2.58V21H9.34z"/></svg></a>
         </div>
       </div>
     </div>
