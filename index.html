@@ -699,17 +699,18 @@
   /* Even darken so the heading reads at centre over the lit floor. */
   .breaker--night .breaker__overlay { background:
     linear-gradient(180deg, rgba(8,7,5,.44) 0%, rgba(8,7,5,.22) 45%, rgba(8,7,5,.40) 100%); }
-  /* Heading centred over the frame — same size and same slide-up-on-scroll as
-     the proof band's keys (it borrows [data-reveal="up"]). */
+  /* Heading seated near the bottom of the frame, like the proof band, at the
+     "We buy classic cars." size (--fs-h1). Slides up on scroll via the proof
+     band's [data-reveal="up"]. */
   .breaker--night .breaker__cap {
-    position: absolute; inset: 0; z-index: 2;
-    display: grid; place-items: center; padding-inline: var(--container-pad);
+    position: absolute; left: 0; right: 0; bottom: clamp(40px, 9vh, 96px); z-index: 2;
+    text-align: center; padding-inline: var(--container-pad);
   }
   .breaker__mark {
-    margin: 0; text-align: center;
+    margin: 0;
     font-family: var(--font-display); font-weight: 400; color: #fff;
-    font-size: clamp(1.25rem, .95rem + 1.2vw, 1.9rem); line-height: 1.1; letter-spacing: -.005em;
-    text-shadow: 0 2px 24px rgba(6,5,3,.7);
+    font-size: var(--fs-h1); line-height: 1.06; letter-spacing: -.01em;
+    text-shadow: 0 2px 28px rgba(6,5,3,.72);
   }
   .breaker__mark .s { color: rgba(239,236,228,.55); }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
