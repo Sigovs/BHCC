@@ -517,8 +517,7 @@
   /* ============================================================
      FOUNDER — split
      ============================================================ */
-  /* full-bleed founder — photo runs to the left screen edge, copy sits right */
-  .founder-sec { padding-block: 0; }
+  .founder-sec { padding-block: var(--section-py); }
 
   /* PIN STACK — three beats, in this order:
        1. the portrait pins to the left and stays,
@@ -530,103 +529,20 @@
      section scrolls normally until its BOTTOM edge reaches the viewport bottom,
      then pins. That is exactly the moment the copy has finished leaving.
      --founder-run tunes how much scroll the copy gets. */
-  /* --overlap is the distance the NEXT section travels over the pinned one.
-     It is bought with matching trailing padding inside the pinned section, so
-     the page is no taller than before. */
-  /* --overlap can never exceed the height of the section that does the
-     covering, or the pinned section hangs out of the stack and paints over
-     whatever follows. Sell is aspect-ratio 2/1, so its height tracks viewport
-     WIDTH while svh tracks HEIGHT — they do not agree on their own. 46vw keeps
-     it under Sell (50vw) at every width. */
-  .pin-stack { position: relative; isolation: isolate; --overlap: min(100svh, 46vw); }
-  .pin-stack .founder-sec { position: relative; z-index: 0; }
-  .pin-stack .sell { position: relative; z-index: 1; margin-top: calc(-1 * var(--overlap)); }
-  @media (max-width: 1024px) {
-    .pin-stack .founder-sec { position: static; }   /* no pin on small screens */
+  /* Two-column editorial (per the reference): a rounded photo card on the left,
+     copy centred on the right, both in view at once. Contained (not full-bleed),
+     compact height. No pin/blur/drift. */
+  .founder { max-width: 1320px; margin-inline: auto; padding-inline: var(--container-pad);
+    display: grid; grid-template-columns: 0.92fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+  .founder__media {
+    overflow: hidden; background: var(--bg-deep);
+    border-radius: 16px; aspect-ratio: 4 / 5;
+    box-shadow: 0 24px 60px -28px rgba(26,26,24,.35);
   }
-  /* align-items:start, not stretch — a stretched grid item fills the row and has
-     nowhere to travel, so the portrait could not stick. */
-  /* The section now pins the moment the press clipping is centred on screen —
-     that is what --founder-run solves for. Derivation: the clipping's centre
-     sits (86vh + copy + gap + h/2) below the section top; it is centred when
-     scrolled by that minus 50vh; the section pins when scrolled by its own
-     height minus 100vh. Setting the two equal leaves run = 50vh - h/2.
-     The gap above the clipping is sized so the copy has fully left the top
-     before that moment arrives. */
-  .founder {
-    --press-clip-w: 300px;                                  /* native 263×350 — a clipping, not a hero */
-    --press-clip-h: 399px;                                  /* 300 ÷ 263 × 350 */
-    --founder-run: calc(50vh - (var(--press-clip-h) / 2));
-    display: grid; grid-template-columns: 1fr 1fr; align-items: start;
-  }
-  .founder__media { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--bg-deep); }
-  /* Portrait source (860×1179) in a landscape-ish half-column: `cover` has to
-  /* Source is a tall 2580×4050 (0.64) in a column that runs 0.95–1.5, so `cover`
-     keeps only a horizontal band of it. Alex's head sits at ~28% of the frame;
-     anchoring the window at 30% keeps him inside it across the whole
-     480–760px min-height range, cropping wall above and tarmac below. */
-  /* Over-scanned so the drift has somewhere to travel: at height 100% any
-     translate would expose the figure background at one edge. 124% with a -12%
-     offset gives ~96px of headroom each way for a ±80px drift. */
-  .founder__media img {
-    position: absolute; left: 0; top: -12%; width: 100%; height: 124%;
-    object-fit: cover; object-position: 50% 30%; will-change: transform;
-  }
-  /* The vertical motion is scroll-linked (see JS) rather than a one-shot
-     transition, so the entrance only fades the blur off — a transform here
-     would fight the drift for the same axis. */
-  .js .founder__media[data-reveal] { transition-duration: 1.6s; }
-  .js .founder__media[data-reveal="img"] { transform: none; }
-
-  /* the run is PADDING on the column rather than a bottom margin on the clipping
-     — a bottom margin is the kind of thing that collapses out and silently
-     shortens the section, and this section's height IS the hand-off timing */
-  .founder__col { position: relative; padding-bottom: calc(var(--founder-run) + var(--overlap)); }
-  /* 86vh of lead-in puts the copy down at the BOTTOM edge of the frame the
-     moment the portrait pins, so its whole movement is a climb from there out
-     of the top. The bottom pad is the pause after it has gone, before Sell. */
-  .founder__body { max-width: 600px; padding: 86vh clamp(24px, 5vw, 84px) 0; }
-  .founder__press {
-    width: var(--press-clip-w); max-width: 100%;
-    margin: clamp(36px, 6vh, 64px) clamp(24px, 5vw, 84px) 0;
-  }
-  /* Three nested transforms, one per job, so none of them fights the others:
-       figure — the reveal (rise out of blur), and the layout anchor for timing
-       .tilt  — the resting angle + hover
-       img    — the parallax drift
-     It arrives square and settles into the angle: .tilt only takes its rotation
-     once the figure is revealed, so the movement reads as a cutting being
-     dropped onto the page rather than one that was always crooked. */
-  .founder__press-tilt {
-    display: block; transform: rotate(0deg); transform-origin: 50% 60%;
-    box-shadow: 0 16px 38px -18px rgba(26,26,24,.42);
-    transition: transform .9s var(--ease) .22s, box-shadow var(--dur-slow) var(--ease);
-  }
-  .founder__press.is-in .founder__press-tilt { transform: rotate(-3.4deg); }
-  .founder__press:hover .founder__press-tilt {
-    transform: rotate(0deg) translateY(-8px) scale(1.025);
-    box-shadow: 0 30px 62px -20px rgba(26,26,24,.55);
-    transition-delay: 0s;
-  }
-  .founder__press img { width: 100%; height: auto; border-radius: 4px; will-change: transform; }
-  @media (prefers-reduced-motion: reduce) {
-    .founder__press-tilt { transition: none; }
-  }
-  /* Blur window pinned to the top of the copy column. mask-image ramps the blur
-     from full at the very top to nothing 45% down, so the text does not hit a
-     hard edge — it thickens, goes soft, and is gone. The tint gradient underneath
-     finishes the dissolve, and it is what carries the effect on browsers with no
-     backdrop-filter (the copy still fades out, just without the blur). */
-  .founder__fade {
-    position: sticky; top: 0; height: 30vh; margin-bottom: -30vh; z-index: 3;
-    pointer-events: none;
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    background: linear-gradient(180deg,
-      var(--bg-tint) 0%, rgba(242,240,235,.92) 34%, rgba(242,240,235,.55) 62%, rgba(242,240,235,0) 100%);
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
-            mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgba(0,0,0,.35) 68%, transparent 100%);
-  }
-  @media (prefers-reduced-motion: reduce) { .founder__fade { display: none; } }
+  /* Tall 2580×4050 portrait; Alex's head sits high, so anchor the crop near the
+     top to keep him framed. */
+  .founder__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .founder__body { max-width: 500px; }
   .founder__body .eyebrow { display: block; margin-bottom: 20px; }
   .founder__quote {
     font-family: var(--font-display); font-weight: 400; color: var(--ink);
@@ -841,52 +757,60 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .news > .shell { position: relative; z-index: 1; }
-  /* heading LEFT (sticky anchor), posts RIGHT */
-  .news__in {
-    display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
-    gap: clamp(28px, 3vw, 56px); align-items: start;
-    max-width: 1140px; margin-inline: auto;   /* pull the whole block in so columns sit together */
+  /* Heading row on top, three article cards below it — all in view at once
+     (manager feedback 2026-07: was a sticky heading with posts scrolling past
+     one at a time). */
+  .news__in { max-width: 1200px; margin-inline: auto; }
+  /* heading + "see all" on one row, like brief §08 */
+  .news__head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: clamp(16px, 2vw, 32px);
+    margin-bottom: clamp(40px, 5vw, 68px);
   }
-  .news__head { order: -1; }
-  .news__list { margin-left: 0; }   /* posts hug the left edge of their column, close to the heading */
-
-  /* LEFT — 4 stacked posts, held compact */
-  .news__list { display: flex; flex-direction: column; gap: clamp(48px, 6vw, 84px); max-width: 500px; }
-  /* whole tile is the link (was: only "Read more" was clickable) */
-  .npost { display: block; }
-  .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; border-radius: 6px; }
+  .news__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.5vw, 22px); }
+  /* whole tile is the link, wrapped in a dark-grey card (a step below the
+     #212528 section) so the three posts read as a set */
+  .npost {
+    display: flex; flex-direction: column; overflow: hidden;
+    background: #191c1f; border: 1px solid rgba(239,236,228,.07); border-radius: 12px;
+    transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .npost:hover { transform: translateY(-4px); border-color: rgba(239,236,228,.16); box-shadow: 0 22px 48px -24px rgba(0,0,0,.7); }
+  .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; }
   .npost img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
-  .npost:hover img { transform: scale(1.03); }
-  .npost:hover .npost__more { color: var(--accent-dark-hover); background: var(--accent-wash-dark); }
+  .npost:hover img { transform: scale(1.04); }
+  .npost:hover .npost__more { color: var(--accent-dark-hover); }
   .npost:hover .npost__more .a { transform: translateX(4px); }
-  .npost__date { display: block; margin-top: 22px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft-on-dark); }
-  /* Post titles in the UI sans, not the display serif: with the section heading
-     ("News & Events") already in Gloock, three more serif headlines below it read
-     as competing titles rather than as a list. Size dropped a step and weight
-     lifted to medium — the sans needs that to hold the same rank the serif held. */
+  /* copy sits inside the card with padding; the meta row pushes "Read more" to
+     the bottom so every card's CTA lines up regardless of title/excerpt length */
   .npost__title {
-    margin-top: 11px; font-family: var(--font-sans); font-weight: var(--fw-medium);
-    color: #fff; font-size: clamp(1.15rem, .96rem + .74vw, 1.5rem);
-    line-height: 1.3; letter-spacing: -.01em;
+    margin: 0; padding: clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) 0;
+    font-family: var(--font-sans); font-weight: var(--fw-medium);
+    color: #fff; font-size: clamp(1rem, .92rem + .34vw, 1.18rem);
+    line-height: 1.32; letter-spacing: -.005em;
+    /* reserve a two-line box so every card's excerpt/CTA line up: shorter
+       titles keep the height, longer ones clamp to two lines */
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+    min-height: calc(clamp(18px, 2vw, 24px) + 2 * 1.32em);
   }
-  .npost__text { margin-top: 12px; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.6; max-width: 46ch; }
-  .npost__more { margin-top: 16px; }
+  /* reserve three lines so every excerpt is the same height → the CTA lands at
+     the same level on all cards and the gap after the text is equal */
+  .npost__text {
+    margin: 10px 0 0; padding-inline: clamp(18px, 2vw, 24px);
+    color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.6;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+    min-height: calc(3 * 1.6em);
+  }
+  .npost__more { margin: clamp(20px, 2.2vw, 26px) clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px); }
 
-  /* Sticky heading, parked at the vertical middle of the viewport.
-     NOT `top:50vh` + `translateY(-50%)`: a transform moves the block off its
-     flow position, so at the start of the section it rendered half its own
-     height ABOVE the section and bled over the breaker above it. A sticky
-     element never rises above its flow position, so the centring has to come
-     from `top` alone — the JS below sets it to (viewportH − headingH) / 2.
-     This value is the no-JS fallback. */
-  .news__head { position: sticky; top: clamp(24px, 22vh, 200px); align-self: start; max-width: 32ch; }
   .news__head .eyebrow { display: block; color: var(--accent-dark); margin-bottom: 20px; }
+  .news__head-lead { max-width: 46ch; }
   .news__title {
     font-family: var(--font-display); font-weight: 400; color: #fff;
-    font-size: clamp(2.5rem, 1.62rem + 3.9vw, 4.25rem); line-height: 1.02; letter-spacing: -.02em;
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem); line-height: 1.04; letter-spacing: -.02em;
   }
-  .news__sub { margin-top: 22px; color: var(--cream); font-size: var(--fs-body-lg); line-height: 1.55; max-width: 34ch; }
-  .news__cta { margin-top: clamp(28px, 3vw, 36px); }
+  .news__sub { margin-top: 16px; color: var(--cream); font-size: var(--fs-body-lg); line-height: 1.55; max-width: 46ch; }
+  .news__cta { flex: none; }
 
   /* ============================================================
      FOOTER — DARK
@@ -1019,17 +943,10 @@
     .hdr__burger { display: block; order: -1; }
     .brand { justify-self: center; }        /* centre the logo */
     .hdr__phone-m { display: inline-flex; }
-    /* one column — nothing to pin against, so the whole choreography is off */
+    /* one column: photo on top, copy below */
     .founder { grid-template-columns: 1fr; }
-    .founder__media { position: static; height: auto; }
-    /* back to normal flow: the desktop rule takes the img out to position:absolute
-       for the scroll-drift, but with .founder__media static that would anchor to
-       the sticky section ancestor and blow out the layout. No drift on mobile. */
-    .founder__media img { position: static; height: auto; width: 100%; min-height: 460px; transform: none !important; }
-    .founder__fade { display: none; }
-    .founder__body { padding: 32px var(--container-pad) 8px; }
-    .founder__col { padding-bottom: 0; }
-    .founder__press { margin: 28px var(--container-pad) 8px; }
+    .founder__media img { min-height: 360px; }
+    .founder__body { padding: 32px var(--container-pad); }
     .footer__grid { grid-template-columns: 1fr 1fr; gap: 40px 32px; }
     .footer__brand { grid-column: 1 / -1; }
   }
@@ -1306,34 +1223,23 @@
      PIN STACK — the Founder story stays sticky while the Sell slab
      scrolls up and over it, then both release together.
      ============================================================ -->
-<div class="pin-stack">
-
 <!-- ============================================================
-     FOUNDER
+     FOUNDER — plain two-column editorial (photo left, copy right).
+     The pinned/blur/scroll-drift version was removed (manager feedback,
+     2026-07): the photo and quote should read at once, without scrolling.
      ============================================================ -->
 <section class="founder-sec section--tint" aria-labelledby="founder-h">
     <div class="founder">
       <figure class="founder__media">
         <img src="assets/images/Alex_Manos_Founder.jpg" alt="Alex Manos leaning against a red Ferrari Testarossa" loading="lazy" width="2580" height="4050">
       </figure>
-      <div class="founder__col">
-      <!-- the blur window the copy dissolves into as it reaches the top -->
-      <div class="founder__fade" aria-hidden="true"></div>
       <div class="founder__body">
-        <!-- <span class="eyebrow">Alex Manos, Founder</span> -->
+        <span class="eyebrow">Alex Manos, Founder</span>
         <p class="founder__quote" id="founder-h">I've been buying and selling the world's finest automobiles for over&nbsp;20&nbsp;years.</p>
         <p class="founder__p">What began with a single Porsche has become the largest collection of European and American classics under one roof in Los Angeles.</p>
         <div class="founder__link">
           <a class="arrow-link arrow-link--accent" href="/about.htm">Read Alex's story <span class="a" aria-hidden="true">›</span></a>
         </div>
-      </div>
-      <!-- press clipping — trails the copy up the column; the Sell slab is
-           timed to start the moment this reaches the middle of the screen -->
-      <figure class="founder__press">
-        <span class="founder__press-tilt">
-          <img src="assets/images/Alex_Manos_support_image.png" alt="The Hollywood Reporter feature on Alex Manos of Beverly Hills Car Club" loading="lazy" width="263" height="350">
-        </span>
-      </figure>
       </div>
     </div>
 </section>
@@ -1362,8 +1268,6 @@
     </div>
   </div>
 </section>
-
-</div><!-- /.pin-stack -->
 
 <!-- ============================================================
      TESTIMONIALS + PRESS
@@ -1439,42 +1343,39 @@
 <section class="section news" aria-labelledby="news-h">
   <div class="shell news__in">
 
-    <!-- LEFT — real posts from beverlyhillscarclub.com/blog.htm. Titles, links
-         and pull-quotes are the live ones; the site publishes no visible dates,
-         so the meta line carries the section instead of an invented date.
-         Photography is deliberately NOT reused from Featured above. -->
+    <!-- heading row on top -->
+    <div class="news__head">
+      <div class="news__head-lead">
+        <h2 class="news__title" id="news-h">News &amp; Events</h2>
+        <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
+      </div>
+      <div class="news__cta">
+        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See all articles <span aria-hidden="true">›</span></a>
+      </div>
+    </div>
+
+    <!-- real posts from beverlyhillscarclub.com/blog.htm. Titles, links and
+         pull-quotes are the live ones; the site publishes no visible dates, so
+         the meta line carries the section instead of an invented date. -->
     <div class="news__list">
       <a class="npost" href="https://www.beverlyhillscarclub.com/dscene-editor-in-chief-interviews-alex-manos.htm">
         <figure><img src="assets/images/alex-editorial.jpg" alt="Alex Manos in the Beverly Hills Car Club showroom" loading="lazy" width="1280" height="553"></figure>
-        <span class="npost__date mono">Press · DSCENE</span>
         <h3 class="npost__title">DSCENE Editor-in-Chief Interviews Alex Manos</h3>
         <p class="npost__text">“Compare a 1958 Corvette to a Tesla. There's no passion, no emotion. When you sit in that Corvette, you smell the leather.”</p>
         <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
       </a>
       <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-refined-brute-ferrari-330gtc.htm">
         <figure><img src="assets/images/583815906_18550719925061419_6070715814259884510_n.jpg" alt="A red Ferrari on the floor of the Beverly Hills Car Club showroom" loading="lazy" width="1080" height="1350"></figure>
-        <span class="npost__date mono">Car Tales · Ferrari</span>
         <h3 class="npost__title">Refined Brute, Ferrari 330GTC</h3>
         <p class="npost__text">“A racing brute in a fine suit” is how the 330GTC was once described — one of the most elegantly beautiful, as well as puissant, cars ever built.</p>
         <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
       </a>
       <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-ultimately-unique-mercedes-benz-280sl-california-special.htm">
         <figure><img src="assets/images/503657635_18516614353061419_7590410718349528124_n.jpg" alt="A black Mercedes-Benz SL parked inside the showroom" loading="lazy" width="1080" height="1350"></figure>
-        <span class="npost__date mono">Car Tales · Mercedes-Benz</span>
         <h3 class="npost__title">Ultimately Unique, Mercedes-Benz 280SL California Special</h3>
         <p class="npost__text">“There are around 900 million cars in the world, and thousands of models,” remarked Dr. Dieter Zetsche. “But there are only a handful of automotive icons: our SL is one of them.”</p>
         <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
       </a>
-    </div>
-
-    <!-- RIGHT — sticky heading -->
-    <div class="news__head">
-      <!-- <span class="eyebrow">From the showroom</span> -->
-      <h2 class="news__title" id="news-h">News &amp; Events</h2>
-      <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
-      <div class="news__cta">
-        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See all articles <span aria-hidden="true">›</span></a>
-      </div>
     </div>
 
   </div>
@@ -1671,32 +1572,6 @@
     update();
   })();
 
-  // scroll-linked zoom + drift on the founder portrait — slow push-in as it passes
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const media = document.querySelector('.founder__media');
-    const img = media && media.querySelector('img');
-    if (!img) return;
-    let ticking = false;
-    const update = () => {
-      const vh = window.innerHeight;
-      const r = media.getBoundingClientRect();
-      if (r.bottom < -160 || r.top > vh + 160) { ticking = false; return; }
-      const prog = (r.top + r.height / 2 - vh / 2) / vh;   // + above centre, − below
-      const scale = 1.09 + prog * 0.07;                    // ~1.04–1.15, never below 1
-      let dy = prog * -24; dy = Math.max(-18, Math.min(18, dy));
-      img.style.transform = `scale(${scale.toFixed(3)}) translate3d(0, ${dy.toFixed(1)}px, 0)`;
-      ticking = false;
-    };
-    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-  })();
-
-  // News/Events is a pure CSS sticky-column now (right heading sticky, left
-  // posts scroll, unsticks at section end) — no JS needed.
-
   // Watch-the-film lightbox. The <video> src is only attached on open and
   // stripped on close, so a 49MB file is never fetched by a visitor who does
   // not ask for it, and it stops dead when the box is dismissed.
@@ -1729,28 +1604,6 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
   })();
 
-  // Founder hand-off timing. The CSS solves --founder-run as 50vh − h/2 so the
-  // Sell slab starts exactly as the clipping reaches mid-screen, but `vh`, `svh`
-  // and the real viewport disagree by the scrollbar width (measured: 45px off).
-  // Measuring beats predicting — recompute from the live numbers, and the CSS
-  // value stays as the no-JS fallback.
-  (function () {
-    const founder = document.querySelector('.founder');
-    const press = document.querySelector('.founder__press');
-    if (!founder || !press) return;
-    const calibrate = () => {
-      if (window.matchMedia('(max-width: 1024px)').matches) {
-        founder.style.removeProperty('--founder-run');
-        return;
-      }
-      const run = Math.max(0, Math.round(window.innerHeight / 2 - press.offsetHeight / 2));
-      founder.style.setProperty('--founder-run', run + 'px');
-    };
-    calibrate();
-    window.addEventListener('resize', calibrate);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
-  })();
-
   // Search circle: first click opens the field and focuses it rather than
   // submitting an empty query — on touch there is no hover to open it with.
   (function () {
@@ -1776,68 +1629,11 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
   })();
 
-  // Founder portrait — scroll-linked drift, not a one-shot entrance. It is
-  // pinned for most of the section, so without this it is the one still frame
-  // on a page that is otherwise all motion. Rides from +80px to -80px across
-  // the whole section: slow, but continuous, so it reads as floating up with
-  // the scroll rather than as an animation that has already finished.
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const sec = document.querySelector('.founder-sec');
-    const img = sec && sec.querySelector('.founder__media img');
-    if (!img) return;
-    const AMP = 80;
-    let ticking = false;
-    const update = () => {
-      const vh = window.innerHeight;
-      const r = sec.getBoundingClientRect();
-      if (r.bottom > -200 && r.top < vh + 200) {
-        // 0 when the section's top meets the viewport top, 1 when its bottom
-        // meets the viewport bottom — i.e. the whole time it is on screen
-        const span = Math.max(1, r.height - vh);
-        const p = Math.min(1, Math.max(0, -r.top / span));
-        img.style.transform = `translate3d(0, ${(AMP - p * AMP * 2).toFixed(1)}px, 0)`;
-      }
-      ticking = false;
-    };
-    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-  })();
-
-  // Founder press clipping — drifts at its own rate so it reads as a separate
-  // element travelling past, not as part of the copy block. Translates the img,
-  // never the figure, so the Sell hand-off timing is untouched.
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const fig = document.querySelector('.founder__press');
-    const img = fig && fig.querySelector('img');
-    if (!img) return;
-    let ticking = false;
-    const update = () => {
-      const vh = window.innerHeight;
-      const r = fig.getBoundingClientRect();
-      if (r.bottom > -200 && r.top < vh + 200) {
-        const prog = (r.top + r.height / 2 - vh / 2) / vh;
-        const dy = Math.max(-52, Math.min(52, prog * -64));
-        img.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
-      }
-      ticking = false;
-    };
-    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-  })();
-
   // Scroll reveal — images rise from blur, text slides in from the side.
   (function () {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // the night breaker is a pinned stage now — revealing it as one block would
-    // fight its own sticky children, so only the day breaker rises
-    const imgSel  = '.card figure, .npost figure, .founder__media, .founder__press, .breaker--day, .sell__bg, .press';
-    const leftSel = '.lede, .npost__date, .npost__title, .npost__text, .npost__more, .sell__in > *';
+    const imgSel  = '.card figure, .npost figure, .founder__media, .breaker--day, .breaker--night, .sell__bg, .press';
+    const leftSel = '.lede, .npost__title, .npost__text, .npost__more, .sell__in > *';
     const rightSel = '.founder__body > *, .news__head > *';
     const upSel   = '.proof li, .breaker__mark';
     document.querySelectorAll(upSel).forEach(el => el.setAttribute('data-reveal', 'up'));
@@ -1855,11 +1651,11 @@
         child.querySelectorAll('[data-reveal]').forEach(el => { el.style.transitionDelay = d; });
       });
     });
-    // founder — the portrait reveals first, then the quote/body slide in one by one
+    // founder — the copy lines slide in one after another as the section enters
     const founderBody = document.querySelector('.founder__body');
     if (founderBody) {
       [...founderBody.children].forEach((child, i) => {
-        if (child.hasAttribute('data-reveal')) child.style.transitionDelay = (0.32 + i * 0.1).toFixed(2) + 's';
+        if (child.hasAttribute('data-reveal')) child.style.transitionDelay = (i * 0.08).toFixed(2) + 's';
       });
     }
     // proof band — the three claims rise in one after another, not together.
