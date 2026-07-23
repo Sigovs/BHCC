@@ -904,9 +904,11 @@
        (the end of News) stranded above it, because the footer simply could not
        cover the screen. min-height:100svh guarantees it fills the viewport at
        the end of the scroll; the content sits at the top and the base gradient
-       fills the slack below. */
+       fills the slack below. The content is centred vertically and nudged a
+       little past centre (55%) so it does not float dead-centre in the tall
+       slab; the base gradient then reads as a deliberate floor beneath it. */
     min-height: 100svh;
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: column; justify-content: center;
     /* A soft pool of light rising from the bottom edge, so the page does not
        end on a flat slab. Kept wide and shallow — it has to lift the base
        without touching the News→footer tonal step that the sticky reveal
