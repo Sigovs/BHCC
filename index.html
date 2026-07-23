@@ -946,12 +946,12 @@
   .footer__connect .contact { display: grid; gap: 12px; margin-bottom: 22px; font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); }
   .footer__connect .contact a { display: inline-flex; align-items: center; gap: 9px; }
   .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
-  /* breathing room above the row, and wrap so six circles never overflow the
-     Connect column on a narrow desktop */
-  .footer__social { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; margin-bottom: 26px; }
-  .footer__social a { width: 40px; height: 40px; border: 1px solid var(--rule-dark); border-radius: 999px; display: grid; place-items: center; transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
-  .footer__social a:hover { border-color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
-  .footer__social svg { width: 17px; height: 17px; color: var(--cream); }
+  /* bare glyphs, no circles — one line. Without the 48px chips six icons fit
+     the column easily, so they can be larger and generously spaced. */
+  .footer__social { display: flex; flex-wrap: nowrap; gap: clamp(18px, 2vw, 28px); margin-top: 28px; margin-bottom: 26px; }
+  .footer__social a { display: grid; place-items: center; color: var(--cream); transition: color var(--dur) var(--ease); }
+  .footer__social a:hover { color: var(--fo-accent-hi); }
+  .footer__social svg { width: 24px; height: 24px; }
   /* signup on the left, language switcher opposite on the right, on one row */
   .footer__base {
     margin-top: clamp(44px, 5vw, 68px); padding-top: clamp(36px, 4vw, 52px);
