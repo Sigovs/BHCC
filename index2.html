@@ -696,12 +696,9 @@
      into the ground where they meet and the seam into News is seamless. The
      darkening gradient is pushed up into the top half only, so it never tints
      that flat colour: solid #212528 from 72% down, no scrim over it. */
-  /* Bottom third of the frame resolves to a flat #212528 (same colour as the
-     News section below → invisible seam). The darkening gradient stays in the
-     top half so it never tints that flat floor, which is the plate the
-     watermark reads against. */
+  /* Gentle top-down darkening only; the photo runs clean to the bottom edge. */
   .breaker--night .breaker__overlay { background:
-    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.10) 34%, rgba(33,37,40,0) 52%, #212528 66%, #212528 100%); }
+    linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.14) 34%, rgba(8,7,5,0) 62%); }
   /* Watermark: one oversized line across the full width, sitting on the floor.
      It reads fully — a tone just DARKER than the #212528 plate it lies on, so
      the whole line is legible as a quiet engraving, not blended away. nowrap +
