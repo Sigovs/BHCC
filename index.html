@@ -703,16 +703,18 @@
      "We buy classic cars." size (--fs-h1). Slides up on scroll via the proof
      band's [data-reveal="up"]. */
   .breaker--night .breaker__cap {
-    position: absolute; left: 0; right: 0; bottom: clamp(40px, 9vh, 96px); z-index: 2;
+    position: absolute; left: 0; right: 0; bottom: clamp(72px, 16vh, 168px); z-index: 2;
     text-align: center; padding-inline: var(--container-pad);
   }
+  /* two lines: place name large, the date beneath it smaller */
   .breaker__mark {
-    margin: 0;
+    margin: 0; display: grid; gap: .22em; justify-items: center;
     font-family: var(--font-display); font-weight: 400; color: #fff;
-    font-size: var(--fs-h1); line-height: 1.06; letter-spacing: -.01em;
+    line-height: 1.16; letter-spacing: -.01em;
     text-shadow: 0 2px 28px rgba(6,5,3,.72);
   }
-  .breaker__mark .s { color: rgba(239,236,228,.55); }
+  .breaker__mark-lg { display: block; font-size: var(--fs-h1); }
+  .breaker__mark-sm { display: block; font-size: var(--fs-h3); color: rgba(239,236,228,.82); }
   .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
   .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
 
@@ -1427,7 +1429,7 @@
   </div>
   <div class="breaker__overlay" aria-hidden="true"></div>
   <div class="breaker__cap">
-    <h2 class="breaker__mark" id="la-h">Los Angeles <span class="s" aria-hidden="true">/</span> Since 2001</h2>
+    <h2 class="breaker__mark" id="la-h"><span class="breaker__mark-lg">Los Angeles</span><span class="breaker__mark-sm">Since 2001</span></h2>
   </div>
 </section>
 
