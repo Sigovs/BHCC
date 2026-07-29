@@ -50,6 +50,7 @@
      LAYOUT PRIMITIVES
      ============================================================ */
   .shell { max-width: 1320px; margin-inline: auto; padding-inline: var(--container-pad); }
+  .shell--wide { max-width: 1480px; }
   .section { padding-block: var(--section-py); }
   .section--compact { padding-block: clamp(46px, 6vh, 78px); }   /* testimonials — less height per feedback */
   .section--tint { background: var(--bg-tint); }
@@ -81,6 +82,8 @@
     color: var(--ink); transition: color var(--dur) var(--ease);
   }
   .arrow-link .a { transition: transform var(--dur) var(--ease); }
+  /* unified chevron glyph for all "read more / view details / browse all" links */
+  .chev { width: .66em; height: .66em; display: inline-block; vertical-align: -0.05em; }
   .arrow-link:hover { color: var(--accent); }
   .arrow-link:hover .a { transform: translateX(4px); }
   .arrow-link--gold { color: var(--accent); }
@@ -176,7 +179,7 @@
     /* 1fr | auto | 1fr keeps the nav optically centred in the bar no matter how
        wide the mark or the phone number get. It also does the right thing on
        mobile, where the visible children become burger | logo | phone. */
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px;
     /* wider than the 1320 content shell — the bar spans the full container so
        the mark and the nav sit closer to the screen edges than the copy does */
     max-width: var(--container-max); margin-inline: auto; padding-inline: var(--container-pad);
@@ -197,6 +200,13 @@
   .hdr.is-scrolled .brand__logo--hero { display: none; }
   .hdr.is-scrolled .brand__logo--bar { display: block; }
   .hdr:not(.is-scrolled) .brand__logo--hero { filter: drop-shadow(0 2px 10px rgba(0,0,0,.45)); }
+  /* mobile brand — stacked shield crest + script signature (hidden on desktop) */
+  .brand__mobile { display: none; flex-direction: column; align-items: center; gap: 3px; }
+  .brand__shield { height: clamp(80px, 22vw, 100px); width: auto; display: block; transition: height var(--dur) var(--ease); }
+  .brand__script { font-family: "Dancing Script", cursive; font-weight: 600; line-height: 1; font-size: clamp(1rem, 4.6vw, 1.2rem); color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.5); transition: color var(--dur) var(--ease); }
+  .hdr.is-scrolled .brand__script { color: var(--ink); text-shadow: none; }
+  .hdr.is-scrolled .brand__shield { height: clamp(38px, 9vw, 46px); }
+  .hdr:not(.is-scrolled) .brand__shield { filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
   .hdr__nav { justify-self: center; }
   /* Pill hover: the item fills rather than getting underlined. Items sit close
      together so the pills read as one control strip; the padding IS the gap. */
@@ -237,7 +247,7 @@
   /* mobile dropdown accordions */
   .mnav { display: flex; flex-direction: column; }
   .mdrop { border-bottom: 1px solid var(--rule); }
-  .mdrop summary { list-style: none; cursor: pointer; padding: 14px 4px; font-size: 1.1rem; font-family: var(--font-display); color: var(--ink); display: flex; align-items: center; justify-content: space-between; }
+  .mdrop summary { list-style: none; cursor: pointer; padding: 14px 4px; font-size: 1.05rem; font-family: var(--font-sans); font-weight: var(--fw-medium); color: var(--ink); display: flex; align-items: center; justify-content: space-between; }
   .mdrop summary::-webkit-details-marker { display: none; }
   .mdrop summary::after { content: ""; width: 8px; height: 8px; border-right: 1.6px solid var(--accent); border-bottom: 1.6px solid var(--accent); transform: rotate(45deg); transition: transform var(--dur) var(--ease); }
   .mdrop[open] summary::after { transform: rotate(225deg); }
@@ -276,13 +286,18 @@
      label inside it. */
   .hact__reveal > * { overflow: hidden; min-width: 0; }
   .hact:hover .hact__reveal, .hact:focus-within .hact__reveal { grid-template-columns: minmax(0, 1fr); }
+  /* Email Alerts is a labelled CTA (brief §01: "email alerts … stay in header"), not a hover-reveal icon → always open */
+  .hact--alerts .hact__reveal { grid-template-columns: minmax(0, 1fr); }
+  .hact--alerts .hact__btn { border-color: transparent; }
+  .hact--alerts { background: var(--accent-wash); border-color: rgba(26,26,24,.14); }
+  .hdr:not(.is-scrolled) .hact--alerts { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.30); }
   .hact__label {
     display: block; white-space: nowrap; padding-inline: 14px 6px;
     font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
   }
   .hact__count { color: var(--ink-muted); }
   .hact__field {
-    display: block; width: 190px; height: 34px; margin-inline: 12px 4px;
+    display: block; width: 160px; height: 34px; margin-inline: 12px 4px;
     border: 0; background: transparent; outline: none;
     font-family: var(--font-sans); font-size: var(--fs-body-sm); color: var(--ink);
   }
@@ -321,10 +336,20 @@
   }
   .hdr.is-open .hdr__mobile { display: block; }
   .hdr__mobile ul { display: grid; gap: 2px; margin-bottom: 20px; }
-  .hdr__mobile a.mlink { display: block; padding: 14px 4px; font-size: 1.1rem; font-family: var(--font-display); border-bottom: 1px solid var(--rule); }
+  .hdr__mobile a.mlink { display: block; padding: 14px 4px; font-size: 1.05rem; font-family: var(--font-sans); font-weight: var(--fw-medium); color: var(--ink); border-bottom: 1px solid var(--rule); }
   .hdr__mobile .mcta { display: grid; gap: 12px; margin-top: 8px; }
   .hdr__mobile .btn { width: 100%; }
-  .hdr__mobile .hdr__phone { margin-top: 18px; font-size: var(--fs-body); }
+  /* phone in the mobile menu — a centred accent pill, distinct from the nav links */
+  .hdr__mobile .hdr__phone {
+    display: flex; width: fit-content; margin: 24px auto 4px;
+    align-items: center; justify-content: center; gap: 10px;
+    padding: 13px 30px; border-radius: 999px;
+    background: var(--accent); color: #fff;
+    font-size: var(--fs-body); font-weight: var(--fw-medium); letter-spacing: .01em;
+    transition: background var(--dur) var(--ease);
+  }
+  .hdr__mobile .hdr__phone svg { color: #fff; }
+  .hdr__mobile .hdr__phone:hover { background: var(--accent-hover); color: #fff; }
 
   /* ============================================================
      HERO — light inset frame (ref7)
@@ -337,6 +362,13 @@
   .hero__media { position: absolute; inset: 0; z-index: -2; }
   .hero__media picture { display: block; width: 100%; height: 100%; }
   .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 66%; }
+  /* subtle dark scrim so the white type reads — heavier where the copy sits, image stays dominant (brief) */
+  .hero__media::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(74% 58% at 50% 40%, rgba(0,0,0,.46) 0%, rgba(0,0,0,0) 72%),
+      linear-gradient(180deg, rgba(0,0,0,.34) 0%, rgba(0,0,0,.12) 38%, rgba(0,0,0,.24) 70%, rgba(0,0,0,.50) 100%);
+  }
   .hero__inner {
     position: relative; height: 100%;
     display: flex; flex-direction: column; align-items: center;
@@ -351,13 +383,49 @@
   }
   .hero__title .by { display: block; font-family: "Dancing Script", cursive; font-weight: 600; font-size: .66em; margin-top: .02em; letter-spacing: 0; }
   .hero__sub {
-    margin-top: clamp(14px, 1.6vw, 20px); max-width: 52ch;
-    font-family: var(--font-text); font-style: italic; font-size: var(--fs-body-lg);
-    line-height: 1.5; color: rgba(255,255,255,.92);
+    margin-top: clamp(16px, 1.8vw, 24px); max-width: 40ch;
+    font-family: var(--font-text); font-style: italic; font-size: clamp(1.2rem, .85rem + 1.15vw, 1.7rem);
+    line-height: 1.45; color: #fff;
     text-shadow: 0 1px 16px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
   }
   .hero__ctas { display: flex; gap: 14px; margin-top: clamp(24px, 3vw, 34px); flex-wrap: wrap; justify-content: center; }
   .hero__ctas .btn--light { box-shadow: 0 1px 3px rgba(26,26,24,.06); }
+
+  /* HERO video — wireframe calls for a full-bleed film with a centred ▶.
+     Image is the poster; the button plays bhcc-film.mp4 inline over the hero. */
+  .hero__play {
+    --sz: clamp(66px, 6vw, 88px);
+    margin-top: clamp(24px, 3vw, 36px);
+    width: var(--sz); height: var(--sz); border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer; color: #fff;
+    background: rgba(255,255,255,.10); border: 1.5px solid rgba(255,255,255,.72);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    box-shadow: 0 14px 44px -14px rgba(0,0,0,.55);
+    transition: transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+  }
+  .hero__play svg { width: 34%; height: 34%; margin-left: 9%; }  /* optically centre the triangle */
+  .hero__play:hover { transform: scale(1.08); background: rgba(255,255,255,.92); color: #1a1a18; border-color: #fff; }
+  .hero__play:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+  .hero__video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; background: #000; border: 0; z-index: 3;
+    opacity: 0; visibility: hidden; transition: opacity .5s var(--ease);
+  }
+  .hero__frame.is-playing .hero__video { opacity: 1; visibility: visible; }
+  .hero__frame.is-playing .hero__inner { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .hero__close {
+    position: absolute; top: calc(var(--hdr-h) + 14px); right: clamp(16px, 3vw, 34px);
+    z-index: 4; width: 46px; height: 46px; border-radius: 50%;
+    display: none; place-items: center; cursor: pointer; color: #fff;
+    background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.5);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    transition: background .25s var(--ease);
+  }
+  .hero__frame.is-playing .hero__close { display: grid; }
+  .hero__close svg { width: 44%; height: 44%; }
+  .hero__close:hover { background: rgba(0,0,0,.82); }
 
   /* HERO intro — title, by-line, sub, then the two CTAs rise from the bottom
      one by one on load. .js only; reduced-motion shows them at rest. */
@@ -366,14 +434,16 @@
   .js .hero__title .hero__line,
   .js .hero__title .by,
   .js .hero__sub,
+  .js .hero__play,
   .js .hero__ctas .btn { opacity: 0; animation: heroRise .85s var(--ease) forwards; }
   .js .hero__title .hero__line   { animation-delay: .15s; }
   .js .hero__title .by           { animation-delay: .34s; }
   .js .hero__sub                 { animation-delay: .52s; }
-  .js .hero__ctas .btn:nth-child(1) { animation-delay: .68s; }
-  .js .hero__ctas .btn:nth-child(2) { animation-delay: .82s; }
+  .js .hero__play                { animation-delay: .66s; }
+  .js .hero__ctas .btn:nth-child(1) { animation-delay: .80s; }
+  .js .hero__ctas .btn:nth-child(2) { animation-delay: .94s; }
   @media (prefers-reduced-motion: reduce) {
-    .js .hero__title .hero__line, .js .hero__title .by, .js .hero__sub, .js .hero__ctas .btn { opacity: 1; animation: none; }
+    .js .hero__title .hero__line, .js .hero__title .by, .js .hero__sub, .js .hero__play, .js .hero__ctas .btn { opacity: 1; animation: none; }
   }
   /* slow cinematic zoom-out on the idle hero image — perceptible but calm.
      linear + alternate so it keeps visibly moving (no dead-zone at the ends). */
@@ -434,6 +504,28 @@
     font-size: var(--fs-h4); line-height: var(--lh-card); color: var(--ink);
   }
   .card__price { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); color: var(--accent); letter-spacing: .02em; white-space: nowrap; }
+
+  /* Featured Classics — the primary buyer moment: wider container, larger
+     imagery, bigger model + price, tighter spacing, restrained hover reveal. */
+  .section--featured { padding-top: clamp(30px, 4vw, 54px); }
+  .section--featured .lede { margin-bottom: clamp(22px, 2.6vw, 34px); }
+  .section--featured .cards { gap: clamp(20px, 1.8vw, 30px); }
+  .section--featured .card figure { aspect-ratio: 1200 / 740; border-radius: 9px; }
+  .section--featured .card__meta { margin-top: 22px; }
+  .section--featured .card__title { font-size: clamp(1.18rem, .92rem + .7vw, 1.5rem); line-height: 1.14; min-height: 2.28em; }  /* reserve 2 lines so 1- and 2-line titles align */
+  .section--featured .card__price { font-size: clamp(1rem, .9rem + .32vw, 1.18rem); }
+  .section--featured .card__view {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 9px;
+    font-size: var(--fs-body-sm); font-weight: var(--fw-medium); letter-spacing: .015em;
+    color: var(--ink-soft);
+    opacity: 0; transform: translateY(4px);
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .section--featured .card__view .a { transition: transform var(--dur) var(--ease); }
+  .section--featured .card:hover .card__view,
+  .section--featured .card:focus-visible .card__view { opacity: 1; transform: none; color: var(--accent); }
+  .section--featured .card:hover .card__view .a { transform: translateX(3px); }
+  @media (hover: none) { .section--featured .card__view { opacity: 1; transform: none; } }
 
   /* ============================================================
      FOUNDER — split
@@ -540,19 +632,19 @@
   .quote { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity var(--dur-slow) var(--ease); }
   .quote.is-active { opacity: 1; visibility: visible; }
   /* elegant chevrons on the sides */
-  .quote-nav { position: absolute; top: 44%; transform: translateY(-50%); width: 46px; height: 46px; display: grid; place-items: center; border-radius: 999px; color: var(--ink-soft); background: transparent; transition: color var(--dur) var(--ease), background var(--dur) var(--ease); }
-  .quote-nav:hover { color: var(--accent); background: var(--accent-wash); }
-  .quote-nav svg { width: 24px; height: 24px; }
+  .quote-nav { position: absolute; top: 44%; transform: translateY(-50%); width: 48px; height: 48px; display: grid; place-items: center; border-radius: 999px; color: var(--ink-soft); background: var(--bg); border: 1px solid var(--rule); box-shadow: 0 1px 4px rgba(26,26,24,.06); transition: color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+  .quote-nav:hover { color: #fff; background: var(--accent); border-color: var(--accent); }
+  .quote-nav svg { width: 23px; height: 23px; stroke-width: 1.9; }
   .quote-nav--prev { left: clamp(-8px, -2vw, -26px); }
   .quote-nav--next { right: clamp(-8px, -2vw, -26px); }
   @media (max-width: 560px) { .quote-nav--prev { left: -4px; } .quote-nav--next { right: -4px; } }
   .quote__mark { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); line-height: .6; color: var(--accent); height: .5em; }
   .quote blockquote {
     font-family: var(--font-text); font-style: italic; font-weight: 400;
-    font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--ink);
-    max-width: 26ch; margin: 22px auto 0;
+    font-size: calc(var(--fs-quote) * 1.1); line-height: var(--lh-quote); color: var(--ink);
+    max-width: 28ch; margin: 22px auto 0;
   }
-  .quote__by { display: block; margin-top: 26px; font-family: var(--font-sans); font-style: normal; font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink-muted); letter-spacing: .04em; }
+  .quote__by { display: block; margin-top: 24px; font-family: var(--font-sans); font-style: normal; font-size: calc(var(--fs-body-sm) * 1.12); font-weight: var(--fw-medium); color: var(--ink-muted); letter-spacing: .04em; }
   .quote-dots { display: flex; justify-content: center; gap: 10px; margin-top: 36px; }
   .quote-dots button { width: 8px; height: 8px; border-radius: 999px; background: rgba(26,26,24,.18); transition: background var(--dur) var(--ease), transform var(--dur) var(--ease); }
   .quote-dots button.is-active { background: var(--accent); transform: scale(1.35); }
@@ -563,17 +655,17 @@
      mono tone: brightness(0) flattens every fill to black, opacity mutes it to
      a grey ≈ --ink-muted on the cream ground. Hover lifts to near-solid. */
   .press__logo {
-    width: auto; height: 24px; filter: brightness(0); opacity: .55;
+    width: auto; height: 30px; filter: brightness(0); opacity: .62;
     transition: opacity var(--dur) var(--ease);
   }
   .press__logo:hover { opacity: .95; }
   /* equal OPTICAL height — badges read larger than wide wordmarks at same px */
-  .press__logo--hemmings { height: 19px; }
-  .press__logo--thr      { height: 20px; }
-  .press__logo--t911     { height: 34px; }
-  .press__logo--ebay     { height: 23px; }
-  .press__logo--google   { height: 22px; }
-  .press__logo--yelp     { height: 23px; }
+  .press__logo--hemmings { height: 24px; }
+  .press__logo--thr      { height: 26px; }
+  .press__logo--t911     { height: 44px; }
+  .press__logo--ebay     { height: 29px; }
+  .press__logo--google   { height: 28px; }
+  .press__logo--yelp     { height: 29px; }
 
   /* ============================================================
      NEWS / EVENTS — dark section, Cayenne composition
@@ -712,10 +804,18 @@
     transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
   .footer__col a:hover { color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
+  /* Inventory/Company are <details>: plain columns on desktop (summary inert,
+     chevron hidden, list always shown), tap-to-open accordions on mobile. */
+  .footer__acc > summary { list-style: none; display: block; }
+  .footer__acc > summary::-webkit-details-marker { display: none; }
+  .footer__acc > summary::marker { content: ""; }
+  .footer__acc .acc-chev { display: none; }
+  @media (min-width: 761px) { .footer__acc > summary { pointer-events: none; } }
   .footer__connect .contact { display: grid; gap: 12px; margin-bottom: 22px; font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); }
   .footer__connect .contact a { display: inline-flex; align-items: center; gap: 9px; }
   .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
   .footer__hours { display: inline-flex; align-items: center; gap: 9px; }
+  .footer__addr { display: inline-flex; align-items: flex-start; gap: 9px; }
   /* bare glyphs, no circles — one line. Without the 48px chips six icons fit
      the column easily, so they can be larger and generously spaced. */
   .footer__social { display: flex; flex-wrap: nowrap; gap: clamp(16px, 1.6vw, 22px); margin-top: 28px; margin-bottom: 26px; }
@@ -793,31 +893,75 @@
     .footer { position: static; min-height: 0; justify-content: flex-start; }
   }
   @media (max-width: 760px) {
-    .hero__frame { min-height: 0; height: 86svh; max-height: none; }
-    .hero__inner { justify-content: flex-start; }
+    /* taller header to seat the larger crest logo (per mobile comp) */
+    :root { --hdr-h: 128px; --hdr-h-scrolled: 74px; }
+    /* header is NOT sticky over the hero — it scrolls away with the hero; only
+       the compact bar (is-scrolled) becomes fixed once scrolled past the hero. */
+    .hdr { position: absolute; left: 0; right: 0; }
+    .hdr.is-scrolled { position: fixed; }
+    .hero { margin-top: 0; }
+    /* over the hero: stacked shield + script (per comp). after scroll: the
+       compact horizontal lockup, as before. */
+    .brand__logo--hero { display: none !important; }
+    .hdr:not(.is-scrolled) .brand__mobile { display: flex; }
+    .hdr:not(.is-scrolled) .brand__logo--bar { display: none !important; }
+    .hdr.is-scrolled .brand__mobile { display: none !important; }
+    .hdr.is-scrolled .brand__logo--bar { display: block !important; }
+    .hdr__burger, .hdr__phone-m { align-self: start; margin-top: 8px; }
+    .hdr.is-scrolled .hdr__burger, .hdr.is-scrolled .hdr__phone-m { align-self: center; margin-top: 0; }
+    /* mobile hero — portrait image, copy up top, full-width CTAs pinned to the bottom */
+    .hero__frame { min-height: 0; height: 100svh; max-height: none; }
+    .hero__media img { object-position: 50% 50%; }
+    .hero__inner { justify-content: flex-start; padding-bottom: clamp(26px, 6vw, 40px); }
+    .hero__title { font-size: clamp(2.8rem, 13vw, 3.5rem); }   /* larger — wraps to two lines like the comp */
+    .hero__ctas { margin-top: auto; width: 100%; flex-direction: column; align-items: stretch; gap: 12px; }
+    .hero__ctas .btn { width: 100%; justify-content: center; }
     .cards { grid-template-columns: 1fr; gap: 40px; }
     .searchbar__in { flex-direction: column; align-items: stretch; gap: 16px; }
     .search-form__field { max-width: none; }
-    .footer__grid { grid-template-columns: 1fr; }
+    .searchbar .arrow-link { justify-content: center; }
+    .footer__grid { grid-template-columns: 1fr; gap: 8px; }
+    /* Inventory/Company collapse into tap-to-open accordions; Connect + social
+       + language switcher stay always visible (per brief). */
+    .footer__acc { border-top: 1px solid var(--rule-on-dark, rgba(239,236,228,.14)); }
+    .footer__acc > summary { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding-block: 16px; }
+    .footer__acc > summary h3 { margin-bottom: 0; }
+    .footer__acc .acc-chev { display: grid; place-items: center; color: var(--fo-accent); transition: transform var(--dur) var(--ease); }
+    .footer__acc .acc-chev svg { width: 18px; height: 18px; }
+    .footer__acc[open] .acc-chev { transform: rotate(180deg); }
+    .footer__acc > ul { gap: 12px; padding-bottom: 14px; }
+    .footer__connect { margin-top: 18px; }
     .footer__base { flex-direction: column; align-items: stretch; }
     .footer__lang { align-self: flex-start; }
     .footer__bottom { flex-direction: column; align-items: flex-start; }
-    /* a 2:1 strip (≈195px) is too short for the stacked copy → content-driven
-       height with a floor; the photo covers (crops) here, which is fine on phone */
-    .sell { aspect-ratio: auto; min-height: 460px; }
+    /* Mobile We Buy — client: "boring, can't see the image", and it's "secretly
+       the most important CTA". Restructure to a photo-forward stack: the showroom
+       photo sits on top (fully visible, no heavy scrim), the copy drops onto the
+       solid dark panel below at full contrast. */
+    .sell { aspect-ratio: auto; min-height: 0; padding-block: 0; display: flex; flex-direction: column; place-items: stretch; }
+    .sell__bg { position: relative; inset: auto; height: clamp(320px, 46svh, 440px); flex: none; transform: none; }
+    .sell__bg img { object-position: 50% 40%; }
+    .sell__bg::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 48%;
+      background: linear-gradient(180deg, rgba(18,16,12,0), var(--dark)); pointer-events: none; }
     /* proof band: content-driven height, claims stack to one column */
-    .breaker--day { aspect-ratio: auto; display: grid; align-items: end; }
-    .breaker--day .breaker__cap--proof { position: static; grid-area: 1 / 1; padding-block: clamp(40px, 11vw, 64px); }
-    .proof { grid-template-columns: 1fr; gap: 26px; }
+    /* mobile: taller (more vertical) + darker photo so the three claims read */
+    .breaker--day { aspect-ratio: auto; min-height: 70svh; display: grid; align-items: end; }
+    .breaker--day .breaker__overlay { background:
+      linear-gradient(180deg, rgba(8,7,5,.42) 0%, rgba(8,7,5,.5) 45%, rgba(8,7,5,.72) 100%); }
+    .breaker--day .breaker__cap--proof { position: static; grid-area: 1 / 1; padding-top: 0; padding-bottom: clamp(72px, 18vw, 120px); }
+    .proof { grid-template-columns: 1fr; gap: 30px; }
     .proof__k { min-height: 0; }
     .proof__v { max-width: none; }
-    /* Phone: copy is left-aligned but mid-tone (gold eyebrow / muted trust) can't
-       hit AA over the lit Porsche with a light scrim. Strong LEFT-weighted scrim
-       makes the left ~62% near-black (guaranteed contrast) then fades to reveal
-       the Porsche on the right. */
-    .sell__overlay { background:
-      linear-gradient(90deg, rgba(18,16,12,.90) 0%, rgba(18,16,12,.85) 62%, rgba(18,16,12,.56) 84%, rgba(18,16,12,.32) 100%),
-      linear-gradient(180deg, rgba(18,16,12,.34) 0%, rgba(18,16,12,.24) 45%, rgba(18,16,12,.48) 100%); }
+    /* copy now sits on the solid dark panel (not over the photo) → no scrim needed */
+    .sell__overlay { display: none; }
+    .sell .shell { padding-top: clamp(26px, 6vw, 36px); padding-bottom: clamp(34px, 9vw, 50px); }
+    .sell__in { max-width: none; }
+    /* mobile: centre the whole We Buy copy (text + button + phone + trust) */
+    .sell { text-align: center; }
+    .sell__in { margin-inline: auto; }
+    .sell__actions { gap: 16px; margin-top: 26px; justify-content: center; }
+    .sell__actions .btn { width: 100%; justify-content: center; text-align: center; }
+    .sell__phone { justify-content: center; }
   }
 
   /* News — the three cards step down on smaller screens */
@@ -847,6 +991,10 @@
       <!-- full lockup over the hero; shield alone once the bar comes in -->
       <img class="brand__logo brand__logo--hero" src="assets/images/hero/logo.png?v=2" alt="Beverly Hills Car Club by Alex Manos" width="329" height="123" fetchpriority="high">
       <img class="brand__logo brand__logo--bar" src="assets/images/logo-lockup.png?v=2" alt="" aria-hidden="true" width="327" height="123">
+      <!-- mobile: shield crest only (the hero title carries "by Alex Manos") -->
+      <span class="brand__mobile">
+        <img class="brand__shield" src="assets/images/logo-shield.svg" alt="" aria-hidden="true" width="97" height="104">
+      </span>
     </a>
 
     <nav class="hdr__nav" aria-label="Primary">
@@ -924,10 +1072,10 @@
         </span>
       </a>
 
-      <a class="hact hact--member" href="/account.htm">
-        <span class="hact__reveal"><span><span class="hact__label">My&nbsp;Garage <span class="hact__count">(5)</span></span></span></span>
+      <a class="hact hact--alerts" href="/email-alerts.htm" aria-label="Email Alerts">
+        <span class="hact__reveal"><span><span class="hact__label">Email Alerts</span></span></span>
         <span class="hact__btn" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </span>
       </a>
     </div>
@@ -993,14 +1141,24 @@
   <div class="hero__frame">
     <div class="hero__media">
       <picture>
-        <source media="(max-width: 760px)" srcset="assets/images/hero-drive-sm.jpg?v=1">
+        <source media="(max-width: 760px)" srcset="assets/images/hero/hero-mobile.png">
         <img src="assets/images/hero-drive.jpg?v=1" alt="A red Mercedes-Benz 300SL roadster on a coastal canyon road at dusk" fetchpriority="high" width="2400" height="1716">
       </picture>
     </div>
 
+    <video class="hero__video" playsinline controls preload="none" poster="assets/images/hero-drive.jpg?v=1">
+      <source src="assets/video/bhcc-film.mp4" type="video/mp4">
+    </video>
+    <button class="hero__close" type="button" aria-label="Close video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+
     <div class="hero__inner">
       <h1 class="hero__title"><span class="hero__line">Beverly Hills Car Club</span><span class="by">by Alex Manos</span></h1>
       <p class="hero__sub">The world's largest dealer of European and American classic&nbsp;cars.</p>
+      <button class="hero__play" type="button" aria-label="Play the film">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
       <div class="hero__ctas">
         <a class="btn btn--primary" href="/inventory.htm">Browse inventory</a>
         <a class="btn btn--secondary on-dark" href="/sell-your-car.htm">Sell your classic</a>
@@ -1008,6 +1166,37 @@
     </div>
   </div>
 </section>
+
+<script>
+/* HERO film — the centred ▶ plays bhcc-film.mp4 inline over the poster. */
+(function () {
+  var frame = document.querySelector('.hero__frame');
+  if (!frame) return;
+  var video = frame.querySelector('.hero__video');
+  var playBtn = frame.querySelector('.hero__play');
+  var closeBtn = frame.querySelector('.hero__close');
+  if (!video || !playBtn) return;
+
+  function open() {
+    frame.classList.add('is-playing');
+    video.muted = false;
+    var p = video.play();
+    if (p && p.catch) p.catch(function () { video.muted = true; video.play().catch(function () {}); });
+    if (closeBtn) closeBtn.focus();
+  }
+  function close() {
+    frame.classList.remove('is-playing');
+    video.pause();
+    playBtn.focus();
+  }
+  playBtn.addEventListener('click', open);
+  if (closeBtn) closeBtn.addEventListener('click', close);
+  video.addEventListener('ended', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && frame.classList.contains('is-playing')) close();
+  });
+})();
+</script>
 
 <!-- search band -->
 <section class="searchbar shell" aria-label="Search inventory">
@@ -1020,32 +1209,35 @@
           </button>
         </div>
       </form>
-      <a class="arrow-link" href="/inventory.htm">Browse all inventory <span class="a" aria-hidden="true">›</span></a>
+      <a class="arrow-link" href="/inventory.htm">Browse all inventory <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
   </div>
 </section>
 
 <!-- ============================================================
      FEATURED CLASSICS
      ============================================================ -->
-<section class="section" aria-labelledby="feat-h">
-  <div class="shell">
+<section class="section section--featured" aria-labelledby="feat-h">
+  <div class="shell shell--wide">
     <div class="lede">
       <span class="eyebrow">The Collection</span>
       <h2 id="feat-h">Featured classics</h2>
     </div>
 
     <div class="cards">
-      <a class="card" href="https://www.beverlyhillscarclub.com/inventory.htm">
-        <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series 1 Roadster" loading="lazy" width="1200" height="675"></figure>
-        <div class="card__meta"><h3 class="card__title">1962 Jaguar XKE Roadster</h3><span class="card__price mono">$99,500</span></div>
+      <a class="card" href="https://www.beverlyhillscarclub.com/1962-jaguar-xke-series-i-roadster-c-17753.htm">
+        <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series I Roadster" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1962 Jaguar XKE Series I Roadster</h3><span class="card__price mono">$56,500</span></div>
+        <span class="card__view">View details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
-      <a class="card" href="https://www.beverlyhillscarclub.com/inventory.htm">
-        <figure><img src="assets/images/inventory-real/1959-porsche-356a-cabriolet.jpg" alt="1959 Porsche 356A Cabriolet" loading="lazy" width="1200" height="675"></figure>
-        <div class="card__meta"><h3 class="card__title">1959 Porsche 356A Cabriolet</h3><span class="card__price mono">$89,500</span></div>
+      <a class="card" href="https://www.beverlyhillscarclub.com/1962-ferrari-250gte-c-16635.htm">
+        <figure><img src="assets/images/inventory-real/1962-ferrari-250gte.jpg" alt="1962 Ferrari 250 GTE" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1962 Ferrari 250 GTE</h3><span class="card__price">On request</span></div>
+        <span class="card__view">View details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card" href="https://www.beverlyhillscarclub.com/1969-aston-martin-dbs-left-hand-drive-c-16944.htm">
-        <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="675"></figure>
+        <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1969 Aston Martin DBS</h3><span class="card__price mono">$59,950</span></div>
+        <span class="card__view">View details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
     </div>
 
@@ -1188,7 +1380,7 @@
         <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
       </div>
       <div class="news__cta">
-        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See all articles <span aria-hidden="true">›</span></a>
+        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See all articles <span aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
       </div>
     </div>
 
@@ -1200,19 +1392,19 @@
         <figure><img src="assets/images/alex-editorial.jpg" alt="Alex Manos in the Beverly Hills Car Club showroom" loading="lazy" width="1280" height="553"></figure>
         <h3 class="npost__title">DSCENE Editor-in-Chief Interviews Alex Manos</h3>
         <p class="npost__text">“Compare a 1958 Corvette to a Tesla. There's no passion, no emotion. When you sit in that Corvette, you smell the leather.”</p>
-        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
+        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-refined-brute-ferrari-330gtc.htm">
         <figure><img src="assets/images/583815906_18550719925061419_6070715814259884510_n.jpg" alt="A red Ferrari on the floor of the Beverly Hills Car Club showroom" loading="lazy" width="1080" height="1350"></figure>
         <h3 class="npost__title">Refined Brute, Ferrari 330GTC</h3>
         <p class="npost__text">“A racing brute in a fine suit” is how the 330GTC was once described — one of the most elegantly beautiful, as well as puissant, cars ever built.</p>
-        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
+        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-ultimately-unique-mercedes-benz-280sl-california-special.htm">
         <figure><img src="assets/images/503657635_18516614353061419_7590410718349528124_n.jpg" alt="A black Mercedes-Benz SL parked inside the showroom" loading="lazy" width="1080" height="1350"></figure>
         <h3 class="npost__title">Ultimately Unique, Mercedes-Benz 280SL California Special</h3>
         <p class="npost__text">“There are around 900 million cars in the world, and thousands of models,” remarked Dr. Dieter Zetsche. “But there are only a handful of automotive icons: our SL is one of them.”</p>
-        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true">›</span></span>
+        <span class="arrow-link arrow-link--dark npost__more">Read more <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
     </div>
 
@@ -1238,31 +1430,45 @@
         <p>The world's finest European and American classic automobiles, bought and sold from Los Angeles since 2008.</p>
       </div>
 
-      <div class="footer__col">
-        <h3>Explore</h3>
+      <details class="footer__col footer__acc" open>
+        <summary>
+          <h3>Inventory</h3>
+          <span class="acc-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
         <ul>
-          <li><a href="/inventory.htm">Inventory</a></li>
+          <li><a href="/new-arrivals.htm">New Arrivals</a></li>
+          <li><a href="/coming-soon.htm">Cars Coming Soon</a></li>
+          <li><a href="/sale-specials.htm">Sale Specials</a></li>
+          <li><a href="/right-hand-drive.htm">Right-Hand Drive</a></li>
+          <li><a href="/sold-inventory.htm">Sold Inventory</a></li>
+          <li><a href="/rentals.htm">Rentals</a></li>
           <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
-          <li><a href="/inventory.htm">Featured Classics</a></li>
-          <li><a href="/about.htm#testimonials">Testimonials</a></li>
         </ul>
-      </div>
+      </details>
 
-      <div class="footer__col">
-        <h3>Company</h3>
+      <details class="footer__col footer__acc" open>
+        <summary>
+          <h3>Company</h3>
+          <span class="acc-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
         <ul>
           <li><a href="/about.htm">About Alex Manos</a></li>
-          <li><a href="/about.htm">Our Story</a></li>
+          <li><a href="/how-to-buy.htm">How To Buy</a></li>
+          <li><a href="/shipping.htm">Shipping</a></li>
+          <li><a href="/faqs.htm">FAQs</a></li>
+          <li><a href="/buy-with-crypto.htm">Buy with Crypto</a></li>
+          <li><a href="/store.htm">BHCC Store</a></li>
+          <li><a href="/careers.htm">Careers</a></li>
           <li><a href="/blog.htm">Press &amp; Blog</a></li>
-          <li><a href="/contact.htm">Contact</a></li>
         </ul>
-      </div>
+      </details>
 
       <div class="footer__col footer__connect">
         <h3>Connect</h3>
         <div class="contact">
           <a href="tel:+13109750272"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(310) 975-0272</a>
-          <span>4576½ Worth St, Los Angeles, CA 90063</span>
+          <a href="mailto:info@beverlyhillscarclub.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>info@beverlyhillscarclub.com</a>
+          <span class="footer__addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>4576½ Worth St, Los Angeles, CA 90063</span>
           <span class="footer__hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Mon–Fri 8–6 · Sat 10–5 · Sun closed</span>
         </div>
         <!-- all six networks the live site links, per brief §09 -->
@@ -1342,6 +1548,16 @@
   document.querySelectorAll('.hdr__mobile a').forEach(a =>
     a.addEventListener('click', () => { hdr.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); }));
 
+  // Footer Inventory/Company: tap-to-open accordions on mobile, always-open columns on desktop
+  (function () {
+    const mq = window.matchMedia('(max-width: 760px)');
+    const accs = document.querySelectorAll('.footer__acc');
+    if (!accs.length) return;
+    const sync = () => accs.forEach(d => { d.open = !mq.matches; });
+    sync();
+    mq.addEventListener('change', sync);
+  })();
+
   // Search circle: first click opens the field and focuses it rather than
   // submitting an empty query — on touch there is no hover to open it with.
   (function () {
@@ -1382,6 +1598,7 @@
     if (!bg) return;
     let ticking = false;
     const update = () => {
+      if (window.matchMedia('(max-width: 760px)').matches) { bg.style.transform = ''; ticking = false; return; }  /* stacked on mobile — no parallax */
       const r = sell.getBoundingClientRect();
       const prog = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight;
       // gentle: small over-scan (8%) → clamp drift so the photo edges never show
