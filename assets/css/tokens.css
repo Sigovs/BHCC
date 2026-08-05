@@ -230,8 +230,22 @@
 
   /* ---------- Spacing — 8px base, generous editorial ramp -------------
      Aligned to Bootstrap's $spacers so tokens and utilities agree:
-     sp-5 = 48px = Bootstrap's `5`. Steps 6→9 are added, not remapped. */
+     sp-5 = 48px = Bootstrap's `5`. Steps 6→9 are added, not remapped.
+
+     TWO SUB-STEPS ADDED, and the reason is worth recording: this ramp was
+     declared and then used zero times by index4.html, which instead grew 28
+     distinct hand-written spacings across 107 declarations. The cause was the
+     bottom of the ramp, not the discipline — component internals need 4px and
+     12px (an icon beside a label, the inside of a control), the ramp started at
+     8 and jumped to 16, so the first time someone needed 12 they wrote 12px and
+     nobody came back. A scale that cannot express the values a page actually
+     needs is a scale the page will abandon.
+
+     Numbering is unchanged: --sp-1 is still 8px, so nothing already on the ramp
+     moves. The two new steps sit between, named for where they fall. */
+  --sp-05: 4px;   /* half the base — icon nudges, gaps inside tight controls */
   --sp-1:  8px;
+  --sp-15: 12px;  /* icon → label, control padding, label → field */
   --sp-2:  16px;
   --sp-3:  24px;
   --sp-4:  32px;
