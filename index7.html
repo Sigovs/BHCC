@@ -690,7 +690,15 @@
   .buyers__track { display: flex; transition: transform .5s var(--ease); will-change: transform; }
   @media (prefers-reduced-motion: reduce) { .buyers__track { transition: none; } }
   .buyers__item { flex: 0 0 25%; box-sizing: border-box; padding-inline: clamp(5px, .6vw, 9px); margin: 0; }
-  .buyers__item img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 8px; display: block; background: #0c0b09;
+  /* client Aug21: "the images are too big and don't fit ... not cut off, not super zoomed in".
+     All three were one bug. The <img> carries height="522", which is a presentational hint, so
+     BOTH dimensions were definite and `aspect-ratio` was silently ignored — the frames rendered
+     316x522 PORTRAIT and object-fit:cover threw away the sides, which is what cropped the people
+     and read as a zoom. `height: auto` hands the sizing back to aspect-ratio. The ratio is now
+     the source files' own 760/522 rather than a rounded 3/2, so these crop by nothing at all,
+     and the frames drop from 522px tall to ~215px — which is the "too big" complaint as well. */
+  .buyers__item img { width: 100%; height: auto; aspect-ratio: 760 / 522; object-fit: cover;
+    border-radius: 8px; display: block; background: #0c0b09;
     transition: transform var(--dur-slow) var(--ease), filter var(--dur) var(--ease); }
   .buyers__item:hover img { transform: scale(1.03); filter: brightness(1.06); }
   @media (max-width: 900px) { .buyers__item { flex-basis: 50%; } }
@@ -712,6 +720,18 @@
     transition: background var(--dur) var(--ease), width var(--dur) var(--ease); }
   .buyers__dots button:hover { background: rgba(255,255,255,.55); }
   .buyers__dots button.is-active { width: 34px; background: var(--accent-red); }
+
+  @media (max-width: 560px) {
+    /* client Aug21: at one frame per page the arrows sat dead centre on the photo — which on
+       these pictures means on somebody's face. There is no edge to hide them against here, so
+       they leave the picture entirely and join the dots in a control row underneath. Nothing
+       is drawn over the image at any width now. */
+    .buyers__nav { top: 100%; bottom: auto; transform: translateY(28px); width: 44px; height: 44px; }
+    .buyers__nav svg { width: 21px; height: 21px; }
+    .buyers__nav--prev { left: 2px; }
+    .buyers__nav--next { right: 2px; }
+    .buyers__dots { margin-top: 28px; min-height: 44px; align-items: center; }
+  }
 
   /* ============================================================
      VISUAL BREAKERS — full-bleed cinematic dividers between sections.
@@ -1005,9 +1025,10 @@
   .footer__lang-chev svg { width: 15px; height: 15px; }
   .footer__form input {
     flex: 1; min-width: 0; height: 48px; padding: 0 var(--sp-3); border-radius: 999px;
-    /* client Aug20: red gradient field so it stands out — white text clears AA at 5.37:1 on the light stop */
-    background: linear-gradient(135deg, var(--accent-red) 0%, #A5111B 100%);
-    border: 1px solid var(--accent-red-hover); color: #fff;
+    /* client Aug21: semi-opaque like the hero's secondary button, not a solid red fill — same
+       treatment as .hero__ctas .btn--secondary.on-dark: a 20% red tint carrying a solid red edge. */
+    background: rgba(211,23,32,.20);
+    border: 1px solid var(--accent-red); color: #fff;
     font-family: var(--font-sans); font-size: var(--fs-body-sm);
   }
   .footer__form input::placeholder { color: rgba(255,255,255,.82); }
@@ -1478,8 +1499,8 @@
 <section class="section buyers" aria-labelledby="buyers-h">
   <div class="shell shell--wide">
     <div class="buyers__head">
-      <span class="eyebrow">Recently Acquired</span>
-      <h2 id="buyers-h" class="buyers__title">Bought directly from enthusiasts</h2>
+      <span class="eyebrow">Satisfied Customers</span>
+      <h2 id="buyers-h" class="buyers__title">Real sellers, real results, great service!</h2>
     </div>
     <div class="buyers__carousel">
       <button class="buyers__nav buyers__nav--prev" type="button" aria-label="Previous">
@@ -1494,8 +1515,7 @@
           <figure class="buyers__item"><img src="assets/images/buyers/buyer-mercedes.jpg" alt="Alex Manos with a seller beside a classic Mercedes-Benz" loading="lazy" width="760" height="522"></figure>
           <figure class="buyers__item"><img src="assets/images/buyers/buyer-project.jpg" alt="Alex Manos with a seller beside a classic project car" loading="lazy" width="760" height="522"></figure>
           <figure class="buyers__item"><img src="assets/images/buyers/buyer-classics.jpg" alt="Alex Manos with a seller and their classic cars" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-call-alex.jpg" alt="Alex Manos with a classic car buyer" loading="lazy" width="760" height="522"></figure>
-        </div>
+            </div>
       </div>
       <button class="buyers__nav buyers__nav--next" type="button" aria-label="Next">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
@@ -1788,15 +1808,20 @@
     if (!vp || !track || !dotsWrap) return;
     const total = track.children.length;
     let page = 0, pages = 1;
+    let per = 1;
     function render() {
-      track.style.transform = 'translateX(' + (-page * 100) + '%)';
+      /* with a count that does not divide by the page size (7 frames, 4 per page) a plain
+         page*100% leaves an empty slot on the last page; clamping the start index makes the
+         last page sit flush against the end instead. */
+      const start = Math.min(page * per, Math.max(0, total - per));
+      track.style.transform = 'translateX(' + (-start * (100 / per)) + '%)';
       [...dotsWrap.children].forEach((d, k) => d.classList.toggle('is-active', k === page));
       if (prev) prev.disabled = page === 0;
       if (next) next.disabled = page === pages - 1;
     }
     function measure() {
       const itemW = track.children[0].getBoundingClientRect().width || 1;
-      const per = Math.max(1, Math.round(vp.getBoundingClientRect().width / itemW));
+      per = Math.max(1, Math.round(vp.getBoundingClientRect().width / itemW));
       pages = Math.max(1, Math.ceil(total / per));
       if (page > pages - 1) page = pages - 1;
       if (dotsWrap.children.length !== pages) {
