@@ -666,10 +666,14 @@
      1440 between the text end and the badge, which is exactly the "floating in the middle"
      the client rejected. In the text flow it tracks the sentence at every width for free. */
   .sell__badge { display: inline-block; vertical-align: middle; pointer-events: none;
-    width: clamp(46px, 4.2vw, 64px); height: auto;
-    margin-left: clamp(10px, .95vw, 16px);
+    /* Alex Aug21: bigger again. The client's "too big" was really two complaints, and only one
+       of them was size — at 104px it also sat 200px adrift of the text, which is what read as
+       floating. Welded to the end of the sentence it can carry far more weight, so this goes
+       past the mockup's 4.17% to 6.6vw (95px at 1440) and still reads as a mark on the line. */
+    width: clamp(54px, 6.6vw, 98px); height: auto;   /* 54 floor, not 64: at 761 the 2:1 section left the taller badge only 12px above its own clip */
+    margin-left: clamp(12px, 1.15vw, 20px);
     /* the line-box grows to the badge, so pull the extra leading back off the paragraph */
-    margin-block: calc(-.5 * clamp(46px, 4.2vw, 64px) * 170 / 134);
+    margin-block: calc(-.5 * clamp(54px, 6.6vw, 98px) * 170 / 134);
     filter: drop-shadow(0 3px 10px rgba(0,0,0,.45)); }
 
   /* ============================================================
