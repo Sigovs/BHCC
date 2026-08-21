@@ -629,10 +629,12 @@
      without exposing an edge, keeping the photo essentially uncropped. */
   .sell__bg { position: absolute; left: 0; right: 0; top: -4%; height: 108%; z-index: 0; will-change: transform; }
   .sell__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
-  /* the two frames occupy the same box; only the top one's opacity moves */
+  /* the two frames occupy the same box; only the top one's opacity moves. At rest the room is
+     dark; hovering brings the lights up in it. The headlights are lit in BOTH frames — they are
+     not the event, the room is. */
   .sell__frame { position: absolute; inset: 0; }
-  .sell__frame--dusk { opacity: 0; transition: opacity 900ms var(--ease); }
-  .sell.is-lit .sell__frame--dusk { opacity: 1; }
+  .sell__frame--lit { opacity: 0; transition: opacity 900ms var(--ease); }
+  .sell.is-lit .sell__frame--lit { opacity: 1; }
   /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
      right so the white Porsche keeps presence) + a gentle vertical for the
      bright skylight/floor. Keeps left text ≥AA. */
@@ -659,7 +661,7 @@
      frames crossfading — nothing is layered on top. The brightness(1.32)+scale that used to
      stand in for this is gone; a flat multiplier lifts the blacks too, which is exactly why the
      client called it underwhelming. */
-  @media (prefers-reduced-motion: reduce) { .sell__frame--dusk { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .sell__frame--lit { transition: none; } }
   .sell__cover { position: absolute; inset: 0; z-index: 4; }   /* covers the image; content promoted above */
   .sell__actions { position: relative; z-index: 5; }           /* Sell Today + phone stay clickable */
   /* client Aug21: the badge is an INLINE mark at the end of the trust line, not an object
@@ -1473,14 +1475,16 @@
      ============================================================ -->
 <section class="section sell" aria-labelledby="sell-h">
   <div class="sell__bg" data-parallax aria-hidden="true">
-    <!-- client Aug21: "lightbox-like illumination". Two frames of the SAME shot, camera locked —
-         daylight at rest, and dusk with the ceiling tubes and the 911's headlights lit on hover.
-         The light is photographed, not faked, so it falls where the room's own light falls; the
-         surround sinks and the car comes forward, which is what a lightbox actually does.
-         Registration was verified per-pixel before shipping: the two exports were 1px apart
-         vertically, so a row was cropped off each to bring them into exact alignment. -->
-    <img class="sell__frame sell__frame--day"  src="assets/images/sell-day.jpg"  alt="" loading="lazy">
-    <img class="sell__frame sell__frame--dusk" src="assets/images/sell-dusk.jpg" alt="" loading="lazy">
+    <!-- client: "a hover effect that brightens" (Aug20), restated as "the goal was this gives a
+         lightbox-like illumination" (Aug21) — the same request, said more precisely. The ROOM
+         lights up, like a slide laid on a lightbox. So the dark frame rests and the lit one
+         fades in over it; an earlier pass had this backwards and the picture darkened on hover,
+         which is the opposite of what was asked. Two frames of the SAME shot with the camera
+         locked, and the headlights are lit in both (250 vs 249 peak) — they are not the event,
+         the room is. Registration verified per-pixel: a 50% blend of this pair is clean, where
+         the alternate pair ghosted on the sign, the flag and the fan. -->
+    <img class="sell__frame sell__frame--dim" src="assets/images/sell-dusk.jpg" alt="" loading="lazy">
+    <img class="sell__frame sell__frame--lit" src="assets/images/sell-day.jpg"  alt="" loading="lazy">
   </div>
   <div class="sell__overlay" aria-hidden="true"></div>
   <!-- client Aug20: the whole image is a link that brightens on hover; the Sell Today
@@ -1866,8 +1870,7 @@
   (function () {
     const sell = document.querySelector('.sell');
     if (!sell) return;
-    const dusk = sell.querySelector('.sell__frame--dusk');
-    if (!dusk) return;
+    if (!sell.querySelector('.sell__frame--lit')) return;
 
     const lit = on => sell.classList.toggle('is-lit', on);
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
