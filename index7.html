@@ -632,10 +632,15 @@
   /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
      right so the white Porsche keeps presence) + a gentle vertical for the
      bright skylight/floor. Keeps left text ≥AA. */
+  /* the two scrims are split into separate layers only so the vertical one can be reasoned
+     about on its own. BOTH stay at full strength at all times — an earlier pass retreated the
+     vertical one to let the lamps through and that lifted the ground under the copy with it,
+     dropping the sub to 3.8:1 and the trust line to 2.4:1. Legibility does not negotiate with
+     the lighting; the lamps get their strength from rendering ABOVE the scrims instead. */
   .sell__overlay { position: absolute; inset: 0; z-index: 1;
-    background:
-      linear-gradient(90deg, rgba(18,16,12,.82) 0%, rgba(18,16,12,.62) 34%, rgba(18,16,12,.18) 68%, rgba(18,16,12,0) 100%),
-      linear-gradient(180deg, rgba(18,16,12,.52) 0%, rgba(18,16,12,.34) 46%, rgba(18,16,12,.62) 100%); }
+    background: linear-gradient(90deg, rgba(18,16,12,.82) 0%, rgba(18,16,12,.62) 34%, rgba(18,16,12,.18) 68%, rgba(18,16,12,0) 100%); }
+  .sell__overlay::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(18,16,12,.52) 0%, rgba(18,16,12,.34) 46%, rgba(18,16,12,.62) 100%); }
   .sell .shell { position: relative; z-index: 2; width: 100%; }
   .sell__in { max-width: 620px; margin-inline: 0; position: relative; }
   .sell .eyebrow { color: var(--accent-dark); display: block; margin-bottom: var(--sp-2); }
@@ -651,11 +656,43 @@
   /* muted caption can fall over the sunlit floor of the new showroom photo —
      a soft shadow keeps it ≥AA there without changing colour or the overlay */
   .sell__trust { margin-top: var(--sp-3); font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); letter-spacing: .03em; text-shadow: 0 1px 7px rgba(8, 6, 4, .78); }
-  /* client Aug20: whole image is a clickable link that brightens on hover */
-  .sell__bg img { transition: filter var(--dur) var(--ease), transform var(--dur-slow) var(--ease); }
-  /* client Aug20: make the hover clearly noticeable — stronger brighten + a small zoom
-     (the zoom reads even under the legibility scrim, which stays put for AA) */
-  .sell:hover .sell__bg img, .sell:focus-within .sell__bg img { filter: brightness(1.32) saturate(1.06); transform: scale(1.035); }
+  /* client Aug20/21: the whole image is a clickable link, and reaching the section turns the
+     car's headlights on. brightness() alone was the old approach and read as raised exposure
+     rather than as light — a flat multiplier lifts the blacks too, so the photo went milky
+     instead of lit. Light is added by a screen-blended layer that only ever brightens, and
+     brightness is now paired with contrast so the shadows hold. */
+  .sell__bg img { transition: filter var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
+  /* the light sits ABOVE both scrims, so it is not fighting a veil — and the mask inside the
+     svg is what keeps it off the copy, not the scrim. Box matches .sell__bg exactly (same
+     over-scan) so the photo coordinates in the viewBox stay welded to the car; the parallax
+     handler drives this element with the same transform. */
+  .sell__lights { position: absolute; left: 0; right: 0; top: -4%; height: 108%; z-index: 2;
+    pointer-events: none; mix-blend-mode: plus-lighter; opacity: 0;
+    transition: opacity 1100ms var(--ease) 220ms; will-change: transform; }
+  /* .sell__bg already carries data-reveal="img", so `is-in` lands on it when the section
+     scrolls into view — the lamps come up off that, with no extra observer, and it works on
+     touch where a hover effect never fires. */
+  .sell__bg.is-in ~ .sell__lights { opacity: 1; }
+  .sell:hover .sell__lights, .sell:focus-within .sell__lights { opacity: 1; transition-delay: 0ms; }
+  .sell:hover .sell__bg img, .sell:focus-within .sell__bg img {
+    filter: brightness(1.16) contrast(1.12) saturate(1.10); transform: scale(1.03); }
+  /* Alex Aug21: the surround sinks as the lamps rise, so the lit centre comes forward — and the
+     same layer is the copy's legibility guard. It has to sit ABOVE the light to do that job: an
+     earlier pass put the vignette under it, where it guarded nothing and the trust line still
+     fell to 4.44:1. Equal z-index to .shell, earlier in the DOM, so the copy always paints over
+     it. Left ramp measured against the worst pixel under the trust line, then given margin. */
+  .sell__guard { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0;
+    background:
+      linear-gradient(90deg, rgba(18,16,12,.36) 0%, rgba(18,16,12,.32) 38%, rgba(18,16,12,.11) 58%, rgba(18,16,12,0) 72%),
+      radial-gradient(124% 90% at 48% 55%, rgba(10,8,6,0) 36%, rgba(10,8,6,.26) 74%, rgba(10,8,6,.46) 100%);
+    transition: opacity 1100ms var(--ease) 220ms; }
+  .sell__bg.is-in ~ .sell__guard { opacity: 1; }
+  /* reduced motion keeps the DESIGNED state — the lamps are lit, they just do not animate on */
+  @media (prefers-reduced-motion: reduce) {
+    .sell__lights, .sell__guard { transition: none; }
+    .sell__lights, .sell__guard { opacity: 1; }
+    .sell:hover .sell__bg img, .sell:focus-within .sell__bg img { transform: none; }
+  }
   .sell__cover { position: absolute; inset: 0; z-index: 4; }   /* covers the image; content promoted above */
   .sell__actions { position: relative; z-index: 5; }           /* Sell Today + phone stay clickable */
   /* client Aug21: the badge is an INLINE mark at the end of the trust line, not an object
@@ -1093,6 +1130,15 @@
     .sell__bg img { object-position: 50% 40%; }
     .sell__bg::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 48%;
       background: linear-gradient(180deg, rgba(18,16,12,0), var(--dark)); pointer-events: none; }
+    /* mobile stacks the photo as the first block, so the light layer is pinned to that band
+       instead of to the whole section — same box as .sell__bg's mobile height. No scrim here
+       (.sell__overlay is display:none), so the lamps read at full strength on touch, which is
+       the point of driving this off scroll rather than off hover. */
+    .sell__lights { top: 0; height: clamp(320px, 46svh, 440px); }
+    /* the guard exists to keep the light off the copy. On mobile the copy is not over the photo
+       at all — it sits on the solid panel below — so the guard is pinned to the photo band too;
+       left across the centred mobile copy it would only tilt the panel darker on one side. */
+    .sell__guard { top: 0; height: clamp(320px, 46svh, 440px); }
     /* mobile proof band: photo-forward like the We Buy section — photo on top,
        the three claims on a solid dark panel below (not overlaid on the image) */
     .breaker--day { aspect-ratio: auto; min-height: 0; padding-block: 0; display: flex; flex-direction: column; background: var(--dark); }
@@ -1447,6 +1493,74 @@
     <img src="assets/images/sell-showroom.jpg" alt="" loading="lazy" style="object-position: 50% 50%;">
   </div>
   <div class="sell__overlay" aria-hidden="true"></div>
+  <!-- client Aug21: "the headlights come on when you reach the section". Additive light drawn
+       in the PHOTO'S OWN coordinate space (viewBox 2000x1000 = the jpg's native size, and
+       xMidYMid slice = the img's object-fit:cover + object-position:50% 50%), so every lamp
+       and beam stays welded to the car at any viewport instead of drifting with the crop.
+       Positions measured off the source file: the 911 sits three-quarter facing LEFT, lamps
+       at x936/x1027 y533, and the bright floor pool already in the frame is at x700 y830 —
+       exactly where these beams land. The light is added, never invented. -->
+  <svg class="sell__lights" viewBox="0 0 2000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="hlCore">
+        <stop offset="0"   stop-color="#fffdf4" stop-opacity=".98"/>
+        <stop offset=".42" stop-color="#ffe7ab" stop-opacity=".60"/>
+        <stop offset="1"   stop-color="#ffd98a" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="hlHalo">
+        <stop offset="0"   stop-color="#ffe6a8" stop-opacity=".58"/>
+        <stop offset="1"   stop-color="#ffd98a" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="hlThrow" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0"   stop-color="#fff0c8" stop-opacity=".58"/>
+        <stop offset=".5"  stop-color="#ffe6a8" stop-opacity=".26"/>
+        <stop offset="1"   stop-color="#ffdf95" stop-opacity="0"/>
+      </linearGradient>
+      <radialGradient id="hlPool">
+        <stop offset="0"   stop-color="#fff2d2" stop-opacity=".52"/>
+        <stop offset=".58" stop-color="#ffe6a8" stop-opacity=".24"/>
+        <stop offset="1"   stop-color="#ffdf95" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="hlSoft" x="-35%" y="-35%" width="170%" height="170%">
+        <feGaussianBlur stdDeviation="15"/>
+      </filter>
+      <filter id="hlMaskSoft" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="62"/>
+      </filter>
+      <filter id="hlMaskTight" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="30"/>
+      </filter>
+      <!-- Legibility guard. Real headlights WOULD spill across this area, but the copy column
+           lives there and legibility is fixed at the background layer — it does not negotiate
+           with the lighting. Measured in the photo's own coordinates: the text block occupies
+           x203-989, y336-700, so the added light is held out of it with a heavily feathered
+           edge (no hard boundary). The near lamp, the throw and the floor pool all sit outside
+           it and stay at full strength; the far lamp is damped, which also reads correctly
+           since the car's own nose occludes it. -->
+      <mask id="hlOffCopy" maskUnits="userSpaceOnUse" x="0" y="0" width="2000" height="1000">
+        <rect width="2000" height="1000" fill="#fff"/>
+        <rect x="90" y="292" width="880" height="474" rx="170" fill="#000" filter="url(#hlMaskSoft)"/>
+        <!-- the trust line is the weakest type on the page (15px, #a8a49b) and it sits exactly
+             where the throw passes between the lamps and the floor pool. A second, tighter
+             guard covers just its row (photo y675-700), narrow enough to leave the lamps above
+             and the pool below at full strength. -->
+        <rect x="40" y="626" width="830" height="126" rx="63" fill="#000" filter="url(#hlMaskTight)"/>
+      </mask>
+    </defs>
+    <g mask="url(#hlOffCopy)">
+      <g filter="url(#hlSoft)">
+        <polygon points="930,530 690,1000 150,1000" fill="url(#hlThrow)"/>
+        <polygon points="1029,530 820,1000 290,1000" fill="url(#hlThrow)"/>
+        <ellipse cx="706" cy="878" rx="330" ry="94" fill="url(#hlPool)"/>
+      </g>
+      <circle cx="930"  cy="539" r="104" fill="url(#hlHalo)"/>
+      <circle cx="1029" cy="539" r="110" fill="url(#hlHalo)"/>
+      <circle cx="930"  cy="539" r="23" fill="url(#hlCore)"/>
+      <circle cx="1029" cy="539" r="25" fill="url(#hlCore)"/>
+    </g>
+  </svg>
+  <div class="sell__guard" aria-hidden="true"></div>
+
   <!-- client Aug20: the whole image is a link that brightens on hover; the Sell Today
        button and phone are promoted above it and stay independently clickable -->
   <a class="sell__cover" href="/sell-your-car.htm" aria-label="Sell your classic car — we buy classic cars"></a>
@@ -1818,16 +1932,19 @@
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const sell = document.querySelector('.sell');
     const bg = sell && sell.querySelector('.sell__bg');
+    const lights = sell && sell.querySelector('.sell__lights');
     if (!bg) return;
     let ticking = false;
     const update = () => {
-      if (window.matchMedia('(max-width: 760px)').matches) { bg.style.transform = ''; ticking = false; return; }  /* stacked on mobile — no parallax */
+      if (window.matchMedia('(max-width: 760px)').matches) { bg.style.transform = ''; if (lights) lights.style.transform = ''; ticking = false; return; }  /* stacked on mobile — no parallax */
       const r = sell.getBoundingClientRect();
       const prog = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight;
       // gentle: small over-scan (8%) → clamp drift so the photo edges never show
       let dy = prog * -34;
       dy = Math.max(-25, Math.min(25, dy));
-      bg.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      const t = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      bg.style.transform = t;
+      if (lights) lights.style.transform = t;   /* the lamps travel with the photo they are welded to */
       ticking = false;
     };
     const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
