@@ -96,7 +96,14 @@
   .arrow-link--dark { color: var(--accent-dark); }
   .arrow-link--dark:hover { color: #dcc384; }
 
-  .center-cta { text-align: center; margin-top: clamp(40px, 5vw, 60px); }
+  /* client Aug21: the Featured CTA is a PAIR — "View All Inventory" + "New Inventory Alerts"
+     side by side under the cars, laid out like the hero pair (equal minimums, 8px
+     radius, 1.5px border) so the two CTA clusters on the page read as the same component.
+     Colours stay the section's own: primary is the dark fill on cream, alerts is the red
+     outline — the hero's cream/red inversions belong to a dark surface, not to this one. */
+  .center-cta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: var(--sp-2); margin-top: clamp(40px, 5vw, 60px); }
+  .center-cta .btn { min-width: 240px; border-radius: 8px; border-width: 1.5px; }   /* 240, not the hero's 220: the longer label sets its own width at 226, and a pair with one button 6px wider reads as an accident */
 
   /* ============================================================
      BUTTONS — pill (art-director exception for interactive CTAs)
@@ -529,13 +536,15 @@
   }
   .search-form__btn:hover { background: var(--accent); }
   .search-form__btn svg { width: 17px; height: 17px; }
-  /* client Aug20: 2nd CTA under the search — inverse (red outline), not bold, same 220px width as the hero buttons */
-  .searchbar__more { display: flex; justify-content: center; margin-top: clamp(14px, 1.6vw, 20px); }
-  .searchbar__alerts {
-    min-width: 220px; border-radius: 8px; border-width: 1.5px; font-weight: var(--fw-medium);
+  /* client Aug20: the alerts CTA is the inverse of the solid primary — red outline, not bold.
+     Aug21: it moved out of the search block and under the Featured cars, so the class is
+     named for what it is rather than for where it used to live. Geometry now comes from
+     .center-cta, which sets it once for both buttons in the pair. */
+  .cta-alerts {
+    font-weight: var(--fw-medium);
     background: transparent; color: var(--accent-red); border-color: var(--accent-red);
   }
-  .searchbar__alerts:hover { background: var(--accent-red); color: #fff; border-color: var(--accent-red); }
+  .cta-alerts:hover { background: var(--accent-red); color: #fff; border-color: var(--accent-red); }
 
   /* ============================================================
      FEATURED CLASSICS — borderless cards
@@ -1054,6 +1063,9 @@
     .hero__inner { text-align: left; align-items: flex-start; }
     .hero__ctas { margin-top: auto; width: 100%; flex-direction: column; align-items: stretch; gap: var(--sp-15); }
     .hero__ctas .btn { width: 100%; justify-content: center; }
+    /* the Featured pair stacks the same way the hero pair does — full width, one per row */
+    .center-cta { flex-direction: column; align-items: stretch; gap: var(--sp-15); }
+    .center-cta .btn { width: 100%; justify-content: center; }
     .cards { grid-template-columns: 1fr; gap: var(--sp-5); }
     .searchbar__in { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
     .search-form__field { max-width: none; }
@@ -1306,7 +1318,7 @@
 
     <div class="hero__inner">
       <h1 class="hero__title"><span class="hero__line">Beverly Hills Car Club</span><span class="by">by Alex Manos</span></h1>
-      <p class="hero__sub">The world's largest dealer of European and American classic cars. Hundreds of cars for sale from dozens of classic car makers, every&nbsp;day!</p>
+      <p class="hero__sub">The world's largest dealer of European and American classic cars. Hundreds of vehicles in-stock, every&nbsp;day!</p>
       <div class="hero__ctas">
         <a class="btn btn--primary" href="/inventory.htm">Browse Inventory</a>
         <a class="btn btn--secondary on-dark" href="/sell-your-car.htm">Sell Your Car</a>
@@ -1345,10 +1357,6 @@
       </form>
       <a class="arrow-link" href="/inventory.htm">View All Inventory <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
   </div>
-  <!-- client Aug20: 2nd CTA — inverse of the hero buttons, not bold, same width -->
-  <div class="searchbar__more">
-    <a class="btn btn--secondary searchbar__alerts" href="/email-alerts.htm">New Inventory Alerts</a>
-  </div>
 </section>
 
 <!-- ============================================================
@@ -1381,6 +1389,7 @@
 
     <div class="center-cta">
       <a class="btn btn--primary" href="/inventory.htm">View All Inventory</a>
+      <a class="btn btn--secondary cta-alerts" href="/email-alerts.htm">New Inventory Alerts</a>
     </div>
   </div>
 </section>
