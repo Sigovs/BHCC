@@ -6,3 +6,6 @@ _font-lab*.html
 # Uncompressed hero master (49MB, 295s) — replaced by a compressed loop.
 # Do not commit: git keeps blobs forever.
 assets/video/home.mp4
+
+# source renders for the We Buy day/dusk pair — the shipped JPEGs are derived from these
+assets/images/SELL/

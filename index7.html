@@ -619,7 +619,7 @@
      SELL — DARK SLAB
      ============================================================ */
   /* Section = the photo's own proportion (2000×1000 → aspect-ratio 2/1),
-     so sell-showroom.jpg shows at natural size, not stretched into a tall
+     so the showroom frames show at natural size, not stretched into a tall
      band. ≈712px @1440. No min-height on desktop (mobile override below).
      Content: vertical centre, left aligned. */
   .sell { position: relative; overflow: hidden; background: var(--dark); color: var(--cream); text-align: left;
@@ -628,7 +628,11 @@
      shows the whole frame; a small headroom lets the parallax drift ±25px
      without exposing an edge, keeping the photo essentially uncropped. */
   .sell__bg { position: absolute; left: 0; right: 0; top: -4%; height: 108%; z-index: 0; will-change: transform; }
-  .sell__bg img { width: 100%; height: 100%; object-fit: cover; }
+  .sell__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+  /* the two frames occupy the same box; only the top one's opacity moves */
+  .sell__frame { position: absolute; inset: 0; }
+  .sell__frame--dusk { opacity: 0; transition: opacity 900ms var(--ease); }
+  .sell.is-lit .sell__frame--dusk { opacity: 1; }
   /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
      right so the white Porsche keeps presence) + a gentle vertical for the
      bright skylight/floor. Keeps left text ≥AA. */
@@ -651,11 +655,11 @@
   /* muted caption can fall over the sunlit floor of the new showroom photo —
      a soft shadow keeps it ≥AA there without changing colour or the overlay */
   .sell__trust { margin-top: var(--sp-3); font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); letter-spacing: .03em; text-shadow: 0 1px 7px rgba(8, 6, 4, .78); }
-  /* client Aug20: whole image is a clickable link that brightens on hover */
-  .sell__bg img { transition: filter var(--dur) var(--ease), transform var(--dur-slow) var(--ease); }
-  /* client Aug20: make the hover clearly noticeable — stronger brighten + a small zoom
-     (the zoom reads even under the legibility scrim, which stays put for AA) */
-  .sell:hover .sell__bg img, .sell:focus-within .sell__bg img { filter: brightness(1.32) saturate(1.06); transform: scale(1.035); }
+  /* client Aug20/21: the whole background is a clickable link, and the hover effect is the two
+     frames crossfading — nothing is layered on top. The brightness(1.32)+scale that used to
+     stand in for this is gone; a flat multiplier lifts the blacks too, which is exactly why the
+     client called it underwhelming. */
+  @media (prefers-reduced-motion: reduce) { .sell__frame--dusk { transition: none; } }
   .sell__cover { position: absolute; inset: 0; z-index: 4; }   /* covers the image; content promoted above */
   .sell__actions { position: relative; z-index: 5; }           /* Sell Today + phone stay clickable */
   /* client Aug21: the badge is an INLINE mark at the end of the trust line, not an object
@@ -1469,7 +1473,14 @@
      ============================================================ -->
 <section class="section sell" aria-labelledby="sell-h">
   <div class="sell__bg" data-parallax aria-hidden="true">
-    <img src="assets/images/sell-showroom.jpg" alt="" loading="lazy" style="object-position: 50% 50%;">
+    <!-- client Aug21: "lightbox-like illumination". Two frames of the SAME shot, camera locked —
+         daylight at rest, and dusk with the ceiling tubes and the 911's headlights lit on hover.
+         The light is photographed, not faked, so it falls where the room's own light falls; the
+         surround sinks and the car comes forward, which is what a lightbox actually does.
+         Registration was verified per-pixel before shipping: the two exports were 1px apart
+         vertically, so a row was cropped off each to bring them into exact alignment. -->
+    <img class="sell__frame sell__frame--day"  src="assets/images/sell-day.jpg"  alt="" loading="lazy">
+    <img class="sell__frame sell__frame--dusk" src="assets/images/sell-dusk.jpg" alt="" loading="lazy">
   </div>
   <div class="sell__overlay" aria-hidden="true"></div>
   <!-- client Aug20: the whole image is a link that brightens on hover; the Sell Today
@@ -1845,6 +1856,38 @@
   // strong parallax on the Sell band
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  /* ============================================================
+     WE BUY — the lights come on (client Aug21)
+     ------------------------------------------------------------
+     Pointer devices get it on hover, which is what was asked for. Touch has no hover at all, so
+     there it runs once as the section reaches the middle of the screen and stays lit — otherwise
+     most of the traffic would never see the effect the whole thing was built for.
+     ============================================================ */
+  (function () {
+    const sell = document.querySelector('.sell');
+    if (!sell) return;
+    const dusk = sell.querySelector('.sell__frame--dusk');
+    if (!dusk) return;
+
+    const lit = on => sell.classList.toggle('is-lit', on);
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (canHover) {
+      sell.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') lit(true); });
+      sell.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') lit(false); });
+      sell.addEventListener('focusin', () => lit(true));
+      sell.addEventListener('focusout', e => { if (!sell.contains(e.relatedTarget)) lit(false); });
+      return;
+    }
+
+    /* touch: light it once when the section is properly on screen, then leave it lit */
+    if (!('IntersectionObserver' in window)) { lit(true); return; }
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.intersectionRatio >= 0.45) { lit(true); io.disconnect(); } });
+    }, { threshold: [0, 0.45, 1] });
+    io.observe(sell);
+  })();
+
     const sell = document.querySelector('.sell');
     const bg = sell && sell.querySelector('.sell__bg');
     if (!bg) return;
