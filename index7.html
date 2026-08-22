@@ -633,7 +633,11 @@
   .sell__bg { position: absolute; inset: 0; z-index: 0; }
   .sell__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
   .sell__frame { position: absolute; inset: 0; }
-  .sell__frame--lit { opacity: 0; transition: opacity 900ms var(--ease); }
+  /* Alex Aug21: softer. 1600ms on a long ease-out, so the room comes up like a dimmer being
+     turned rather than a switch being thrown — the first third of the curve does most of the
+     travel and the last stretch settles slowly, which is what reads as "gentle" rather than
+     simply "slow". Leaving on the same curve so it does not snap back. */
+  .sell__frame--lit { opacity: 0; transition: opacity 1600ms cubic-bezier(.22, .61, .36, 1); }
   .sell.is-lit .sell__frame--lit { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .sell__frame--lit { transition: none; } }
   /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
