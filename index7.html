@@ -627,7 +627,10 @@
   /* Gentle over-scan (8%): with the section already at the photo's 2:1, cover
      shows the whole frame; a small headroom lets the parallax drift ±25px
      without exposing an edge, keeping the photo essentially uncropped. */
-  .sell__bg { position: absolute; left: 0; right: 0; top: -4%; height: 108%; z-index: 0; will-change: transform; }
+  /* Alex Aug21: parallax off. The 8% over-scan existed only so the drift never exposed an edge;
+     with nothing drifting it was pure crop. inset:0 puts a 2:1 frame in a 2:1 section, so the
+     picture now shows whole — nothing is cut on any side. */
+  .sell__bg { position: absolute; inset: 0; z-index: 0; }
   .sell__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
   .sell__frame { position: absolute; inset: 0; }
   /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
@@ -1465,7 +1468,7 @@
      SELL — DARK SLAB
      ============================================================ -->
 <section class="section sell" aria-labelledby="sell-h">
-  <div class="sell__bg" data-parallax aria-hidden="true">
+  <div class="sell__bg" aria-hidden="true">
     <img class="sell__frame" src="assets/images/sell-dusk.jpg" alt="" loading="lazy" width="2850" height="1425">
   </div>
   <div class="sell__overlay" aria-hidden="true"></div>
@@ -1837,29 +1840,6 @@
     if (next) next.addEventListener('click', () => { if (page < pages - 1) { page++; render(); } });
     measure();
     let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 150); });
-  })();
-
-  // strong parallax on the Sell band
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const sell = document.querySelector('.sell');
-    const bg = sell && sell.querySelector('.sell__bg');
-    if (!bg) return;
-    let ticking = false;
-    const update = () => {
-      if (window.matchMedia('(max-width: 760px)').matches) { bg.style.transform = ''; ticking = false; return; }  /* stacked on mobile — no parallax */
-      const r = sell.getBoundingClientRect();
-      const prog = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight;
-      // gentle: small over-scan (8%) → clamp drift so the photo edges never show
-      let dy = prog * -34;
-      dy = Math.max(-25, Math.min(25, dy));
-      bg.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
-      ticking = false;
-    };
-    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
   })();
 
   // gentle parallax on the full-bleed breaker dividers (softer than the sell band)
