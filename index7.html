@@ -633,10 +633,15 @@
   .sell__bg { position: absolute; inset: 0; z-index: 0; }
   .sell__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
   .sell__frame { position: absolute; inset: 0; }
+  .sell__frame--lit { opacity: 0; transition: opacity 900ms var(--ease); }
+  .sell.is-lit .sell__frame--lit { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .sell__frame--lit { transition: none; } }
   /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
      right so the white Porsche keeps presence) + a gentle vertical for the
      bright skylight/floor. Keeps left text ≥AA. */
-  .sell__overlay { display: none; }   /* Alex Aug21: scrim off — the frame carries itself */
+  /* no scrim: Alex's gradients are baked into the two exports themselves, so nothing is
+     layered over the picture here. See the markup note. */
+  .sell__overlay { display: none; }
   .sell .shell { position: relative; z-index: 2; width: 100%; }
   .sell__in { max-width: 620px; margin-inline: 0; position: relative; }
   .sell .eyebrow { color: var(--accent-dark); display: block; margin-bottom: var(--sp-2); }
@@ -1469,7 +1474,14 @@
      ============================================================ -->
 <section class="section sell" aria-labelledby="sell-h">
   <div class="sell__bg" aria-hidden="true">
-    <img class="sell__frame" src="assets/images/sell-dusk.jpg" alt="" loading="lazy" width="2850" height="1425">
+    <!-- client: "a hover effect that brightens ... lightbox-like illumination". Two exports of
+         the same Figma frame (2163:62) — the room dim, then the room lit. Alex authored the
+         gradients by hand in that file and they are baked into both files, so there is no CSS
+         scrim here at all: the treatment that keeps the copy legible is part of the picture.
+         Registration is exact — the two are the same frame with only the fill changed, and all
+         40 sample points align at zero offset, so the fade cannot swim. -->
+    <img class="sell__frame sell__frame--dim" src="assets/images/sell-dim.jpg" alt="" loading="lazy" width="1920" height="960">
+    <img class="sell__frame sell__frame--lit" src="assets/images/sell-lit.jpg" alt="" loading="lazy" width="1920" height="960">
   </div>
   <div class="sell__overlay" aria-hidden="true"></div>
   <!-- client Aug20: the whole image is a link that brightens on hover; the Sell Today
@@ -1840,6 +1852,26 @@
     if (next) next.addEventListener('click', () => { if (page < pages - 1) { page++; render(); } });
     measure();
     let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 150); });
+  })();
+
+  /* WE BUY — the room lights up. Pointer devices on hover; touch has none, so there it runs
+     once when the section is 45% on screen and stays lit. */
+  (function () {
+    const sell = document.querySelector('.sell');
+    if (!sell || !sell.querySelector('.sell__frame--lit')) return;
+    const lit = on => sell.classList.toggle('is-lit', on);
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      sell.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') lit(true); });
+      sell.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') lit(false); });
+      sell.addEventListener('focusin', () => lit(true));
+      sell.addEventListener('focusout', e => { if (!sell.contains(e.relatedTarget)) lit(false); });
+      return;
+    }
+    if (!('IntersectionObserver' in window)) { lit(true); return; }
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.intersectionRatio >= 0.45) { lit(true); io.disconnect(); } });
+    }, { threshold: [0, 0.45, 1] });
+    io.observe(sell);
   })();
 
   // gentle parallax on the full-bleed breaker dividers (softer than the sell band)
