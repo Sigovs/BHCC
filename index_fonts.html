@@ -149,16 +149,23 @@
   .fsw__b:hover { background: rgba(255,255,255,.07); color: #fff; }
   .fsw__b.is-on { background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.30); color: #fff; }
   .fsw__b.is-on span { color: rgba(255,255,255,.62); }
-  .fsw__link { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.14);
-    font-family: 'Inter Tight', system-ui, sans-serif; font-size: 11.5px; color: rgba(255,255,255,.62); }
-  .fsw__link:hover { color: #fff; }
+  /* Alex Aug25: this was a hairline text link and read as a footnote. It is the only route to the
+     side-by-side comparison, which is the more useful of the two pages — so it is a filled button
+     now, and the label says what it does rather than what it is called. */
+  .fsw__link { display: block; margin-top: 14px; text-align: center;
+    background: #EFECE4; color: #141312; border-radius: 9px; padding: 11px 12px;
+    font-family: 'Inter Tight', system-ui, sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: -.005em; text-decoration: none;
+    transition: background .18s ease, transform .18s ease; }
+  .fsw__link:hover { background: #fff; transform: translateY(-1px); }
+  .fsw__link:active { transform: translateY(0); }
   @media (max-width: 1180px) {
     .fsw { left: 0; right: 0; top: auto; bottom: 0; transform: none; width: auto; border-radius: 0;
       flex-direction: row; align-items: center; gap: 8px; overflow-x: auto; padding: 10px 12px;
       border: 0; border-top: 1px solid rgba(255,255,255,.14); }
     .fsw__ttl, .fsw__grp { display: none; }
     .fsw__b { width: auto; white-space: nowrap; flex: none; }
-    .fsw__link { margin: 0 0 0 4px; padding: 0 0 0 12px; border-top: 0; border-left: 1px solid rgba(255,255,255,.14); white-space: nowrap; }
+    .fsw__link { margin: 0 0 0 6px; padding: 9px 14px; white-space: nowrap; flex: none; }
     body { padding-bottom: 64px; }
   }
 
@@ -1338,7 +1345,7 @@
       <p class="fsw__grp">Three voices</p>
       <button class="fsw__b" type="button" data-set="cat-serif">Instrument Serif<span>+ Inter Tight + Plex Mono</span></button>
       <button class="fsw__b" type="button" data-set="cat-sans">Jost<span>+ Archivo + Plex Mono</span></button>
-      <a class="fsw__link" href="fonts-specimen.html">Full specimen &rarr;</a>
+      <a class="fsw__link" href="fonts-specimen.html">Compare side by side &rarr;</a>
 </nav>
 
 <header class="hdr" id="hdr">
