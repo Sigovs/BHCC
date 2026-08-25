@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" data-ground="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BHCC — Typeface Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Space+Grotesk:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/images/favicon-32.png" type="image/png">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --ui:'Inter Tight',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --bg:#111110; --panel:#171715; --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.20);
+    --tx:#EFECE4; --tx-2:rgba(239,236,228,.56); --tx-3:rgba(239,236,228,.34);
+    --hot:#D8B36A;
+    --pane-bg:#0E0E0D; --pane-tx:#EFECE4;
+  }
+  [data-ground="light"]{ --pane-bg:#F4F1EA; --pane-tx:#191817; }
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--tx);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1560px;margin-inline:auto;padding-inline:clamp(18px,2.6vw,40px)}
+
+  /* ---------------- masthead ---------------- */
+  .top{padding-block:clamp(34px,4.6vw,64px) clamp(20px,2.4vw,30px)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-3);margin:0 0 16px}
+  .top h1{font-size:clamp(1.75rem,1.1rem+2.1vw,2.9rem);line-height:1.04;letter-spacing:-.025em;margin:0 0 16px;font-weight:600}
+  .top p{max-width:74ch;font-size:1.0625rem;line-height:1.6;color:var(--tx-2);margin:0}
+  .top p + p{margin-top:10px}
+  .top b{color:var(--tx);font-weight:500}
+
+  /* ---------------- controls ---------------- */
+  .bar{position:sticky;top:0;z-index:50;background:rgba(17,17,16,.93);
+       -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+       border-block:1px solid var(--line);margin-top:clamp(24px,3vw,40px)}
+  .bar__in{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(14px,2vw,34px);padding-block:14px}
+  .ctl{display:flex;align-items:center;gap:10px}
+  .ctl__lab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);white-space:nowrap}
+  select{appearance:none;background:var(--panel);color:var(--tx);border:1px solid var(--line-2);
+    border-radius:8px;padding:8px 30px 8px 11px;font-family:var(--ui);font-size:14px;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,var(--tx-2) 50%),linear-gradient(135deg,var(--tx-2) 50%,transparent 50%);
+    background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  select:focus{outline:2px solid var(--hot);outline-offset:1px}
+  .seg{display:flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+  .seg button{background:transparent;border:0;color:var(--tx-2);font-family:var(--ui);font-size:13px;
+    padding:8px 14px;cursor:pointer;transition:background .16s,color .16s}
+  .seg button.on{background:var(--tx);color:#111110}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:clamp(120px,14vw,210px);height:2px;background:var(--line-2);border-radius:2px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--hot);cursor:pointer;border:0}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--hot);cursor:pointer;border:0}
+  .val{font-family:var(--mono);font-size:12px;color:var(--tx-2);min-width:5.2em;font-variant-numeric:tabular-nums}
+  .bar__note{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--tx-3);letter-spacing:.04em}
+
+  /* narrow screens: the option labels are long, so the selects have to be capped or they push the
+     page sideways. The control row stacks and each control takes the full width. */
+  @media (max-width:720px){
+    .bar__in{gap:12px}
+    .ctl{width:100%}
+    select{flex:1;min-width:0;max-width:100%;text-overflow:ellipsis}
+    .ctl__lab{width:4.2em}
+    .bar__note{margin-left:0;width:100%}
+    input[type=range]{flex:1}
+  }
+  .bar__note a{color:var(--tx-2);text-decoration:none;border-bottom:1px solid var(--line-2)}
+  .bar__note a:hover{color:var(--tx)}
+
+  /* ---------------- the two panes ---------------- */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+       border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-block:clamp(22px,3vw,38px)}
+  @media (max-width:1000px){ .cmp{grid-template-columns:1fr} }
+  .pane{background:var(--pane-bg);color:var(--pane-tx);padding:clamp(20px,2.4vw,34px);min-width:0;
+        transition:background .25s ease,color .25s ease}
+  .pane__hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;
+    padding-bottom:14px;margin-bottom:22px;border-bottom:1px solid currentColor;border-color:color-mix(in srgb,currentColor 16%,transparent)}
+  .pane__slot{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.42}
+  .pane__name{font-family:var(--ui);font-size:1.2rem;font-weight:600;letter-spacing:-.01em;margin:0}
+  .pane__stack{font-family:var(--mono);font-size:11.5px;opacity:.5}
+  .pane__why{font-family:var(--ui);font-size:.9375rem;line-height:1.5;opacity:.66;margin:-8px 0 24px}
+
+  /* the ranks — sizes driven by the slider */
+  .rk{margin:0}
+  .rk + .rk{margin-top:var(--gap,14px)}
+  .rk--display{font-size:calc(var(--s) * 1px);line-height:1.03;letter-spacing:-.015em}
+  .rk--h2{font-size:calc(var(--s) * .58px);line-height:1.1;letter-spacing:-.01em}
+  .rk--card{font-size:calc(var(--s) * .31px);line-height:1.25;font-weight:500}
+  .rk--body{font-size:calc(var(--s) * .29px);line-height:1.55;max-width:46ch;opacity:.86}
+  .rk--label{font-size:calc(var(--s) * .24px);letter-spacing:.13em;text-transform:uppercase;opacity:.62}
+  .rk--micro{font-size:calc(var(--s) * .25px);opacity:.6}
+  .rk--data{font-size:calc(var(--s) * .29px);font-variant-numeric:tabular-nums;
+    display:grid;grid-template-columns:11em auto;column-gap:14px;row-gap:4px}
+  [contenteditable]{outline:none}
+  [contenteditable]:focus{background:color-mix(in srgb,currentColor 9%,transparent);border-radius:4px}
+
+  /* ---------------- the ramp ---------------- */
+  /* the ramp follows the ground toggle too — the figures have to be judged on the surface the
+     page will actually set them on, and half the site is dark */
+  .ramp{border:1px solid var(--line);border-radius:14px;padding:clamp(20px,2.4vw,32px);margin-bottom:clamp(40px,6vw,80px);
+        background:var(--pane-bg);color:var(--pane-tx);transition:background .25s ease,color .25s ease}
+  .ramp h2{font-size:1.1rem;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+  .ramp p{font-size:.9375rem;line-height:1.55;margin:0 0 22px;max-width:76ch;color:color-mix(in srgb,currentColor 66%,transparent)}
+  .ramp__grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:14px clamp(16px,2.4vw,40px);align-items:baseline}
+  .ramp__px{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums;text-align:right;color:color-mix(in srgb,currentColor 45%,transparent)}
+  .ramp__s{font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ramp__hd{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,currentColor 48%,transparent)}
+  footer{padding-bottom:clamp(40px,6vw,70px);color:var(--tx-3);font-size:.875rem;font-family:var(--mono)}
+  footer a{color:var(--tx-2)}
+</style>
+</head>
+<body>
+
+<div class="wrap top">
+  <p class="eyebrow">Beverly Hills Car Club · Typeface lab</p>
+  <h1>Put any two side by side</h1>
+  <p>Eight type systems, set in the page's own words — the headline, a car title, a price, the phone
+     number, the ratings count. <b>Nothing here is filler</b>, because a typeface fails on real
+     content and looks fine on lorem.</p>
+  <p>Drag the size down and watch the figures. A face that is beautiful on a large headline can lose
+     a stroke on a price or drop the hyphen out of a phone number, and that only shows at the size
+     the page actually sets it. <b>Every line is editable</b> — type your own words into it.</p>
+</div>
+
+<div class="bar">
+  <div class="wrap bar__in">
+    <div class="ctl"><span class="ctl__lab">Left</span><select id="selA"></select></div>
+    <div class="ctl"><span class="ctl__lab">Right</span><select id="selB"></select></div>
+    <div class="ctl"><span class="ctl__lab">Ground</span>
+      <div class="seg" id="ground">
+        <button type="button" data-g="dark" class="on">Dark</button>
+        <button type="button" data-g="light">Light</button>
+      </div>
+    </div>
+    <div class="ctl"><span class="ctl__lab">Size</span>
+      <input type="range" id="size" min="18" max="86" value="52">
+      <span class="val" id="sizeval">52 px</span>
+    </div>
+    <p class="bar__note"><a href="index_fonts.html">See them on the page &rarr;</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="cmp">
+    <section class="pane" id="paneA"></section>
+    <section class="pane" id="paneB"></section>
+  </div>
+
+  <section class="ramp">
+    <h2>The figures, all the way down</h2>
+    <p>The same price and phone number in both faces, at every size the site sets — from a headline
+       down to the smallest label. This is where a typeface is actually decided: the row where a
+       digit loses a stroke or a hyphen disappears is the row that matters.</p>
+    <div class="ramp__grid" id="ramp"></div>
+  </section>
+</div>
+
+<footer class="wrap">Beverly Hills Car Club · <a href="index_fonts.html">typeface comparison on the page</a></footer>
+
+<script>
+const OPTS = [
+  { k:'current', n:'Cormorant Garamond', s:'current · + Inter Tight',
+    d:"'Cormorant Garamond',serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
+    w:"What the site runs today. A light, high-contrast old-style serif — it reads heritage and does it well at large size. Its weakness is the middle: the strokes thin out as the type gets smaller." },
+  { k:'jost', n:'Jost', s:'geometric · one family',
+    d:"'Jost',sans-serif", b:"'Jost',sans-serif", m:"'Jost',sans-serif",
+    w:"The honest, freely licensed descendant of Futura — the face the note named. Bauhaus geometry, European, the same decades as the cars. Geometric faces run a small x-height, so the micro-line is where it is tested." },
+  { k:'archivo', n:'Archivo', s:'wide grotesque · one family',
+    d:"'Archivo',sans-serif", b:"'Archivo',sans-serif", m:"'Archivo',sans-serif",
+    w:"The most automotive of the set — number plates, gauge faces, badges. Its figures are its strength, which matters on a page carrying prices and a phone number." },
+  { k:'inter', n:'Inter Tight', s:'neutral · one family',
+    d:"'Inter Tight',sans-serif", b:"'Inter Tight',sans-serif", m:"'Inter Tight',sans-serif",
+    w:"No character on purpose. Hierarchy comes from weight and size rather than contrast between faces. The quietest option, the least likely to date, and the lightest page — one family instead of six." },
+  { k:'instrument', n:'Instrument Serif', s:'modern serif · + Instrument Sans',
+    d:"'Instrument Serif',serif", b:"'Instrument Sans',sans-serif", m:"'Instrument Sans',sans-serif",
+    w:"The diagnostic. The note asked to contrast against the current Garamond — a named face, not a whole class. If this reads well, the objection was to Cormorant specifically and the site need not leave serifs at all." },
+  { k:'space', n:'Space Grotesk', s:'grotesque with character',
+    d:"'Space Grotesk',sans-serif", b:"'Space Grotesk',sans-serif", m:"'Space Grotesk',sans-serif",
+    w:"Distinctive without being loud, with a slight technical edge and unusually good figures. Where Inter is deliberately anonymous, this one is recognisable — which cuts both ways." },
+  { k:'catserif', n:'Instrument Serif', s:'+ Inter Tight + IBM Plex Mono',
+    d:"'Instrument Serif',serif", b:"'Inter Tight',sans-serif", m:"'IBM Plex Mono',monospace",
+    w:"Three voices. Serif carries heritage, the grotesque carries reading, the monospace carries facts only — prices, the phone number, the ratings count. The auction-catalogue system." },
+  { k:'catsans', n:'Jost', s:'+ Archivo + IBM Plex Mono',
+    d:"'Jost',sans-serif", b:"'Archivo',sans-serif", m:"'IBM Plex Mono',monospace",
+    w:"The same three-part structure with a sans at the top, which is the direction the note asked for. Geometry in the headline, a wider grotesque for reading, the same monospace kept for data." },
+];
+
+const $ = s => document.querySelector(s);
+const byKey = k => OPTS.find(o => o.k === k) || OPTS[0];
+
+function fillSelect(sel, val){
+  sel.innerHTML = OPTS.map(o =>
+    `<option value="${o.k}"${o.k===val?' selected':''}>${o.n} — ${o.s}</option>`).join('');
+}
+
+function renderPane(el, o, slot){
+  el.innerHTML = `
+    <div class="pane__hd">
+      <span class="pane__slot">${slot}</span>
+      <h2 class="pane__name">${o.n}</h2>
+      <span class="pane__stack">${o.s}</span>
+    </div>
+    <p class="pane__why">${o.w}</p>
+    <p class="rk rk--display" contenteditable="true" spellcheck="false">We buy classic cars!</p>
+    <p class="rk rk--h2"      contenteditable="true" spellcheck="false">Featured classics</p>
+    <p class="rk rk--card"    contenteditable="true" spellcheck="false">1962 Jaguar XKE Series I Roadster</p>
+    <p class="rk rk--body"    contenteditable="true" spellcheck="false">From a single Porsche to an entire collection — Alex personally reviews every car offered.</p>
+    <p class="rk rk--label"   contenteditable="true" spellcheck="false">Sell Your Classic Car</p>
+    <div class="rk rk--data"><span>$56,500</span><span>(310) 975-0272</span><span>2,250+ ratings</span><span>Since 2008</span></div>
+    <p class="rk rk--micro"   contenteditable="true" spellcheck="false">Trusted by collectors worldwide · Serving enthusiasts since 2008</p>`;
+  el.querySelector('.rk--display').style.fontFamily = o.d;
+  el.querySelector('.rk--h2').style.fontFamily      = o.d;
+  el.querySelector('.rk--card').style.fontFamily    = o.d;
+  el.querySelector('.rk--body').style.fontFamily    = o.b;
+  el.querySelector('.rk--micro').style.fontFamily   = o.b;
+  el.querySelector('.rk--label').style.fontFamily   = o.m;
+  el.querySelector('.rk--data').style.fontFamily    = o.m;
+}
+
+/* the ramp: the same two strings at every size the site sets, so the break point is visible */
+const STEPS = [56, 40, 30, 24, 20, 17, 15, 14];
+function renderRamp(a, b){
+  const r = $('#ramp');
+  r.innerHTML = `<span class="ramp__hd">px</span>
+                 <span class="ramp__hd">${a.n}</span>
+                 <span class="ramp__hd">${b.n}</span>` +
+    STEPS.map(px => `
+      <span class="ramp__px">${px}</span>
+      <span class="ramp__s" style="font-family:${a.m};font-size:${px}px">$56,500 · (310) 975-0272 · 4.8</span>
+      <span class="ramp__s" style="font-family:${b.m};font-size:${px}px">$56,500 · (310) 975-0272 · 4.8</span>`).join('');
+}
+
+function sync(){
+  const a = byKey($('#selA').value), b = byKey($('#selB').value);
+  renderPane($('#paneA'), a, 'Left');
+  renderPane($('#paneB'), b, 'Right');
+  renderRamp(a, b);
+  const p = new URLSearchParams({ a:a.k, b:b.k, g:document.documentElement.dataset.ground, s:$('#size').value });
+  try { history.replaceState(null,'','?'+p) } catch(e){}
+}
+
+(function init(){
+  const q = new URLSearchParams(location.search);
+  fillSelect($('#selA'), q.get('a') || 'current');
+  fillSelect($('#selB'), q.get('b') || 'catserif');
+  if (q.get('g') === 'light') setGround('light');
+  const s = Math.min(86, Math.max(18, +q.get('s') || 52));
+  $('#size').value = s; setSize(s);
+  $('#selA').addEventListener('change', sync);
+  $('#selB').addEventListener('change', sync);
+  $('#size').addEventListener('input', e => setSize(+e.target.value));
+  $('#ground').addEventListener('click', e => {
+    const btn = e.target.closest('button'); if (!btn) return;
+    setGround(btn.dataset.g); sync();
+  });
+  sync();
+})();
+
+function setSize(v){
+  document.querySelectorAll('.pane').forEach(p => p.style.setProperty('--s', v));
+  $('#sizeval').textContent = v + ' px';
+  const p = new URLSearchParams(location.search); p.set('s', v);
+  try { history.replaceState(null,'','?'+p) } catch(e){}
+}
+function setGround(g){
+  document.documentElement.dataset.ground = g;
+  document.querySelectorAll('#ground button').forEach(b => b.classList.toggle('on', b.dataset.g === g));
+}
+</script>
+</body>
+</html>

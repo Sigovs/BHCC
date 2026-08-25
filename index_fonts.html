@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Beverly Hills Car Club by Alex Manos — The World's Finest Classic Automobiles</title>
+<title>BHCC — Typeface Comparison</title>
 <meta name="description" content="The world's finest European and American classic automobiles, bought and sold by Alex Manos. Los Angeles. Inspected, documented and photographed in our showroom.">
 <script>document.documentElement.classList.add('js');</script>
 
@@ -13,16 +13,152 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:wght@400;500;600&family=Dancing+Script:wght@500;600;700&family=Gloock&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Space+Grotesk:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
 <link rel="icon" href="assets/images/favicon-32.png" type="image/png">
 <link rel="stylesheet" href="assets/css/tokens.css?v=11">
 
 <style>
-  /* index4: lighter editorial display serif per client feedback (Gloock read too heavy on the hero + section headings) */
   :root {
-    --font-display: 'Cormorant Garamond', 'Gloock', 'Times New Roman', serif; --ls-display: 0; --ls-h2: 0;   /* Cormorant sits well at natural tracking — drop the Gloock-era letter-spacing */
-    --accent-red: #D31720; --accent-red-hover: #E23A43;   /* v4: brand red promoted to a narrow UI accent — the ONE contrasting CTA border (client p4) */
+    --font-display: 'Cormorant Garamond', 'Gloock', 'Times New Roman', serif; --ls-display: 0; --ls-h2: 0;
+    --accent-red: #D31720; --accent-red-hover: #E23A43;
+    /* the search heading is hard-set to Iowan on the live site (client r3). Kept as a token so
+       "current" stays a faithful copy, while every variant below points it at its own display. */
+    --font-intro: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Lora', Georgia, serif;
+  }
+
+  /* ============================================================
+     TYPEFACE COMPARISON — the variants
+     ------------------------------------------------------------
+     Every option is expressed only as the three type tokens, so switching one changes the
+     typography and nothing else: same markup, same grid, same colour, same images. One variable.
+
+     Two faces are deliberately held CONSTANT across all seven — the logo script and the hero's
+     "by Alex Manos" signature. Those are brand marks, not part of the type system, and letting
+     them move would add noise to the very comparison this page exists to make.
+
+     --font-text is the italic/quote voice. Newsreader is dropped per Alex, so each option answers
+     for it: where a face has a real italic, that italic is used; where it does not, the option
+     says so rather than shipping a faux oblique.
+     ============================================================ */
+
+  /* 1 — GEOMETRIC. The honest free descendant of Futura, which is what the client named. */
+  [data-font="jost"] {
+    --font-display: 'Jost', system-ui, sans-serif;
+    --font-sans:    'Jost', system-ui, sans-serif;
+    --font-text:    'Jost', system-ui, sans-serif;
+    --font-intro:   var(--font-display);
+    --ls-display: -.015em; --ls-h2: -.01em;
+  }
+  /* 2 — WIDE GROTESQUE. Plate and gauge energy; the most automotive of the set. */
+  [data-font="archivo"] {
+    --font-display: 'Archivo', system-ui, sans-serif;
+    --font-sans:    'Archivo', system-ui, sans-serif;
+    --font-text:    'Archivo', system-ui, sans-serif;
+    --font-intro:   var(--font-display);
+    --ls-display: -.02em; --ls-h2: -.015em;
+  }
+  [data-font="archivo"] h1, [data-font="archivo"] h2, [data-font="archivo"] h3 { font-stretch: 112%; }
+  /* 3 — NEUTRAL, ONE FAMILY. No character on purpose; also the lightest page in the set. */
+  [data-font="inter"] {
+    --font-display: 'Inter Tight', system-ui, sans-serif;
+    --font-sans:    'Inter Tight', system-ui, sans-serif;
+    --font-text:    'Inter Tight', system-ui, sans-serif;
+    --font-intro:   var(--font-display);
+    --ls-display: -.028em; --ls-h2: -.02em;
+  }
+  /* 4 — MODERN SERIF, NOT GARAMOND. The diagnostic: is the objection to serifs, or to Cormorant? */
+  [data-font="instrument"] {
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-sans:    'Instrument Sans', system-ui, sans-serif;
+    --font-text:    'Instrument Serif', Georgia, serif;
+    --font-intro:   var(--font-display);
+    --ls-display: -.01em; --ls-h2: -.005em;
+  }
+  /* 5 — GROTESQUE WITH CHARACTER. Distinctive, technical edge, strong figures. */
+  [data-font="space"] {
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-sans:    'Space Grotesk', system-ui, sans-serif;
+    --font-text:    'Space Grotesk', system-ui, sans-serif;
+    --font-intro:   var(--font-display);
+    --ls-display: -.03em; --ls-h2: -.02em;
+  }
+  /* 6 — THREE VOICES, SERIF-LED. Auction catalogue: heritage, reading, ledger. */
+  [data-font="cat-serif"] {
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-sans:    'Inter Tight', system-ui, sans-serif;
+    --font-text:    'Instrument Serif', Georgia, serif;
+    --font-intro:   var(--font-display);
+    --font-data:    'IBM Plex Mono', ui-monospace, monospace;
+    --ls-display: -.01em; --ls-h2: -.005em;
+  }
+  /* 7 — THREE VOICES, SANS-LED. Same structure, the client's sans direction at the top. */
+  [data-font="cat-sans"] {
+    --font-display: 'Jost', system-ui, sans-serif;
+    --font-sans:    'Archivo', system-ui, sans-serif;
+    --font-text:    'Jost', system-ui, sans-serif;
+    --font-intro:   var(--font-display);
+    --font-data:    'IBM Plex Mono', ui-monospace, monospace;
+    --ls-display: -.015em; --ls-h2: -.01em;
+  }
+
+  /* The third voice only exists on options 6 and 7, and it is reserved for FACTS — prices, the
+     phone number, the ratings count, the eyebrows. Fixed advance width is the point: figures line
+     up in a column, which is a job no proportional face can do. */
+  [data-font="cat-serif"] .card__price, [data-font="cat-sans"] .card__price,
+  [data-font="cat-serif"] .eyebrow,     [data-font="cat-sans"] .eyebrow,
+  [data-font="cat-serif"] .hact__label, [data-font="cat-sans"] .hact__label,
+  [data-font="cat-serif"] .card__view,  [data-font="cat-sans"] .card__view {
+    font-family: var(--font-data); font-variant-numeric: tabular-nums;
+  }
+  [data-font="cat-serif"] .eyebrow, [data-font="cat-sans"] .eyebrow { letter-spacing: .1em; }
+
+  /* The live site already sets .card__price to a SYSTEM monospace — so it is quietly running a
+     third voice for its prices without anyone choosing one. That default has to go for the
+     two-voice options or every option here would secretly be three, and the comparison would be
+     measuring nothing. Two-voice options set the price in their own face with tabular figures;
+     the three-voice options set it in Plex Mono, above. */
+  [data-font="jost"] .card__price, [data-font="archivo"] .card__price,
+  [data-font="inter"] .card__price, [data-font="instrument"] .card__price,
+  [data-font="space"] .card__price {
+    font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
+  }
+
+  /* ============================================================
+     THE SWITCHER
+     ------------------------------------------------------------
+     A presentation control, not a dev tool — this gets shown to the owner. Fixed rail on the
+     left at desktop; on narrow screens it becomes a scrollable strip pinned to the bottom, since
+     a side rail has nowhere to live there.
+     ============================================================ */
+  .fsw { position: fixed; left: 18px; top: 50%; transform: translateY(-50%); z-index: 999;
+    display: flex; flex-direction: column; gap: 6px; width: 208px;
+    padding: 14px; border-radius: 14px;
+    background: rgba(20,19,17,.90); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.14); box-shadow: 0 18px 50px rgba(0,0,0,.42); }
+  .fsw__ttl { font-family: 'Inter Tight', system-ui, sans-serif; font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: rgba(255,255,255,.52); margin: 2px 2px 6px; }
+  .fsw__grp { font-family: 'Inter Tight', system-ui, sans-serif; font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: rgba(255,255,255,.38); margin: 10px 2px 4px; }
+  .fsw__b { display: block; width: 100%; text-align: left; cursor: pointer;
+    padding: 8px 10px; border-radius: 9px; border: 1px solid transparent; background: transparent;
+    color: rgba(255,255,255,.80); font-family: 'Inter Tight', system-ui, sans-serif;
+    font-size: 13px; line-height: 1.25; transition: background .18s ease, border-color .18s ease, color .18s ease; }
+  .fsw__b span { display: block; font-size: 10.5px; letter-spacing: .04em; color: rgba(255,255,255,.42); margin-top: 2px; }
+  .fsw__b:hover { background: rgba(255,255,255,.07); color: #fff; }
+  .fsw__b.is-on { background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.30); color: #fff; }
+  .fsw__b.is-on span { color: rgba(255,255,255,.62); }
+  .fsw__link { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.14);
+    font-family: 'Inter Tight', system-ui, sans-serif; font-size: 11.5px; color: rgba(255,255,255,.62); }
+  .fsw__link:hover { color: #fff; }
+  @media (max-width: 1180px) {
+    .fsw { left: 0; right: 0; top: auto; bottom: 0; transform: none; width: auto; border-radius: 0;
+      flex-direction: row; align-items: center; gap: 8px; overflow-x: auto; padding: 10px 12px;
+      border: 0; border-top: 1px solid rgba(255,255,255,.14); }
+    .fsw__ttl, .fsw__grp { display: none; }
+    .fsw__b { width: auto; white-space: nowrap; flex: none; }
+    .fsw__link { margin: 0 0 0 4px; padding: 0 0 0 12px; border-top: 0; border-left: 1px solid rgba(255,255,255,.14); white-space: nowrap; }
+    body { padding-bottom: 64px; }
   }
 
   /* ============================================================
@@ -509,7 +645,7 @@
   .searchbar { padding-block: clamp(26px, 3vw, 44px); }
   /* client p6: intro line above the search — black Iowan Old Style, ~hero_sub size */
   .searchbar__intro {
-    font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Lora', Georgia, serif;
+    font-family: var(--font-intro);
     font-weight: 500; color: var(--ink); line-height: 1.15; text-align: center;   /* client r3: centred over the search bar */
     font-size: clamp(1.3rem, .95rem + 1.1vw, 1.75rem); margin-bottom: clamp(14px, 1.4vw, 20px);
   }
@@ -1186,6 +1322,24 @@
      HEADER — sits OUTSIDE .page so its sticky context is the whole
      document; the nav stays pinned even over the footer (client r3).
      ============================================================ -->
+<!-- ============================================================
+     TYPE SWITCHER
+     ============================================================ -->
+<nav class="fsw" aria-label="Typeface options">
+      <p class="fsw__ttl">Typeface</p>
+      <button class="fsw__b" type="button" data-set="current">Cormorant Garamond<span>current · + Inter Tight</span></button>
+      <p class="fsw__grp">Two voices</p>
+      <button class="fsw__b" type="button" data-set="jost">Jost<span>geometric · Futura lineage</span></button>
+      <button class="fsw__b" type="button" data-set="archivo">Archivo<span>wide grotesque · plate</span></button>
+      <button class="fsw__b" type="button" data-set="inter">Inter Tight<span>neutral · one family</span></button>
+      <button class="fsw__b" type="button" data-set="instrument">Instrument Serif<span>modern serif · + Instrument Sans</span></button>
+      <button class="fsw__b" type="button" data-set="space">Space Grotesk<span>grotesque with character</span></button>
+      <p class="fsw__grp">Three voices</p>
+      <button class="fsw__b" type="button" data-set="cat-serif">Instrument Serif<span>+ Inter Tight + Plex Mono</span></button>
+      <button class="fsw__b" type="button" data-set="cat-sans">Jost<span>+ Archivo + Plex Mono</span></button>
+      <a class="fsw__link" href="fonts-specimen.html">Full specimen &rarr;</a>
+</nav>
+
 <header class="hdr" id="hdr">
   <div class="hdr__in">
     <button class="hdr__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" id="burger">
@@ -1437,209 +1591,12 @@
 <!-- ============================================================
      PROOF BAND — showroom photo + three claims (from index2), under inventory
      ============================================================ -->
-<section class="breaker breaker--day" aria-labelledby="proof-h">
-  <div class="breaker__bg">
-    <img src="assets/images/porsche-room.jpg" alt="The Beverly Hills Car Club warehouse — rows of classic Porsches and other European classics beneath marque flags" loading="lazy" width="2000" height="1333">
-  </div>
-  <div class="breaker__overlay" aria-hidden="true"></div>
-  <div class="breaker__cap breaker__cap--proof">
-    <h2 id="proof-h" class="sr-only">Why Beverly Hills Car Club</h2>
-    <div class="shell">
-      <ul class="proof">
-        <li>
-          <span class="proof__k">Since 2008</span>
-          <span class="proof__v">Buying and selling European and American classics in Los Angeles.</span>
-        </li>
-        <li>
-          <span class="proof__k">Inspected &amp; documented</span>
-          <span class="proof__v">Every car inspected, documented and photographed before it reaches you.</span>
-        </li>
-        <li>
-          <span class="proof__k">Delivered worldwide</span>
-          <span class="proof__v">From our Los Angeles showroom to anywhere in the world.</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
 
-<!-- ============================================================
-     FOUNDER — condensed single row
-     ============================================================ -->
-<section class="founder-sec section--tint" aria-labelledby="founder-h">
-    <div class="founder">
-      <figure class="founder__media">
-        <img src="assets/images/alex-editorial.jpg" alt="Alex Manos among rows of classic cars in the Beverly Hills Car Club showroom" loading="lazy" width="1280" height="553">
-      </figure>
-      <div class="founder__body">
-        <span class="eyebrow">Alex Manos, Founder</span>
-        <p class="founder__quote" id="founder-h">I've been buying and selling the world's finest classic cars since&nbsp;2008.</p>
-        <p class="founder__p">What began with a single Porsche is now the largest collection of European and American classics under one roof in Los Angeles — every car personally reviewed, inspected and photographed before it ever reaches you.</p>
-      </div>
-    </div>
-</section>
+<!-- sections 04-09 removed for the type comparison: this page carries the three
+     ranks that actually decide a typeface — the display at hero scale, the lead and
+     controls in the search block, and the mid-range in Featured (section head, card
+     titles, PRICES, micro-labels). A face that survives all three survives the site. -->
 
-<!-- ============================================================
-     SELL — DARK SLAB
-     ============================================================ -->
-<section class="section sell" aria-labelledby="sell-h">
-  <div class="sell__bg" aria-hidden="true">
-    <!-- client: "a hover effect that brightens ... lightbox-like illumination". Two exports of
-         the same Figma frame (2163:62) — the room dim, then the room lit. Alex authored the
-         gradients by hand in that file and they are baked into both files, so there is no CSS
-         scrim here at all: the treatment that keeps the copy legible is part of the picture.
-         Registration is exact — the two are the same frame with only the fill changed, and all
-         40 sample points align at zero offset, so the fade cannot swim. -->
-    <img class="sell__frame sell__frame--dim" src="assets/images/sell-dim.jpg" alt="" loading="lazy" width="1920" height="960">
-    <img class="sell__frame sell__frame--lit" src="assets/images/sell-lit.jpg" alt="" loading="lazy" width="1920" height="960">
-  </div>
-  <div class="sell__overlay" aria-hidden="true"></div>
-  <!-- client Aug20: the whole image is a link that brightens on hover; the Sell Today
-       button and phone are promoted above it and stay independently clickable -->
-  <a class="sell__cover" href="/sell-your-car.htm" aria-label="Sell your classic car — we buy classic cars"></a>
-  <div class="shell">
-    <div class="sell__in">
-      <span class="eyebrow">Sell Your Classic Car</span>
-      <h2 id="sell-h">We buy classic cars!</h2>
-      <p class="sell__sub">From a single Porsche to an entire collection — Alex personally reviews every car offered. Nationwide,&nbsp;In-Any-Condition.</p>
-      <div class="sell__actions">
-        <a class="btn btn--primary on-dark" href="/sell-your-car.htm">Sell Today</a>
-        <a class="sell__phone" href="tel:+13109750272">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          (310) 975-0272
-        </a>
-      </div>
-      <p class="sell__trust">Trusted by collectors worldwide · Serving enthusiasts since 2008<img class="sell__badge" src="assets/images/badge-5star.png" alt="2,250+ five-star ratings" width="134" height="170" loading="lazy"></p>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============================================================
-     BUYERS STRIP — Alex's real buy handshakes (client Aug20)
-     ============================================================ -->
-<section class="section buyers" aria-labelledby="buyers-h">
-  <div class="shell shell--wide">
-    <div class="buyers__head">
-      <span class="eyebrow">Satisfied Customers</span>
-      <h2 id="buyers-h" class="buyers__title">Real sellers, real results, great service!</h2>
-    </div>
-    <div class="buyers__carousel">
-      <button class="buyers__nav buyers__nav--prev" type="button" aria-label="Previous">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-      </button>
-      <div class="buyers__viewport" data-buyers-viewport>
-        <div class="buyers__track" data-buyers-track>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-ferrari.jpg" alt="Alex Manos with a seller beside their classic Ferrari" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-porsche.jpg" alt="Alex Manos with a seller beside a classic Porsche" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-911.jpg" alt="Alex Manos with a seller beside a Porsche 911" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-aston.jpg" alt="Alex Manos with a seller beside a classic Aston Martin" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-mercedes.jpg" alt="Alex Manos with a seller beside a classic Mercedes-Benz" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-project.jpg" alt="Alex Manos with a seller beside a classic project car" loading="lazy" width="760" height="522"></figure>
-          <figure class="buyers__item"><img src="assets/images/buyers/buyer-classics.jpg" alt="Alex Manos with a seller and their classic cars" loading="lazy" width="760" height="522"></figure>
-            </div>
-      </div>
-      <button class="buyers__nav buyers__nav--next" type="button" aria-label="Next">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
-      </button>
-    </div>
-    <div class="buyers__dots" data-buyers-dots></div>
-  </div>
-</section>
-
-
-<!-- ============================================================
-     TESTIMONIALS + PRESS
-     ============================================================ -->
-<section class="section section--compact" aria-labelledby="quotes-h">
-  <div class="shell">
-    <div class="quotes">
-      <span class="eyebrow" id="quotes-h">What they're saying</span>
-      <button type="button" class="quote-nav quote-nav--prev" id="quotePrev" aria-label="Previous testimonial">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-      <button type="button" class="quote-nav quote-nav--next" id="quoteNext" aria-label="Next testimonial">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-      <div class="quote-track" id="quoteTrack">
-        <figure class="quote is-active">
-          <div class="quote__mark" aria-hidden="true">&ldquo;</div>
-          <blockquote>Alex and his team made selling my classic Porsche absolutely seamless — professional, fair and a genuine pleasure to work with.</blockquote>
-          <figcaption class="quote__by">John D. · Beverly Hills, CA</figcaption>
-        </figure>
-        <figure class="quote">
-          <div class="quote__mark" aria-hidden="true">&ldquo;</div>
-          <blockquote>The finest collection of European classics I've seen under one roof. They knew the car's history better than I did.</blockquote>
-          <figcaption class="quote__by">Michael R. · Greenwich, CT</figcaption>
-        </figure>
-        <figure class="quote">
-          <div class="quote__mark" aria-hidden="true">&ldquo;</div>
-          <blockquote>From the first call to delivery, every detail was handled with care. This is how buying a classic should feel.</blockquote>
-          <figcaption class="quote__by">Elena V. · Miami, FL</figcaption>
-        </figure>
-      </div>
-      <div class="quote-dots" id="quoteDots" role="tablist" aria-label="Testimonials">
-        <button type="button" class="is-active" aria-label="Testimonial 1"></button>
-        <button type="button" aria-label="Testimonial 2"></button>
-        <button type="button" aria-label="Testimonial 3"></button>
-      </div>
-
-      <div class="press">
-        <div class="press__row" aria-label="As featured in">
-          <img class="press__logo press__logo--hemmings" src="assets/images/press/hemmings.svg" alt="Hemmings" loading="lazy">
-          <img class="press__logo press__logo--t911" src="assets/images/press/total911.svg" alt="Total 911" loading="lazy">
-          <img class="press__logo press__logo--ebay" src="assets/images/press/ebay.svg" alt="eBay" loading="lazy">
-          <img class="press__logo press__logo--google" src="assets/images/press/google.svg" alt="Google" loading="lazy">
-          <img class="press__logo press__logo--yelp" src="assets/images/press/yelp.svg" alt="Yelp" loading="lazy">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     NEWS / EVENTS — dark, staggered showroom media (Cayenne format)
-     ============================================================ -->
-<section class="section news" aria-labelledby="news-h">
-  <div class="shell news__in">
-
-    <!-- heading row on top -->
-    <div class="news__head">
-      <div class="news__head-lead">
-        <h2 class="news__title" id="news-h">News &amp; Events</h2>
-        <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
-      </div>
-      <div class="news__cta">
-        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See All Articles <span aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
-      </div>
-    </div>
-
-    <!-- real posts from beverlyhillscarclub.com/blog.htm. Titles, links and
-         pull-quotes are the live ones; the site publishes no visible dates, so
-         the meta line carries the section instead of an invented date. -->
-    <div class="news__list">
-      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-eternal-summer-ferrari-360-f1-spider.htm">
-        <figure><img src="assets/images/news/news-ferrari-360.jpg" alt="A 2001 Ferrari 360 F1 Spider" loading="lazy" width="900" height="638"></figure>
-        <h3 class="npost__title">Eternal Summer, Ferrari 360 F1 Spider</h3>
-        <p class="npost__text">An ancient town in the Emilia-Romagna region of northern Italy, Modena was not only the birthplace of Enzo Ferrari, but also of operatic tenor Luciano Pavarotti and chef Massimo Bottura.</p>
-        <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
-      </a>
-      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-unimprovable-porsche-carrera-coupe-g50.htm">
-        <figure><img src="assets/images/news/news-porsche-g50.jpg" alt="A 1988 Porsche Carrera Coupe G50" loading="lazy" width="900" height="638"></figure>
-        <h3 class="npost__title">Unimprovable, Porsche Carrera Coupe G50</h3>
-        <p class="npost__text">The very first Porsche gearbox was a transaxle, a common case sharing the gear stack and the differential — a design theory every 356-to-997 street and race car shares.</p>
-        <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
-      </a>
-      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-post-modern-masterpiece-delorean-dmc-12.htm">
-        <figure><img src="assets/images/news/news-delorean-dmc12.jpg" alt="A red 1981 DeLorean DMC-12" loading="lazy" width="900" height="638"></figure>
-        <h3 class="npost__title">Postmodern Masterpiece, DeLorean DMC-12</h3>
-        <p class="npost__text">Singular among automobiles, the gorgeous rear-engined DeLorean DMC-12 exists in a category of one — a machine charged with hypnotic allure, daring engineering, renegade spirit, and a whiff of delicious controversy.</p>
-        <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
-      </a>
-    </div>
-
-  </div>
-</section>
 
 </div><!-- /.page -->
 
@@ -1975,5 +1932,24 @@
   })();
 </script>
 
+
+<script>
+/* Type switcher — the option is written to the URL hash so a single option can be sent as its
+   own link, which is what the client actually asked for ("a separate link"). */
+(function () {
+  const root = document.documentElement;
+  const btns = [...document.querySelectorAll('.fsw__b')];
+  const set = key => {
+    if (key === 'current') root.removeAttribute('data-font');
+    else root.setAttribute('data-font', key);
+    btns.forEach(b => b.classList.toggle('is-on', b.dataset.set === key));
+    try { history.replaceState(null, '', key === 'current' ? location.pathname : '#' + key); } catch (e) {}
+  };
+  btns.forEach(b => b.addEventListener('click', () => set(b.dataset.set)));
+  const known = btns.map(b => b.dataset.set);
+  const fromHash = location.hash.replace('#', '');
+  set(known.includes(fromHash) ? fromHash : 'current');
+})();
+</script>
 </body>
 </html>
