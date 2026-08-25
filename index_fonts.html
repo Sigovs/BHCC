@@ -13,7 +13,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Bricolage+Grotesque:opsz,wdth,wght@10..48,75..100,300..800&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
 <link rel="icon" href="assets/images/favicon-32.png" type="image/png">
 <link rel="stylesheet" href="assets/css/tokens.css?v=11">
@@ -102,15 +102,22 @@
   [data-font="cat-serif"] h1, [data-font="cat-serif"] h2, [data-font="cat-serif"] h3,
   [data-font="cat-serif"] .card__title, [data-font="cat-serif"] .searchbar__intro {
     font-variation-settings: 'SOFT' 0, 'WONK' 0; font-weight: 400; }
-  /* 7 — THREE VOICES, SANS-LED. Same structure, the client's sans direction at the top. */
+  /* 7 — THREE VOICES, SANS-LED. Same structure as 06, the client's sans direction at the top.
+     Bricolage rather than Jost for two reasons. It carries an optical-size axis, which makes this
+     the exact mirror of 06 — the two triples now differ ONLY in serif versus sans, which is what
+     makes them comparable. And Jost against Archivo was a geometric beside a grotesque at similar
+     weight: close enough to read as an accident rather than as two voices. */
   [data-font="cat-sans"] {
-    --font-display: 'Jost', system-ui, sans-serif;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
     --font-sans:    'Archivo', system-ui, sans-serif;
-    --font-text:    'Jost', system-ui, sans-serif;
+    --font-text:    'Bricolage Grotesque', system-ui, sans-serif;
     --font-intro:   var(--font-display);
     --font-data:    'IBM Plex Mono', ui-monospace, monospace;
-    --ls-display: -.015em; --ls-h2: -.01em;
+    --ls-display: -.022em; --ls-h2: -.015em;
   }
+  [data-font="cat-sans"] h1, [data-font="cat-sans"] h2, [data-font="cat-sans"] h3,
+  [data-font="cat-sans"] .card__title, [data-font="cat-sans"] .searchbar__intro {
+    font-variation-settings: 'wdth' 100; font-weight: 600; }
 
   /* The third voice only exists on options 6 and 7, and it is reserved for FACTS — prices, the
      phone number, the ratings count, the eyebrows. Fixed advance width is the point: figures line
@@ -1353,7 +1360,7 @@
       <button class="fsw__b" type="button" data-set="familjen">Familjen Grotesk<span>character · one family</span></button>
       <p class="fsw__grp">Three voices</p>
       <button class="fsw__b" type="button" data-set="cat-serif">Fraunces<span>+ Inter Tight + Plex Mono</span></button>
-      <button class="fsw__b" type="button" data-set="cat-sans">Jost<span>+ Archivo + Plex Mono</span></button>
+      <button class="fsw__b" type="button" data-set="cat-sans">Bricolage Grotesque<span>+ Archivo + Plex Mono</span></button>
       <a class="fsw__link" href="fonts-specimen.html">Compare side by side &rarr;</a>
 </nav>
 
