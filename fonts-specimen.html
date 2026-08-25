@@ -52,17 +52,21 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--hot);cursor:pointer;border:0}
   input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--hot);cursor:pointer;border:0}
   .val{font-family:var(--mono);font-size:12px;color:var(--tx-2);min-width:5.2em;font-variant-numeric:tabular-nums}
-  .bar__go{margin-left:auto;font-family:var(--ui);font-size:13.5px;color:var(--tx-2);text-decoration:none;
-    border:1px solid var(--line-2);border-radius:8px;padding:8px 13px;white-space:nowrap;
-    transition:border-color .16s,color .16s}
-  .bar__go:hover{color:var(--tx);border-color:var(--tx-2)}
+  /* one per pane, carrying that pane's own typeface. A single shared button pointed at neither
+     of the two on screen — it opened whatever the other page happened to be showing. */
+  .pane__go{display:inline-block;margin-top:26px;font-family:var(--ui);font-size:13.5px;font-weight:500;
+    color:inherit;text-decoration:none;border-radius:8px;padding:9px 14px;
+    border:1px solid color-mix(in srgb,currentColor 26%,transparent);
+    background:color-mix(in srgb,currentColor 6%,transparent);
+    transition:background .16s ease,border-color .16s ease}
+  .pane__go:hover{background:color-mix(in srgb,currentColor 13%,transparent);
+    border-color:color-mix(in srgb,currentColor 45%,transparent)}
 
   /* narrow screens: the option labels are long, so the selects have to be capped or they push the
      page sideways. The control row stacks and each control takes the full width. */
   @media (max-width:720px){
     .bar__in{gap:12px}
     select{flex:1 1 100%;min-width:0;max-width:100%;text-overflow:ellipsis}
-    .bar__go{margin-left:0;width:100%;text-align:center}
     .pane__pick select{font-size:1rem}
     input[type=range]{flex:1}
   }
@@ -140,7 +144,7 @@
     <span class="ctl__lab">at</span>
     <input type="range" id="size" min="18" max="86" value="52" aria-label="Type size">
     <span class="val" id="sizeval">52 px</span>
-    <a class="bar__go" href="index_fonts.html">See them on the page &rarr;</a>
+
   </div>
 </div>
 
@@ -153,6 +157,7 @@
       </div>
       <p class="pane__stack" id="stackA"></p>
       <div id="paneA"></div>
+      <a class="pane__go" id="goA" href="index_fonts.html">See this one on the page &rarr;</a>
     </section>
     <section class="pane">
       <div class="pane__pick">
@@ -161,6 +166,7 @@
       </div>
       <p class="pane__stack" id="stackB"></p>
       <div id="paneB"></div>
+      <a class="pane__go" id="goB" href="index_fonts.html">See this one on the page &rarr;</a>
     </section>
   </div>
 
@@ -177,28 +183,28 @@
 
 <script>
 const OPTS = [
-  { k:'current', n:'Cormorant Garamond', s:'current · + Inter Tight', t:'current',
+  { k:'current', n:'Cormorant Garamond', s:'current · + Inter Tight', t:'current', p:'current',
     d:"'Cormorant Garamond',serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
     w:"What the site runs today. A light, high-contrast old-style serif — it reads heritage and does it well at large size. Its weakness is the middle: the strokes thin out as the type gets smaller." },
-  { k:'jost', n:'Jost', s:'geometric · one family', t:'geometric',
+  { k:'jost', n:'Jost', s:'geometric · one family', t:'geometric', p:'jost',
     d:"'Jost',sans-serif", b:"'Jost',sans-serif", m:"'Jost',sans-serif",
     w:"The honest, freely licensed descendant of Futura — the face the note named. Bauhaus geometry, European, the same decades as the cars. Geometric faces run a small x-height, so the micro-line is where it is tested." },
-  { k:'archivo', n:'Archivo', s:'wide grotesque · one family', t:'wide grotesque',
+  { k:'archivo', n:'Archivo', s:'wide grotesque · one family', t:'wide grotesque', p:'archivo',
     d:"'Archivo',sans-serif", b:"'Archivo',sans-serif", m:"'Archivo',sans-serif",
     w:"The most automotive of the set — number plates, gauge faces, badges. Its figures are its strength, which matters on a page carrying prices and a phone number." },
-  { k:'inter', n:'Inter Tight', s:'neutral · one family', t:'neutral',
+  { k:'inter', n:'Inter Tight', s:'neutral · one family', t:'neutral', p:'inter',
     d:"'Inter Tight',sans-serif", b:"'Inter Tight',sans-serif", m:"'Inter Tight',sans-serif",
     w:"No character on purpose. Hierarchy comes from weight and size rather than contrast between faces. The quietest option, the least likely to date, and the lightest page — one family instead of six." },
-  { k:'instrument', n:'Instrument Serif', s:'modern serif · + Instrument Sans', t:'modern serif',
+  { k:'instrument', n:'Instrument Serif', s:'modern serif · + Instrument Sans', t:'modern serif', p:'instrument',
     d:"'Instrument Serif',serif", b:"'Instrument Sans',sans-serif", m:"'Instrument Sans',sans-serif",
     w:"The diagnostic. The note asked to contrast against the current Garamond — a named face, not a whole class. If this reads well, the objection was to Cormorant specifically and the site need not leave serifs at all." },
-  { k:'familjen', n:'Familjen Grotesk', s:'character · one family', t:'character',
+  { k:'familjen', n:'Familjen Grotesk', s:'character · one family', t:'character', p:'familjen',
     d:"'Familjen Grotesk',sans-serif", b:"'Familjen Grotesk',sans-serif", m:"'Familjen Grotesk',sans-serif",
     w:"A Scandinavian grotesque with real drawing in the lowercase — it reads editorial and made, where Inter reads neutral and Jost reads geometric. This is the set's warm option: character without a technical accent." },
-  { k:'catserif', n:'Fraunces', s:'+ Inter Tight + IBM Plex Mono', t:'three voices',
+  { k:'catserif', n:'Fraunces', s:'+ Inter Tight + IBM Plex Mono', t:'three voices', p:'cat-serif',
     d:"'Fraunces',serif", b:"'Inter Tight',sans-serif", m:"'IBM Plex Mono',monospace",
     w:"Three voices. The serif carries heritage, the grotesque carries reading, the monospace carries facts only — prices, the phone number, the ratings count. Fraunces has an optical-size axis, so its letterforms are redrawn as they shrink rather than merely scaled, which is where a display serif normally fails on this page." },
-  { k:'catsans', n:'Bricolage Grotesque', s:'+ Archivo + IBM Plex Mono', t:'three voices',
+  { k:'catsans', n:'Bricolage Grotesque', s:'+ Archivo + IBM Plex Mono', t:'three voices', p:'cat-sans',
     d:"'Bricolage Grotesque',sans-serif", b:"'Archivo',sans-serif", m:"'IBM Plex Mono',monospace",
     w:"The same three-part structure as 06 with a sans at the top, which is the direction the note asked for. Bricolage also has an optical-size axis, so this is the exact mirror of the option above it — the two triples differ only in serif versus sans, which is what makes them worth comparing." },
 ];
@@ -248,6 +254,8 @@ function sync(){
   const a = byKey($('#selA').value), b = byKey($('#selB').value);
   renderPane($('#paneA'), a, $('#stackA'));
   renderPane($('#paneB'), b, $('#stackB'));
+  $('#goA').href = 'index_fonts.html' + (a.p === 'current' ? '' : '#' + a.p);
+  $('#goB').href = 'index_fonts.html' + (b.p === 'current' ? '' : '#' + b.p);
   renderRamp(a, b);
   const p = new URLSearchParams({ a:a.k, b:b.k, g:document.documentElement.dataset.ground, s:$('#size').value });
   try { history.replaceState(null,'','?'+p) } catch(e){}
