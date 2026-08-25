@@ -13,7 +13,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Space+Grotesk:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
 <link rel="icon" href="assets/images/favicon-32.png" type="image/png">
 <link rel="stylesheet" href="assets/css/tokens.css?v=11">
@@ -75,13 +75,14 @@
     --font-intro:   var(--font-display);
     --ls-display: -.01em; --ls-h2: -.005em;
   }
-  /* 5 — GROTESQUE WITH CHARACTER. Distinctive, technical edge, strong figures. */
-  [data-font="space"] {
-    --font-display: 'Space Grotesk', system-ui, sans-serif;
-    --font-sans:    'Space Grotesk', system-ui, sans-serif;
-    --font-text:    'Space Grotesk', system-ui, sans-serif;
+  /* 5 — CHARACTER. A Scandinavian grotesque with real drawing in the lowercase: editorial and
+     made, where Inter is neutral and Jost is geometric. The set's warm option. */
+  [data-font="familjen"] {
+    --font-display: 'Familjen Grotesk', system-ui, sans-serif;
+    --font-sans:    'Familjen Grotesk', system-ui, sans-serif;
+    --font-text:    'Familjen Grotesk', system-ui, sans-serif;
     --font-intro:   var(--font-display);
-    --ls-display: -.03em; --ls-h2: -.02em;
+    --ls-display: -.022em; --ls-h2: -.015em;
   }
   /* 6 — THREE VOICES, SERIF-LED. Auction catalogue: heritage, reading, ledger. */
   [data-font="cat-serif"] {
@@ -120,7 +121,7 @@
      the three-voice options set it in Plex Mono, above. */
   [data-font="jost"] .card__price, [data-font="archivo"] .card__price,
   [data-font="inter"] .card__price, [data-font="instrument"] .card__price,
-  [data-font="space"] .card__price {
+  [data-font="familjen"] .card__price {
     font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
   }
 
@@ -1333,7 +1334,7 @@
       <button class="fsw__b" type="button" data-set="archivo">Archivo<span>wide grotesque · plate</span></button>
       <button class="fsw__b" type="button" data-set="inter">Inter Tight<span>neutral · one family</span></button>
       <button class="fsw__b" type="button" data-set="instrument">Instrument Serif<span>modern serif · + Instrument Sans</span></button>
-      <button class="fsw__b" type="button" data-set="space">Space Grotesk<span>grotesque with character</span></button>
+      <button class="fsw__b" type="button" data-set="familjen">Familjen Grotesk<span>character · one family</span></button>
       <p class="fsw__grp">Three voices</p>
       <button class="fsw__b" type="button" data-set="cat-serif">Instrument Serif<span>+ Inter Tight + Plex Mono</span></button>
       <button class="fsw__b" type="button" data-set="cat-sans">Jost<span>+ Archivo + Plex Mono</span></button>

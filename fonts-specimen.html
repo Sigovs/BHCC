@@ -6,7 +6,7 @@
 <title>BHCC — Typeface Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Space+Grotesk:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@300..600&family=Jost:ital,wght@0,300..700;1,300..600&family=Archivo:ital,wdth,wght@0,62..125,300..700;1,62..125,300..600&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="icon" href="assets/images/favicon-32.png" type="image/png">
 <style>
   *,*::before,*::after{box-sizing:border-box}
@@ -27,17 +27,18 @@
   .top{padding-block:clamp(34px,4.6vw,64px) clamp(20px,2.4vw,30px)}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-3);margin:0 0 16px}
   .top h1{font-size:clamp(1.75rem,1.1rem+2.1vw,2.9rem);line-height:1.04;letter-spacing:-.025em;margin:0 0 16px;font-weight:600}
-  .top p{max-width:74ch;font-size:1.0625rem;line-height:1.6;color:var(--tx-2);margin:0}
-  .top p + p{margin-top:10px}
+  .top p{max-width:70ch;font-size:.9375rem;line-height:1.6;color:var(--tx-2);margin:0}
   .top b{color:var(--tx);font-weight:500}
 
   /* ---------------- controls ---------------- */
   .bar{position:sticky;top:0;z-index:50;background:rgba(17,17,16,.93);
        -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
        border-block:1px solid var(--line);margin-top:clamp(24px,3vw,40px)}
-  .bar__in{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(14px,2vw,34px);padding-block:14px}
-  .ctl{display:flex;align-items:center;gap:10px}
-  .ctl__lab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);white-space:nowrap}
+  /* the row reads as one sentence — "Compare X with Y on Dark at 52px" — so nothing needs
+     explaining. Labelled controls (LEFT / RIGHT / GROUND / SIZE) read as a schematic instead,
+     which is what this was and why it needed a manual. */
+  .bar__in{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding-block:14px}
+  .ctl__lab{font-family:var(--ui);font-size:14px;color:var(--tx-3);white-space:nowrap}
   select{appearance:none;background:var(--panel);color:var(--tx);border:1px solid var(--line-2);
     border-radius:8px;padding:8px 30px 8px 11px;font-family:var(--ui);font-size:14px;cursor:pointer;
     background-image:linear-gradient(45deg,transparent 50%,var(--tx-2) 50%),linear-gradient(135deg,var(--tx-2) 50%,transparent 50%);
@@ -51,20 +52,19 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--hot);cursor:pointer;border:0}
   input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--hot);cursor:pointer;border:0}
   .val{font-family:var(--mono);font-size:12px;color:var(--tx-2);min-width:5.2em;font-variant-numeric:tabular-nums}
-  .bar__note{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--tx-3);letter-spacing:.04em}
+  .bar__go{margin-left:auto;font-family:var(--ui);font-size:13.5px;color:var(--tx-2);text-decoration:none;
+    border:1px solid var(--line-2);border-radius:8px;padding:8px 13px;white-space:nowrap;
+    transition:border-color .16s,color .16s}
+  .bar__go:hover{color:var(--tx);border-color:var(--tx-2)}
 
   /* narrow screens: the option labels are long, so the selects have to be capped or they push the
      page sideways. The control row stacks and each control takes the full width. */
   @media (max-width:720px){
     .bar__in{gap:12px}
-    .ctl{width:100%}
-    select{flex:1;min-width:0;max-width:100%;text-overflow:ellipsis}
-    .ctl__lab{width:4.2em}
-    .bar__note{margin-left:0;width:100%}
+    select{flex:1 1 100%;min-width:0;max-width:100%;text-overflow:ellipsis}
+    .bar__go{margin-left:0;width:100%;text-align:center}
     input[type=range]{flex:1}
   }
-  .bar__note a{color:var(--tx-2);text-decoration:none;border-bottom:1px solid var(--line-2)}
-  .bar__note a:hover{color:var(--tx)}
 
   /* ---------------- the two panes ---------------- */
   .cmp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
@@ -113,29 +113,26 @@
 <div class="wrap top">
   <p class="eyebrow">Beverly Hills Car Club · Typeface lab</p>
   <h1>Put any two side by side</h1>
-  <p>Eight type systems, set in the page's own words — the headline, a car title, a price, the phone
-     number, the ratings count. <b>Nothing here is filler</b>, because a typeface fails on real
-     content and looks fine on lorem.</p>
-  <p>Drag the size down and watch the figures. A face that is beautiful on a large headline can lose
-     a stroke on a price or drop the hyphen out of a phone number, and that only shows at the size
-     the page actually sets it. <b>Every line is editable</b> — type your own words into it.</p>
+  <p>Eight options, set in the site's own words — a headline, a car title, a price, the phone number.
+     Pick two below and they appear next to each other. <b>Drag the size down</b> to see which ones
+     survive at small sizes, and <b>type over any line</b> to try your own words.</p>
 </div>
 
 <div class="bar">
   <div class="wrap bar__in">
-    <div class="ctl"><span class="ctl__lab">Left</span><select id="selA"></select></div>
-    <div class="ctl"><span class="ctl__lab">Right</span><select id="selB"></select></div>
-    <div class="ctl"><span class="ctl__lab">Ground</span>
-      <div class="seg" id="ground">
-        <button type="button" data-g="dark" class="on">Dark</button>
-        <button type="button" data-g="light">Light</button>
-      </div>
+    <span class="ctl__lab">Compare</span>
+    <select id="selA" aria-label="Left typeface"></select>
+    <span class="ctl__lab">with</span>
+    <select id="selB" aria-label="Right typeface"></select>
+    <span class="ctl__lab">on</span>
+    <div class="seg" id="ground" role="group" aria-label="Background">
+      <button type="button" data-g="dark" class="on">Dark</button>
+      <button type="button" data-g="light">Light</button>
     </div>
-    <div class="ctl"><span class="ctl__lab">Size</span>
-      <input type="range" id="size" min="18" max="86" value="52">
-      <span class="val" id="sizeval">52 px</span>
-    </div>
-    <p class="bar__note"><a href="index_fonts.html">See them on the page &rarr;</a></p>
+    <span class="ctl__lab">at</span>
+    <input type="range" id="size" min="18" max="86" value="52" aria-label="Type size">
+    <span class="val" id="sizeval">52 px</span>
+    <a class="bar__go" href="index_fonts.html">See them on the page &rarr;</a>
   </div>
 </div>
 
@@ -158,28 +155,28 @@
 
 <script>
 const OPTS = [
-  { k:'current', n:'Cormorant Garamond', s:'current · + Inter Tight',
+  { k:'current', n:'Cormorant Garamond', s:'current · + Inter Tight', t:'current',
     d:"'Cormorant Garamond',serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
     w:"What the site runs today. A light, high-contrast old-style serif — it reads heritage and does it well at large size. Its weakness is the middle: the strokes thin out as the type gets smaller." },
-  { k:'jost', n:'Jost', s:'geometric · one family',
+  { k:'jost', n:'Jost', s:'geometric · one family', t:'geometric',
     d:"'Jost',sans-serif", b:"'Jost',sans-serif", m:"'Jost',sans-serif",
     w:"The honest, freely licensed descendant of Futura — the face the note named. Bauhaus geometry, European, the same decades as the cars. Geometric faces run a small x-height, so the micro-line is where it is tested." },
-  { k:'archivo', n:'Archivo', s:'wide grotesque · one family',
+  { k:'archivo', n:'Archivo', s:'wide grotesque · one family', t:'wide grotesque',
     d:"'Archivo',sans-serif", b:"'Archivo',sans-serif", m:"'Archivo',sans-serif",
     w:"The most automotive of the set — number plates, gauge faces, badges. Its figures are its strength, which matters on a page carrying prices and a phone number." },
-  { k:'inter', n:'Inter Tight', s:'neutral · one family',
+  { k:'inter', n:'Inter Tight', s:'neutral · one family', t:'neutral',
     d:"'Inter Tight',sans-serif", b:"'Inter Tight',sans-serif", m:"'Inter Tight',sans-serif",
     w:"No character on purpose. Hierarchy comes from weight and size rather than contrast between faces. The quietest option, the least likely to date, and the lightest page — one family instead of six." },
-  { k:'instrument', n:'Instrument Serif', s:'modern serif · + Instrument Sans',
+  { k:'instrument', n:'Instrument Serif', s:'modern serif · + Instrument Sans', t:'modern serif',
     d:"'Instrument Serif',serif", b:"'Instrument Sans',sans-serif", m:"'Instrument Sans',sans-serif",
     w:"The diagnostic. The note asked to contrast against the current Garamond — a named face, not a whole class. If this reads well, the objection was to Cormorant specifically and the site need not leave serifs at all." },
-  { k:'space', n:'Space Grotesk', s:'grotesque with character',
-    d:"'Space Grotesk',sans-serif", b:"'Space Grotesk',sans-serif", m:"'Space Grotesk',sans-serif",
-    w:"Distinctive without being loud, with a slight technical edge and unusually good figures. Where Inter is deliberately anonymous, this one is recognisable — which cuts both ways." },
-  { k:'catserif', n:'Instrument Serif', s:'+ Inter Tight + IBM Plex Mono',
+  { k:'familjen', n:'Familjen Grotesk', s:'character · one family', t:'character',
+    d:"'Familjen Grotesk',sans-serif", b:"'Familjen Grotesk',sans-serif", m:"'Familjen Grotesk',sans-serif",
+    w:"A Scandinavian grotesque with real drawing in the lowercase — it reads editorial and made, where Inter reads neutral and Jost reads geometric. This is the set's warm option: character without a technical accent." },
+  { k:'catserif', n:'Instrument Serif', s:'+ Inter Tight + IBM Plex Mono', t:'three voices',
     d:"'Instrument Serif',serif", b:"'Inter Tight',sans-serif", m:"'IBM Plex Mono',monospace",
     w:"Three voices. Serif carries heritage, the grotesque carries reading, the monospace carries facts only — prices, the phone number, the ratings count. The auction-catalogue system." },
-  { k:'catsans', n:'Jost', s:'+ Archivo + IBM Plex Mono',
+  { k:'catsans', n:'Jost', s:'+ Archivo + IBM Plex Mono', t:'three voices',
     d:"'Jost',sans-serif", b:"'Archivo',sans-serif", m:"'IBM Plex Mono',monospace",
     w:"The same three-part structure with a sans at the top, which is the direction the note asked for. Geometry in the headline, a wider grotesque for reading, the same monospace kept for data." },
 ];
@@ -189,7 +186,7 @@ const byKey = k => OPTS.find(o => o.k === k) || OPTS[0];
 
 function fillSelect(sel, val){
   sel.innerHTML = OPTS.map(o =>
-    `<option value="${o.k}"${o.k===val?' selected':''}>${o.n} — ${o.s}</option>`).join('');
+    `<option value="${o.k}"${o.k===val?' selected':''}>${o.n} · ${o.t}</option>`).join('');
 }
 
 function renderPane(el, o, slot){
