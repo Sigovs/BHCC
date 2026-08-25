@@ -63,6 +63,7 @@
     .bar__in{gap:12px}
     select{flex:1 1 100%;min-width:0;max-width:100%;text-overflow:ellipsis}
     .bar__go{margin-left:0;width:100%;text-align:center}
+    .pane__pick select{font-size:1rem}
     input[type=range]{flex:1}
   }
 
@@ -72,12 +73,23 @@
   @media (max-width:1000px){ .cmp{grid-template-columns:1fr} }
   .pane{background:var(--pane-bg);color:var(--pane-tx);padding:clamp(20px,2.4vw,34px);min-width:0;
         transition:background .25s ease,color .25s ease}
-  .pane__hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;
-    padding-bottom:14px;margin-bottom:22px;border-bottom:1px solid currentColor;border-color:color-mix(in srgb,currentColor 16%,transparent)}
-  .pane__slot{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.42}
-  .pane__name{font-family:var(--ui);font-size:1.2rem;font-weight:600;letter-spacing:-.01em;margin:0}
-  .pane__stack{font-family:var(--mono);font-size:11.5px;opacity:.5}
-  .pane__why{font-family:var(--ui);font-size:.9375rem;line-height:1.5;opacity:.66;margin:-8px 0 24px}
+  /* the picker IS the pane's title — the control sits on the thing it controls, so there is
+     nothing to map in your head between a bar and a column. It rides on the pane, so it has to
+     read on both grounds: everything here is drawn from currentColor. */
+  .pane__pick{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .pane__slot{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.42;flex:none}
+  .pane__pick select{flex:1;min-width:0;font-family:var(--ui);font-size:1.0625rem;font-weight:600;
+    letter-spacing:-.01em;color:inherit;padding:9px 34px 9px 12px;border-radius:9px;
+    background-color:color-mix(in srgb,currentColor 7%,transparent);
+    border:1px solid color-mix(in srgb,currentColor 20%,transparent);
+    background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+    background-position:calc(100% - 17px) 55%,calc(100% - 12px) 55%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+  .pane__pick select:hover{background-color:color-mix(in srgb,currentColor 12%,transparent)}
+  .pane__pick select:focus{outline:2px solid var(--hot);outline-offset:1px}
+  .pane__stack{font-family:var(--mono);font-size:11.5px;opacity:.5;margin:0 0 4px 0;padding-left:2px}
+  .pane__why{font-family:var(--ui);font-size:.9375rem;line-height:1.5;opacity:.66;margin:14px 0 0;
+    padding-top:14px;border-top:1px solid color-mix(in srgb,currentColor 16%,transparent)}
+  .pane__why + .rk{margin-top:24px}
 
   /* the ranks — sizes driven by the slider */
   .rk{margin:0}
@@ -120,11 +132,7 @@
 
 <div class="bar">
   <div class="wrap bar__in">
-    <span class="ctl__lab">Compare</span>
-    <select id="selA" aria-label="Left typeface"></select>
-    <span class="ctl__lab">with</span>
-    <select id="selB" aria-label="Right typeface"></select>
-    <span class="ctl__lab">on</span>
+    <span class="ctl__lab">Show both on</span>
     <div class="seg" id="ground" role="group" aria-label="Background">
       <button type="button" data-g="dark" class="on">Dark</button>
       <button type="button" data-g="light">Light</button>
@@ -138,8 +146,22 @@
 
 <div class="wrap">
   <div class="cmp">
-    <section class="pane" id="paneA"></section>
-    <section class="pane" id="paneB"></section>
+    <section class="pane">
+      <div class="pane__pick">
+        <span class="pane__slot">Left</span>
+        <select id="selA" aria-label="Left typeface"></select>
+      </div>
+      <p class="pane__stack" id="stackA"></p>
+      <div id="paneA"></div>
+    </section>
+    <section class="pane">
+      <div class="pane__pick">
+        <span class="pane__slot">Right</span>
+        <select id="selB" aria-label="Right typeface"></select>
+      </div>
+      <p class="pane__stack" id="stackB"></p>
+      <div id="paneB"></div>
+    </section>
   </div>
 
   <section class="ramp">
@@ -189,13 +211,9 @@ function fillSelect(sel, val){
     `<option value="${o.k}"${o.k===val?' selected':''}>${o.n} · ${o.t}</option>`).join('');
 }
 
-function renderPane(el, o, slot){
+function renderPane(el, o, stackEl){
+  stackEl.textContent = o.s;
   el.innerHTML = `
-    <div class="pane__hd">
-      <span class="pane__slot">${slot}</span>
-      <h2 class="pane__name">${o.n}</h2>
-      <span class="pane__stack">${o.s}</span>
-    </div>
     <p class="pane__why">${o.w}</p>
     <p class="rk rk--display" contenteditable="true" spellcheck="false">We buy classic cars!</p>
     <p class="rk rk--h2"      contenteditable="true" spellcheck="false">Featured classics</p>
@@ -228,8 +246,8 @@ function renderRamp(a, b){
 
 function sync(){
   const a = byKey($('#selA').value), b = byKey($('#selB').value);
-  renderPane($('#paneA'), a, 'Left');
-  renderPane($('#paneB'), b, 'Right');
+  renderPane($('#paneA'), a, $('#stackA'));
+  renderPane($('#paneB'), b, $('#stackB'));
   renderRamp(a, b);
   const p = new URLSearchParams({ a:a.k, b:b.k, g:document.documentElement.dataset.ground, s:$('#size').value });
   try { history.replaceState(null,'','?'+p) } catch(e){}
