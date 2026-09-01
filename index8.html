@@ -1230,9 +1230,12 @@
     :root { --section-py: clamp(48px, 5vw, 72px); }
     .section--compact { padding-block: clamp(34px, 3.2vw, 46px); }   /* testimonials: 54 -> 46 */
 
-    /* 1 — hero. 72svh/520 -> 58svh/460: 648px -> 522px at a 900px viewport, a fifth shorter.
-       It also lets the search band show at the fold, which is what invites the scroll. */
-    .hero__frame { height: 58svh; min-height: 460px; }
+    /* 1 — hero height RETURNED to the index7 value, deliberately against the client's own
+       item 1. That band is the only place the film plays, and a fifth off its height is a fifth
+       off the one moving thing on the page. The tightening below it does the work instead: the
+       search block now sits at the fold without the hero having to give up room.
+       Reinstate the cut by restoring: height 58svh; min-height 460px. */
+    /* .hero__frame — left at the index7 72svh / 520px */
 
     /* 2 — hero -> intro -> search -> Featured heading -> cards, closed up in sequence */
     .searchbar { padding-block: clamp(18px, 2vw, 28px); }            /* 44 -> 28 */
@@ -1971,16 +1974,20 @@
      leaving the picture and the two CTAs. Reversible on hover and on scrolling back to the top,
      so someone returning to the hero is never met with an unlabelled video. Never runs under
      reduced motion. */
+  /* 7000ms, not "a few". The client gave no number, so this one is measured: the hero carries 23
+     words, which is 6.9s of ordinary reading and 5.5s of skimming, and the entrance does not
+     settle until ~1.4s. At the 4200ms first tried, the reader got 2.8s and was cut off mid
+     sentence. 7000 leaves 5.6s of settled reading before the fade begins. */
   (function () {
     const hero = document.querySelector('.hero');
     if (!hero) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let timer = setTimeout(() => hero.classList.add('is-receded'), 4200);
+    let timer = setTimeout(() => hero.classList.add('is-receded'), 7000);
     /* scrolling away recedes it immediately; coming back to the top restores it */
     const onScroll = () => {
       if (window.scrollY > 40) { clearTimeout(timer); hero.classList.add('is-receded'); }
       else { clearTimeout(timer); hero.classList.remove('is-receded');
-             timer = setTimeout(() => hero.classList.add('is-receded'), 4200); }
+             timer = setTimeout(() => hero.classList.add('is-receded'), 7000); }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
   })();
