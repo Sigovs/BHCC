@@ -1192,6 +1192,21 @@
   .hero__title, .hero__sub {
     transition: opacity 1100ms var(--ease), transform 1100ms var(--ease);
   }
+  /* the CTAs settle downward as the words go. Without this the frame is left 438px empty above
+     the buttons and 158px below — top-heavy, and it reads as something failed to load rather
+     than as a composition. Moving them to the section's own 84px bottom margin re-anchors the
+     film: the picture fills the frame and the controls sit at its base, which also points the
+     eye at the search block below. 8vh tracks the hero rather than a fixed number, so it holds
+     at every viewport height. Same 1100ms as the fade — one movement, not two. */
+  .hero__ctas { transition: transform 1100ms var(--ease); }
+  /* DESKTOP ONLY. On mobile the hero CTAs are already pushed to the bottom by margin-top:auto
+     with 26px of clearance, so settling them further sent them 42px out of the frame and into
+     the section below — measured, not guessed. Below 761px the text still fades; the buttons
+     simply stay where they are, which is already the bottom of the frame. */
+  @media (min-width: 761px) {
+    .hero.is-receded .hero__ctas { transform: translateY(clamp(36px, 8vh, 84px)); }
+    .hero:hover .hero__ctas, .hero:focus-within .hero__ctas { transform: none; }
+  }
   /* !important is load-bearing here and is the correct tool, not a shortcut. The hero entrance
      animation runs ON .hero__sub itself with fill-mode: forwards, so it keeps asserting opacity 1
      for the life of the page — and an animation outranks every normal declaration in the cascade,
@@ -1204,8 +1219,9 @@
   .hero:hover .hero__title, .hero:hover .hero__sub,
   .hero:focus-within .hero__title, .hero:focus-within .hero__sub { opacity: 1 !important; transform: none; }
   @media (prefers-reduced-motion: reduce) {
-    .hero__title, .hero__sub { transition: none; }
+    .hero__title, .hero__sub, .hero__ctas { transition: none; }
     .hero.is-receded .hero__title, .hero.is-receded .hero__sub { opacity: 1 !important; transform: none; }
+    .hero.is-receded .hero__ctas { transform: none; }
   }
 
   /* ============================================================
