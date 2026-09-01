@@ -976,6 +976,10 @@
     .hero__media img { object-position: 50% 50%; }
     .hero__inner { justify-content: flex-start; padding-bottom: clamp(26px, 6vw, 40px); }
     .hero__title { font-size: clamp(2.8rem, 13vw, 3.5rem); }   /* larger — wraps to two lines like the comp */
+    .hero__title .by { text-align: left; margin-right: 0; }   /* mobile: signature aligns to the left column, not flush-right */
+    .hero__sub { text-align: left; }   /* keep the whole hero on one left edge */
+    .hero__title { display: block; }   /* block, so .by aligns to the container edge not the title's word-width box */
+    .hero__inner { text-align: left; align-items: flex-start; }
     .hero__ctas { margin-top: auto; width: 100%; flex-direction: column; align-items: stretch; gap: var(--sp-15); }
     .hero__ctas .btn { width: 100%; justify-content: center; }
     .cards { grid-template-columns: 1fr; gap: var(--sp-5); }
