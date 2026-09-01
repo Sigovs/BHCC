@@ -1177,6 +1177,89 @@
   @media (max-width: 560px) {
     .news__list { grid-template-columns: 1fr; }
   }
+
+  /* ============================================================
+     INDEX8 — HERO TITLE RECEDES (client, Sep 1)
+     ------------------------------------------------------------
+     "the hero video title and subtitle should fade out after a few seconds, leaving only the
+     video and the CTA buttons."
+
+     Done as a class on the section rather than a one-way animation, for three reasons:
+     it can come back, it never strands a late arrival, and it has an honest reduced-motion path.
+     The h1 stays in the DOM throughout — nothing is removed from the document, so the page still
+     announces what it is to a search engine and to a screen reader.
+     ============================================================ */
+  .hero__title, .hero__sub {
+    transition: opacity 1100ms var(--ease), transform 1100ms var(--ease);
+  }
+  /* !important is load-bearing here and is the correct tool, not a shortcut. The hero entrance
+     animation runs ON .hero__sub itself with fill-mode: forwards, so it keeps asserting opacity 1
+     for the life of the page — and an animation outranks every normal declaration in the cascade,
+     whatever its specificity. Nothing but !important can take the property back. (.hero__title
+     needs it only for symmetry: its animation sits on the inner spans, so the h1 was already
+     free — but pinning both the same way stops the next edit from reintroducing the asymmetry.) */
+  .hero.is-receded .hero__title,
+  .hero.is-receded .hero__sub { opacity: 0 !important; transform: translateY(-10px); pointer-events: none; }
+  /* bringing the pointer back to the hero returns it — the words are never unreachable */
+  .hero:hover .hero__title, .hero:hover .hero__sub,
+  .hero:focus-within .hero__title, .hero:focus-within .hero__sub { opacity: 1 !important; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__title, .hero__sub { transition: none; }
+    .hero.is-receded .hero__title, .hero.is-receded .hero__sub { opacity: 1 !important; transform: none; }
+  }
+
+  /* ============================================================
+     INDEX8 — TIGHTER VERTICAL RHYTHM (client, Sep 1)
+     ------------------------------------------------------------
+     Everything here is scoped to min-width 761px, so the mobile layout below that breakpoint is
+     byte-for-byte the index7 layout and needs no re-checking.
+
+     The scale reference the client named is the Featured Classics card: its image is 263px tall
+     at 1440. Section padding was 128px a side — 49% of a card image, which is what reads as loose
+     when the whole page is seen at once. These values put it at roughly 27%, so the air between
+     sections is about a quarter of a card rather than half of one.
+
+     Nothing is restructured, nothing is re-typeset, no crop is re-framed. Only padding, the hero
+     band height and one section proportion move.
+     ============================================================ */
+  @media (min-width: 761px) {
+
+    /* 4 + 5 — the space BETWEEN sections and inside text sections. One token drives founder,
+       buyers, news and the Featured bottom, so the rhythm stays consistent rather than each
+       section getting its own hand-picked number. 128 -> 72 at 1440. */
+    :root { --section-py: clamp(48px, 5vw, 72px); }
+    .section--compact { padding-block: clamp(34px, 3.2vw, 46px); }   /* testimonials: 54 -> 46 */
+
+    /* 1 — hero. 72svh/520 -> 58svh/460: 648px -> 522px at a 900px viewport, a fifth shorter.
+       It also lets the search band show at the fold, which is what invites the scroll. */
+    .hero__frame { height: 58svh; min-height: 460px; }
+
+    /* 2 — hero -> intro -> search -> Featured heading -> cards, closed up in sequence */
+    .searchbar { padding-block: clamp(18px, 2vw, 28px); }            /* 44 -> 28 */
+    .searchbar__intro { margin-bottom: clamp(10px, 1.1vw, 15px); }   /* was 14 -> 20 */
+    .section--featured { padding-top: clamp(20px, 2.2vw, 32px); }    /* 54 -> 32 */
+    .section--featured .lede { margin-bottom: clamp(14px, 1.6vw, 22px); }  /* 34 -> 22 */
+
+    /* 3 — above and below the cards and the CTA pair */
+    .center-cta { margin-top: clamp(22px, 2.4vw, 34px); }            /* 60 -> 34 */
+
+    /* the one image band that moves. The red-car breaker is a photograph with a caption over it,
+       so a shallower band costs nothing but sky. The We Buy band is deliberately NOT touched:
+       its two frames are drawn at exactly 2:1 with hand-authored gradients positioned for that
+       full height, and re-proportioning the section would cut into that work. */
+    .breaker--day { aspect-ratio: 2.5 / 1; }                         /* 713 -> 570 */
+
+    .footer { padding-block: clamp(34px, 3.4vw, 46px) 28px; }        /* 60 -> 46 */
+
+    /* 7 — the centred pagination comes off both carousels. DESKTOP ONLY, deliberately: the
+       complaint was that they look odd floating under a wide row, and up here the prev/next
+       arrows already carry the job. On mobile they stay — the buyers strip runs seven single-frame
+       pages there, so the markers are the only thing telling you where you are, and the arrows
+       were moved into a row WITH them last round, which would collapse without them.
+       They remain in the DOM and keep working for keyboard and screen-reader users. */
+    .buyers__dots, .quote-dots { display: none; }
+  }
+
 </style>
 </head>
 <body>
@@ -1882,6 +1965,24 @@
       es.forEach(e => { if (e.intersectionRatio >= 0.45) { lit(true); io.disconnect(); } });
     }, { threshold: [0, 0.45, 1] });
     io.observe(sell);
+  })();
+
+  /* HERO — the title and subtitle recede once the video has had a moment to establish itself,
+     leaving the picture and the two CTAs. Reversible on hover and on scrolling back to the top,
+     so someone returning to the hero is never met with an unlabelled video. Never runs under
+     reduced motion. */
+  (function () {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let timer = setTimeout(() => hero.classList.add('is-receded'), 4200);
+    /* scrolling away recedes it immediately; coming back to the top restores it */
+    const onScroll = () => {
+      if (window.scrollY > 40) { clearTimeout(timer); hero.classList.add('is-receded'); }
+      else { clearTimeout(timer); hero.classList.remove('is-receded');
+             timer = setTimeout(() => hero.classList.add('is-receded'), 4200); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
   })();
 
   // gentle parallax on the full-bleed breaker dividers (softer than the sell band)
