@@ -1242,6 +1242,32 @@
   }
 
   /* ============================================================
+     INDEX8 — HERO STILL HANDS OVER TO THE FILM WITHOUT A CUT
+     ------------------------------------------------------------
+     Three things had to line up before the swap stopped being visible. The picture is handled in
+     the markup (the still is now the film's own frame at 24s). The other two are here:
+
+     1. The crop. The still sat at object-position 50% 66% and the video at 50% 50%, so even the
+        same photograph would have jumped. Desktop-only — mobile has no video and keeps its own
+        framing, which the 50% 50% rule at the mobile breakpoint already sets.
+     2. The zoom. heroDrift runs the still from scale(1.18) to scale(1.04); by the time the video
+        can play it is around 1.16 while the video is at 1.0. Rather than kill the drift — it is
+        what stops a static hero looking dead during the wait — the film dissolves in over 700ms,
+        which covers the 16% and reads as the shot settling.
+
+     Gated on .js so that with scripting off the video is simply never opacity-0 and hidden.
+     ============================================================ */
+  @media (min-width: 761px) {
+    .hero__media img { object-position: 50% 50%; }
+    .js .hero__bgvideo { opacity: 0; transition: opacity 700ms var(--ease); }
+    .js .hero__bgvideo.is-live { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* the video is display:none here anyway; belt and braces so nothing can strand it invisible */
+    .js .hero__bgvideo { opacity: 1; transition: none; }
+  }
+
+  /* ============================================================
      INDEX8 — TIGHTER VERTICAL RHYTHM (client, Sep 1)
      ------------------------------------------------------------
      Everything here is scoped to min-width 761px, so the mobile layout below that breakpoint is
@@ -1468,10 +1494,18 @@
     <div class="hero__media">
       <picture>
         <source media="(max-width: 760px)" srcset="assets/images/hero/hero-mobile.png">
+        <!-- Desktop still is the film's OWN opening frame (bhcc-film.mp4 @ 24s, where the script
+             starts playback), not a different photograph. It used to be hero-drive.jpg: a red
+             300SL on an overcast canyon road, while the video opens on a black 190SL on the 6th
+             Street bridge at golden hour. Different car, colour, location and time of day, so the
+             handover read as the page swapping its mind — on a cold cache over 4G that still sat
+             there for 3.5s before the cut. Mobile keeps hero-mobile.png; the img below stays as
+             the final fallback. -->
+        <source media="(min-width: 761px)" srcset="assets/images/hero-film-frame.jpg">
         <img src="assets/images/hero-drive.jpg?v=1" alt="A red Mercedes-Benz 300SL roadster on a coastal canyon road at dusk" fetchpriority="high" width="2400" height="1716">
       </picture>
       <!-- autoplay background video replaces the still (client p5 / brief §02). Real ambient footage from BHCC drops in here; bhcc-film.mp4 is a placeholder. -->
-      <video class="hero__bgvideo" autoplay muted loop playsinline preload="auto" poster="assets/images/hero-drive.jpg?v=1" aria-hidden="true">
+      <video class="hero__bgvideo" autoplay muted loop playsinline preload="auto" poster="assets/images/hero-film-frame.jpg" aria-hidden="true">
         <source src="assets/video/bhcc-film.mp4" type="video/mp4">
       </video>
     </div>
@@ -1498,6 +1532,7 @@
   var START = 24, END = 118;
   v.addEventListener('loadedmetadata', function () { try { v.currentTime = START; } catch (e) {} });
   v.addEventListener('timeupdate', function () { if (v.currentTime > END) { try { v.currentTime = START; } catch (e) {} } });
+  v.addEventListener('playing', function () { v.classList.add('is-live'); }, { once: true });
   var p = v.play && v.play();
   if (p && p.catch) p.catch(function () {});
 })();
