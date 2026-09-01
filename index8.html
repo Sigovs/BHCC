@@ -1213,9 +1213,32 @@
      invisible text must not swallow clicks meant for the video or the buttons. */
   .hero.is-receded .hero__title,
   .hero.is-receded .hero__sub { opacity: 0 !important; pointer-events: none; }
+
+  /* The CTAs settle downward as the words go (Alex, over the client's "do not move the buttons" —
+     his call, recorded here so the next reader knows it is a decision and not a regression).
+     Without it the frame is left 438px empty above the buttons and 158px below: top-heavy, and it
+     reads as something failed to load rather than as a composition. Settling them re-anchors the
+     film — picture fills the frame, controls sit at its base, and the eye is pointed at the search
+     block below. 8vh tracks the hero rather than a fixed number, so it holds at any viewport
+     height. 800ms matches the fade exactly: one moment, not two.
+
+     --ease here, --ease-in on the text, deliberately. They are opposite gestures happening at the
+     same time: the words LEAVE, so they accelerate away; the buttons ARRIVE at a new resting
+     place, so they decelerate into it. Motion invariant I3 — same rule, both directions.
+
+     DESKTOP ONLY. Below 761px the CTAs are already pushed to the bottom by margin-top:auto with
+     26px of clearance, so settling them further sent them 42px out of the frame and into the
+     section underneath — measured at 390x844, not assumed. There the text still fades and the
+     buttons hold, which is already the bottom of the frame. */
+  @media (min-width: 761px) {
+    .hero__ctas { transition: transform 800ms var(--ease); }
+    .hero.is-receded .hero__ctas { transform: translateY(clamp(36px, 8vh, 84px)); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .hero__title, .hero__sub { transition: none; }
+    .hero__title, .hero__sub, .hero__ctas { transition: none; }
     .hero.is-receded .hero__title, .hero.is-receded .hero__sub { opacity: 1 !important; }
+    .hero.is-receded .hero__ctas { transform: none; }
   }
 
   /* ============================================================
