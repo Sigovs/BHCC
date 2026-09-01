@@ -1246,11 +1246,12 @@
     /* 3 — above and below the cards and the CTA pair */
     .center-cta { margin-top: clamp(22px, 2.4vw, 34px); }            /* 60 -> 34 */
 
-    /* the one image band that moves. The red-car breaker is a photograph with a caption over it,
-       so a shallower band costs nothing but sky. The We Buy band is deliberately NOT touched:
-       its two frames are drawn at exactly 2:1 with hand-authored gradients positioned for that
-       full height, and re-proportioning the section would cut into that work. */
-    .breaker--day { aspect-ratio: 2.5 / 1; }                         /* 713 -> 570 */
+    /* No image band is re-proportioned. The breaker was briefly cut to 2.5/1 and put back: item 6
+       says keep image crops unchanged, and shortening a full-bleed band crops it — there is no
+       way to take the height without taking the picture. The We Buy band was never touched for
+       the same reason plus one more: its two frames are drawn at exactly 2:1 with gradients
+       authored by hand for that height.
+       To take 143px off the page here again: .breaker--day { aspect-ratio: 2.5 / 1; } */
 
     .footer { padding-block: clamp(34px, 3.4vw, 46px) 28px; }        /* 60 -> 46 */
 
