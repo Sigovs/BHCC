@@ -1179,49 +1179,43 @@
   }
 
   /* ============================================================
-     INDEX8 — HERO TITLE RECEDES (client, Sep 1)
+     INDEX8 — HERO TEXT FADES (client, Sep 1 — revised spec)
      ------------------------------------------------------------
-     "the hero video title and subtitle should fade out after a few seconds, leaving only the
-     video and the CTA buttons."
+     Exactly as specified: at ~3.5s the h1 ("Beverly Hills Car Club" + "by Alex Manos") and the
+     subtitle fade out over ~800ms, leaving the video and the two CTAs. Opacity only — no slide,
+     no scale, no blur. The buttons do not move, the header is untouched, the video is neither
+     stopped nor dimmed.
 
-     Done as a class on the section rather than a one-way animation, for three reasons:
-     it can come back, it never strands a late arrival, and it has an honest reduced-motion path.
-     The h1 stays in the DOM throughout — nothing is removed from the document, so the page still
-     announces what it is to a search engine and to a screen reader.
+     A class on the section rather than a one-way animation: it gives an honest reduced-motion
+     path and stays reversible. The h1 stays in the DOM throughout, so the page still announces
+     what it is to a search engine and to a screen reader.
      ============================================================ */
-  .hero__title, .hero__sub {
-    transition: opacity 1100ms var(--ease), transform 1100ms var(--ease);
-  }
-  /* the CTAs settle downward as the words go. Without this the frame is left 438px empty above
-     the buttons and 158px below — top-heavy, and it reads as something failed to load rather
-     than as a composition. Moving them to the section's own 84px bottom margin re-anchors the
-     film: the picture fills the frame and the controls sit at its base, which also points the
-     eye at the search block below. 8vh tracks the hero rather than a fixed number, so it holds
-     at every viewport height. Same 1100ms as the fade — one movement, not two. */
-  .hero__ctas { transition: transform 1100ms var(--ease); }
-  /* DESKTOP ONLY. On mobile the hero CTAs are already pushed to the bottom by margin-top:auto
-     with 26px of clearance, so settling them further sent them 42px out of the frame and into
-     the section below — measured, not guessed. Below 761px the text still fades; the buttons
-     simply stay where they are, which is already the bottom of the frame. */
-  @media (min-width: 761px) {
-    .hero.is-receded .hero__ctas { transform: translateY(clamp(36px, 8vh, 84px)); }
-    .hero:hover .hero__ctas, .hero:focus-within .hero__ctas { transform: none; }
-  }
-  /* !important is load-bearing here and is the correct tool, not a shortcut. The hero entrance
-     animation runs ON .hero__sub itself with fill-mode: forwards, so it keeps asserting opacity 1
-     for the life of the page — and an animation outranks every normal declaration in the cascade,
-     whatever its specificity. Nothing but !important can take the property back. (.hero__title
-     needs it only for symmetry: its animation sits on the inner spans, so the h1 was already
-     free — but pinning both the same way stops the next edit from reintroducing the asymmetry.) */
+  /* Page-local, deliberately NOT in assets/css/tokens.css: that file is linked as ?v=11 by every
+     page including index7, so changing it either serves stale from cache or forces a version bump
+     that edits index7.html. Scoping the token here keeps index7 untouched. */
+  :root { --ease-in: cubic-bezier(0.55, 0, 1, 0.45); }
+  /* --ease-in, not --ease. This is an exit, and the house --ease is the ENTRANCE curve
+     (easeOutQuint): on it the text was down to 4% opacity 450ms into an 800ms fade, so the
+     client's 800ms read as a ~400ms snap followed by an invisible tail. The exit curve holds
+     the words legible through the first half and accelerates them away — 800ms that is
+     actually 800ms. Motion invariant I3: entrances decelerate, exits accelerate. */
+  .hero__title, .hero__sub { transition: opacity 800ms var(--ease-in); }
+  /* The entrance animation sits ON .hero__sub itself with fill-mode: forwards, so it keeps
+     asserting opacity for the life of the page — and a filling animation suppresses the
+     transition on that property, which made the subtitle SNAP out while the h1 (whose animation
+     is on its inner spans, leaving the element free) faded correctly. Retiring the animation
+     once it has finished hands opacity back to the cascade and the transition works. */
+  .hero.is-settled .hero__sub { animation: none; opacity: 1; }
+  /* Placed after .is-settled so that at equal specificity this wins on source order.
+     !important is the belt to that braces: if .is-settled ever fails to land, the still-filling
+     animation would outrank every normal declaration whatever its specificity, and only
+     !important can take opacity back. pointer-events is not motion, it is correctness —
+     invisible text must not swallow clicks meant for the video or the buttons. */
   .hero.is-receded .hero__title,
-  .hero.is-receded .hero__sub { opacity: 0 !important; transform: translateY(-10px); pointer-events: none; }
-  /* bringing the pointer back to the hero returns it — the words are never unreachable */
-  .hero:hover .hero__title, .hero:hover .hero__sub,
-  .hero:focus-within .hero__title, .hero:focus-within .hero__sub { opacity: 1 !important; transform: none; }
+  .hero.is-receded .hero__sub { opacity: 0 !important; pointer-events: none; }
   @media (prefers-reduced-motion: reduce) {
-    .hero__title, .hero__sub, .hero__ctas { transition: none; }
-    .hero.is-receded .hero__title, .hero.is-receded .hero__sub { opacity: 1 !important; transform: none; }
-    .hero.is-receded .hero__ctas { transform: none; }
+    .hero__title, .hero__sub { transition: none; }
+    .hero.is-receded .hero__title, .hero.is-receded .hero__sub { opacity: 1 !important; }
   }
 
   /* ============================================================
@@ -1991,22 +1985,31 @@
      leaving the picture and the two CTAs. Reversible on hover and on scrolling back to the top,
      so someone returning to the hero is never met with an unlabelled video. Never runs under
      reduced motion. */
-  /* 7000ms, not "a few". The client gave no number, so this one is measured: the hero carries 23
-     words, which is 6.9s of ordinary reading and 5.5s of skimming, and the entrance does not
-     settle until ~1.4s. At the 4200ms first tried, the reader got 2.8s and was cut off mid
-     sentence. 7000 leaves 5.6s of settled reading before the fade begins. */
+  /* 3500ms and 800ms are the client's own numbers (Sep 1 spec), not a judgement call. */
   (function () {
     const hero = document.querySelector('.hero');
     if (!hero) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let timer = setTimeout(() => hero.classList.add('is-receded'), 7000);
-    /* scrolling away recedes it immediately; coming back to the top restores it */
-    const onScroll = () => {
-      if (window.scrollY > 40) { clearTimeout(timer); hero.classList.add('is-receded'); }
-      else { clearTimeout(timer); hero.classList.remove('is-receded');
-             timer = setTimeout(() => hero.classList.add('is-receded'), 7000); }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const sub = hero.querySelector('.hero__sub');
+    /* retire the entrance animation the moment it ends, so the fade below has a clean base.
+       The timeout is a fallback: last delay .52s + .85s duration = 1.37s. */
+    if (sub) {
+      const settle = () => hero.classList.add('is-settled');
+      sub.addEventListener('animationend', settle, { once: true });
+      setTimeout(settle, 1600);
+    }
+    const start = () => setTimeout(() => hero.classList.add('is-receded'), 3500);
+    /* If the page opens in a background tab the timer would burn down unwatched and the visitor
+       would arrive at a hero that never had a title. Start the clock the first time it is seen. */
+    if (document.hidden) {
+      document.addEventListener('visibilitychange', function once() {
+        if (document.hidden) return;
+        document.removeEventListener('visibilitychange', once);
+        start();
+      });
+    } else {
+      start();
+    }
   })();
 
   // gentle parallax on the full-bleed breaker dividers (softer than the sell band)
