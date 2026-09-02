@@ -1274,21 +1274,26 @@
   @media (min-width: 761px) {
     .breaker--day { aspect-ratio: 3.4 / 1; }
     /* The crop window is now 44% of the photo instead of 75%, so WHICH 44% is the whole design
-       decision. Anchored to the very top the window ends above the cars — all ceiling, no
-       collection. 30% keeps the marque flags (the thing that says they deal in every one of
-       these) and lands the row of red 911s across the lower half, which is also the calmer
-       surface the white stat text sits on. */
-    .breaker--day .breaker__bg img { object-position: 50% 30%; }
-    /* The scrim has to be re-cut for the new proportion, and this is not cosmetic — measured, the
-       flattened band FAILED all six text rows where the 2/1 band passed all six. The text sits at
-       roughly the same relative height in the band as before (62-90%), so the gradient's geometry
-       was not the problem: the PICTURE behind it changed. At 2/1 the copy lay over the dark
-       foreground; at 3.4/1 the same relative band is the lit concrete wall and the workshop bay,
-       whose raw luminance under the worst glyph is 0.46-0.53. Reaching the 3.0 and 4.5 floors from
-       there needs ~0.35 of wash at the top of the copy and ~0.72 at its baseline; these stops give
-       0.42 and 0.78. The top 30% is left clear so the marque flags still read. */
+       decision. 80% drops the roof and the marque flags entirely and fills the frame with the
+       collection: the base of the wall along the top edge, the row of red 911s, then cars all the
+       way down. That is the crop the client drew — his note was that the ceiling was taking up
+       too much room, and he is right that a warehouse roof is not what this band is selling. */
+    .breaker--day .breaker__bg img { object-position: 50% 80%; }
+    /* The scrim is re-cut with the crop, and it is not cosmetic. Flattening the band alone already
+       broke it: at 2/1 all six text rows passed, at 3.4/1 all six FAILED (worst pixel 2.89-4.36
+       against floors of 3.0/4.5), because the copy sits at the same relative height while the
+       PICTURE behind it changed. Raising the crop to 80% then put that copy on red bodywork and
+       chrome — raw luminance ~0.54 under the worst glyph, a far worse ground for white than the
+       concrete wall was.
+
+       MEASURED ACROSS THE PARALLAX, not at a single scroll position. .breaker__bg is 122% tall and
+       translates as the band crosses the viewport, so the picture under a fixed line of text
+       MOVES. At the earlier stops "Delivered worldwide" landed on exactly 3.00 against a 3.0 floor
+       while the band was entering, and every heading sat within 0.3 of failing. These carry the
+       worst case clear of the floor in all three states. Top 24% left clear so the picture opens
+       cleanly. */
     .breaker--day .breaker__overlay { background:
-      linear-gradient(180deg, rgba(8,7,5,0) 30%, rgba(8,7,5,.42) 62%, rgba(8,7,5,.78) 88%, rgba(8,7,5,.94) 100%); }
+      linear-gradient(180deg, rgba(8,7,5,0) 24%, rgba(8,7,5,.55) 60%, rgba(8,7,5,.82) 88%, rgba(8,7,5,.95) 100%); }
   }
 
   /* ============================================================
