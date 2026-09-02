@@ -1406,6 +1406,24 @@
 
     .footer { padding-block: clamp(24px, 2.2vw, 32px) 24px; }
 
+    /* SELL YOUR CLASSIC CAR — 2/1 -> 2.7/1, 720px -> 528px at 1440.
+       Measured first: the copy column (eyebrow through trust line, badge included) is 434px, and
+       it was sitting in a 720px band with 194px of air above and 162px below. 2.7 leaves 47 a side.
+
+       A RATIO WITH A FLOOR, not a hard ratio. .sell carries an h2, a subhead, a CTA, a phone
+       number, a trust line and the ratings badge, so its height has to yield to that copy. A bare
+       aspect-ratio re-creates the clipping already fixed once in the 761-900 band (anti-pattern
+       U19): below ~1400px the ratio alone gives less height than the copy needs, and the trust
+       line goes under the fold of its own section. min-height holds the floor and the ratio only
+       applies above it.
+
+       On the crop: sell-dim/sell-lit are 1920x960 and were drawn at exactly 2:1 with the scrim
+       BAKED IN by hand, so there is no CSS scrim here to re-tune. Cover now shows 74% of the
+       frame, trimmed 13% top and 13% bottom. That is survivable specifically because the baked
+       darkening is a vignette weighted to the LEFT EDGE and runs full height there — a centred
+       vertical trim does not uncover the copy side. Verified by measurement below, not assumed. */
+    .sell { aspect-ratio: 2.7 / 1; min-height: 528px; }
+
     /* THE 84px HE ACTUALLY DREW A LINE THROUGH. Between the price row and the CTA pair the box
        gap is 24px, but the INK gap measured 84px — and the difference is not padding. It is
        .card__view ("View Details"), which sits at opacity:0 on pointer devices and still reserves
