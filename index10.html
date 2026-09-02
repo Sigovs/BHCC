@@ -1,0 +1,2266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beverly Hills Car Club by Alex Manos — The World's Finest Classic Automobiles</title>
+<meta name="description" content="The world's finest European and American classic automobiles, bought and sold by Alex Manos. Los Angeles. Inspected, documented and photographed in our showroom.">
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Light editorial homepage, built to refference/ref7nice.jpg:
+     warm off-white base, Gloock display serif, gold accents, two dark slabs
+     (Sell + Footer). All type & colour from assets/css/tokens.css. -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:wght@400;500;600&family=Dancing+Script:wght@500;600;700&family=Gloock&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Inter+Tight:wght@300..600&display=swap" rel="stylesheet">
+
+<link rel="icon" href="assets/images/favicon-32.png" type="image/png">
+<link rel="stylesheet" href="assets/css/tokens.css?v=11">
+
+<style>
+  /* index4: lighter editorial display serif per client feedback (Gloock read too heavy on the hero + section headings) */
+  :root {
+    --font-display: 'Cormorant Garamond', 'Gloock', 'Times New Roman', serif; --ls-display: 0; --ls-h2: 0;   /* Cormorant sits well at natural tracking — drop the Gloock-era letter-spacing */
+    --accent-red: #D31720; --accent-red-hover: #E23A43;   /* v4: brand red promoted to a narrow UI accent — the ONE contrasting CTA border (client p4) */
+  }
+
+  /* ============================================================
+     RESET
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body, h1, h2, h3, h4, p, figure, ul, blockquote { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img, picture, video, svg { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* clip (not hidden): stops off-canvas x-overflow WITHOUT making <body> a
+       scroll container — keeps the footer's position:sticky reveal working. */
+    overflow-x: clip;
+  }
+
+  /* ============================================================
+     LAYOUT PRIMITIVES
+     ============================================================ */
+  .shell { max-width: 1320px; margin-inline: auto; padding-inline: var(--container-pad); }
+  .shell--wide { max-width: 1480px; }
+  .section { padding-block: var(--section-py); }
+  .section--compact { padding-block: clamp(46px, 6vh, 78px); }   /* testimonials — less height per feedback */
+  .section--tint { background: var(--bg-tint); }
+
+  /* Footer sticky-reveal: everything above the footer rides in .page, an
+     opaque layer (z-index 1) that scrolls up and over the footer (z-index 0),
+     which is pinned to the viewport bottom. Pure layout, no JS. */
+  .page { position: relative; z-index: 1; background: var(--bg); }
+
+  .eyebrow {
+    font-size: var(--fs-eyebrow); font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--accent);
+  }
+  .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+  /* section heading cluster (centred) */
+  .lede { text-align: center; max-width: 46ch; margin-inline: auto; margin-bottom: clamp(40px, 5vw, 64px); }
+  .lede .eyebrow { display: block; margin-bottom: var(--sp-2); }
+  .lede h2 {
+    font-family: var(--font-display); font-weight: var(--fw-heading);
+    font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: 0;   /* Cormorant — natural tracking */
+  }
+  .lede p { margin-top: var(--sp-2); color: var(--ink-soft); font-size: var(--fs-body-lg); line-height: 1.6; }
+
+  /* text link with arrow */
+  .arrow-link {
+    display: inline-flex; align-items: center; gap: var(--sp-1);
+    font-size: var(--fs-body-sm); font-weight: var(--fw-medium); letter-spacing: .01em;
+    color: var(--ink); transition: color var(--dur) var(--ease);
+  }
+  .arrow-link .a { transition: transform var(--dur) var(--ease); }
+  /* unified chevron glyph for all "read more / view details / browse all" links */
+  .chev { width: .66em; height: .66em; display: inline-block; vertical-align: -0.05em; }
+  .arrow-link:hover { color: var(--accent); }
+  .arrow-link:hover .a { transform: translateX(4px); }
+  .arrow-link--gold { color: var(--accent); }
+  .arrow-link--dark { color: var(--accent-dark); }
+  .arrow-link--dark:hover { color: #dcc384; }
+
+  /* client Aug21: the Featured CTA is a PAIR — "View All Inventory" + "New Inventory Alerts"
+     side by side under the cars, laid out like the hero pair (equal minimums, 8px
+     radius, 1.5px border) so the two CTA clusters on the page read as the same component.
+     Colours stay the section's own: primary is the dark fill on cream, alerts is the red
+     outline — the hero's cream/red inversions belong to a dark surface, not to this one. */
+  .center-cta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: var(--sp-2); margin-top: clamp(40px, 5vw, 60px); }
+  .center-cta .btn { min-width: 240px; border-radius: 8px; border-width: 1.5px; }   /* 240, not the hero's 220: the longer label sets its own width at 226, and a pair with one button 6px wider reads as an accident */
+
+  /* ============================================================
+     BUTTONS — pill (art-director exception for interactive CTAs)
+     System radius stays 0 for cards/structure; controls are pill.
+     ============================================================ */
+  .btn {
+    --r-cta: 999px;
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-15);
+    height: 52px; padding: 0 var(--sp-4); border-radius: var(--r-cta);
+    font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body);
+    letter-spacing: var(--ls-button); white-space: nowrap; border: 1px solid transparent;
+    transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+                border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn--sm { height: 44px; padding: 0 var(--sp-3); font-size: var(--fs-body-sm); }
+  /* TWO TYPES — main (primary) + secondary. Neutral palette (champagne gold retired). */
+  .btn--primary { background: var(--ink); color: #fff; border-color: var(--accent); border-radius: 6px; }  /* less round than the pill secondary */
+  .btn--primary:hover { background: #000; border-color: var(--accent-hover); }
+  /* on dark surfaces (sell band) primary inverts to a cream fill (ink text) */
+  .btn--primary.on-dark { background: var(--accent-dark); color: var(--ink); border-color: var(--accent-dark); }
+  .btn--primary.on-dark:hover { background: var(--accent-dark-hover); }
+  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--accent); }
+  .btn--secondary:hover { background: var(--accent-wash); border-color: var(--accent); }
+  /* on dark surfaces (sell band): secondary inverts to cream text */
+  .btn--secondary.on-dark { color: var(--cream); border-color: var(--accent-dark); }
+  .btn--secondary.on-dark:hover { background: var(--accent-wash-dark); }
+
+  /* ============================================================
+     SCROLL REVEAL — images rise from blur, text slides in from the side.
+     Applied only under .js (progressive enhancement: no JS = all visible).
+     ============================================================ */
+  .js [data-reveal] {
+    transition: opacity .95s var(--ease), transform .95s var(--ease), filter .95s var(--ease);
+    will-change: opacity, transform, filter;
+  }
+  .js [data-reveal="img"]    { opacity: 0; transform: translateY(46px); filter: blur(12px); }
+  .js [data-reveal="text"]   { opacity: 0; transform: translateX(-46px); }
+  .js [data-reveal="text-r"] { opacity: 0; transform: translateX(46px); }
+  .js [data-reveal="up"]     { opacity: 0; transform: translateY(44px); }
+  .js [data-reveal].is-in { opacity: 1; transform: none; filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .js [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
+  }
+
+  /* ============================================================
+     HEADER — light, sticky
+     ============================================================ */
+  :root { --hdr-h: clamp(72px, 6vw, 100px); --hdr-h-scrolled: clamp(60px, 4.6vw, 72px); }
+
+  .hdr { position: sticky; top: 0; z-index: 60; background: transparent; }
+
+  /* Over the hero: NO bar — just a top-down scrim so the white nav and the
+     logo pop off whatever the hero photo is doing up there (sky, chrome,
+     blown highlights). Fades out once the real bar takes over. */
+  .hdr::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 220%;
+    pointer-events: none; z-index: 0;
+    background: linear-gradient(180deg,
+      rgba(10,9,7,.66) 0%, rgba(10,9,7,.42) 34%, rgba(10,9,7,.16) 66%, rgba(10,9,7,0) 100%);
+    transition: opacity var(--dur) var(--ease);
+  }
+  /* On scroll the bar itself SLIDES DOWN into place — it arrives, it doesn't
+     just cross-fade. ::after is the bar; ::before (the scrim) leaves. */
+  .hdr::after {
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background: var(--bg);
+    /* soft shallow drop only — no hairline rule under the bar */
+    box-shadow: 0 6px 18px -8px rgba(26,26,24,.24);
+    transform: translateY(-101%);
+    transition: transform .42s var(--ease);
+  }
+  .hdr.is-scrolled::before { opacity: 0; }
+  .hdr.is-scrolled::after  { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .hdr::after { transition: none; } }
+  /* content rides above both pseudo-layers */
+  .hdr__in, .hdr__mobile { position: relative; z-index: 1; }
+  /* over the hero (transparent state) the header content goes light */
+  .hdr:not(.is-scrolled) .hdr__nav a,
+  .hdr:not(.is-scrolled) .hdr__phone,
+  .hdr:not(.is-scrolled) .hdr__phone-m { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.4); }
+  .hdr:not(.is-scrolled) .hdr__phone svg,
+  .hdr:not(.is-scrolled) .hdr__phone-m svg { color: #fff; }
+  .hdr:not(.is-scrolled) .hdr__burger span { background: #fff; }
+  .hdr__in {
+    /* 1fr | auto | 1fr keeps the nav optically centred in the bar no matter how
+       wide the mark or the phone number get. It also does the right thing on
+       mobile, where the visible children become burger | logo | phone. */
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--sp-3);
+    /* wider than the 1320 content shell — the bar spans the full container so
+       the mark and the nav sit closer to the screen edges than the copy does */
+    max-width: var(--container-max); margin-inline: auto; padding-inline: var(--container-pad);
+    height: var(--hdr-h);
+    transition: height var(--dur) var(--ease);
+  }
+  .hdr.is-scrolled .hdr__in { height: var(--hdr-h-scrolled); }
+  .brand { display: inline-flex; align-items: center; justify-self: start; }
+  /* The shield is the brand — it gets room to be a mark, not a favicon.
+     Shrinks with the bar on scroll so the sticky state stays compact. */
+  .brand__logo { height: clamp(52px, 5.6vw, 82px); width: auto; display: block; transition: height var(--dur) var(--ease); }
+  .hdr.is-scrolled .brand__logo { height: clamp(42px, 3.6vw, 54px); }
+  /* Two lockups, swapped by state — not two colours of one lockup:
+     over the hero the full shield + signature (329×123); once the bar slides in
+     and the header shrinks, the signature would be unreadable at that size, so
+     it drops to the shield alone (123×123 square). */
+  .brand__logo--bar { display: none; }
+  .hdr.is-scrolled .brand__logo--hero { display: none; }
+  .hdr.is-scrolled .brand__logo--bar { display: block; }
+  .hdr:not(.is-scrolled) .brand__logo--hero { filter: drop-shadow(0 2px 10px rgba(0,0,0,.45)); }
+  /* mobile brand — stacked shield crest + script signature (hidden on desktop) */
+  .brand__mobile { display: none; flex-direction: column; align-items: center; gap: 3px; }
+  .brand__shield { height: clamp(80px, 22vw, 100px); width: auto; display: block; transition: height var(--dur) var(--ease); }
+  .brand__script { font-family: "Dancing Script", cursive; font-weight: 600; line-height: 1; font-size: clamp(1rem, 4.6vw, 1.2rem); color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.5); transition: color var(--dur) var(--ease); }
+  .hdr.is-scrolled .brand__script { color: var(--ink); text-shadow: none; }
+  .hdr.is-scrolled .brand__shield { height: clamp(38px, 9vw, 46px); }
+  .hdr:not(.is-scrolled) .brand__shield { filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
+  .hdr__nav { justify-self: center; }
+  /* Pill hover: the item fills rather than getting underlined. Items sit close
+     together so the pills read as one control strip; the padding IS the gap. */
+  .hdr__nav ul { display: flex; align-items: center; gap: clamp(0px, .4vw, 6px); }
+  .hdr__nav a {
+    position: relative; font-size: .95rem; font-weight: var(--fw-medium); white-space: nowrap;
+    color: var(--ink-soft); padding: var(--sp-15) var(--sp-2); border-radius: 999px;
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  /* variant: clean nav — no visible carets, dropdowns reveal on hover */
+  .hdr__nav .nav-caret { display: none; }
+  .hdr__nav a:hover { color: var(--ink); background: rgba(26,26,24,.07); }
+  /* over the hero the bar is glass on a photograph, so the pill inverts */
+  .hdr:not(.is-scrolled) .hdr__nav a:hover { color: #fff; background: rgba(255,255,255,.18); }
+
+  /* main-nav dropdowns */
+  .nav-caret { display: inline-block; width: 6px; height: 6px; margin-left: var(--sp-05); vertical-align: middle;
+    border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-1px); opacity: .55; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+  .has-menu:hover .nav-caret, .has-menu:focus-within .nav-caret { transform: rotate(225deg) translateY(2px); opacity: .9; }
+  .hdr__nav li { position: relative; }
+  .hdr__nav .submenu li { position: static; }
+  .hdr__nav .has-menu::after { content: ""; position: absolute; left: -8px; right: -8px; top: 100%; height: 16px; }  /* hover bridge */
+  .hdr__nav .submenu {
+    position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%) translateY(6px);
+    min-width: 214px; padding: var(--sp-1); list-style: none;
+    background: var(--bg); border: 1px solid var(--rule); border-radius: 12px; box-shadow: var(--shadow-pop);
+    display: flex; flex-direction: column; gap: 1px;
+    opacity: 0; visibility: hidden; pointer-events: none; z-index: 70;
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .hdr__nav .has-menu:hover .submenu,
+  .hdr__nav .has-menu:focus-within .submenu { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+  .hdr__nav .submenu a { display: block; padding: var(--sp-1) var(--sp-2); border-radius: 8px; font-size: .9rem; font-weight: var(--fw-medium); color: var(--ink-soft); white-space: nowrap; background: none; }
+  .hdr__nav .submenu a:hover { background: var(--bg-tint); color: var(--ink); }
+  /* the panel is always light — keep its links dark even when the bar is transparent over the hero */
+  .hdr:not(.is-scrolled) .hdr__nav .submenu a { color: var(--ink-soft); text-shadow: none; }
+  .hdr:not(.is-scrolled) .hdr__nav .submenu a:hover { color: var(--ink); background: var(--bg-tint); }
+
+  /* mobile dropdown accordions */
+  .mnav { display: flex; flex-direction: column; }
+  .mdrop { border-bottom: 1px solid var(--rule); }
+  .mdrop summary { list-style: none; cursor: pointer; padding: var(--sp-2) var(--sp-05); font-size: 1.05rem; font-family: var(--font-sans); font-weight: var(--fw-medium); color: var(--ink); display: flex; align-items: center; justify-content: space-between; }
+  .mdrop summary::-webkit-details-marker { display: none; }
+  .mdrop summary::after { content: ""; width: 8px; height: 8px; border-right: 1.6px solid var(--accent); border-bottom: 1.6px solid var(--accent); transform: rotate(45deg); transition: transform var(--dur) var(--ease); }
+  .mdrop[open] summary::after { transform: rotate(225deg); }
+  .mdrop .msub { display: block; padding: var(--sp-15) var(--sp-05) var(--sp-15) var(--sp-2); font-size: .95rem; color: var(--ink-soft); }
+  .mdrop .msub:last-child { padding-bottom: var(--sp-2); }
+  .hdr__actions { display: flex; align-items: center; gap: var(--sp-1); justify-self: end; min-width: 0; }
+
+  /* ------------------------------------------------------------------
+     HEADER ACTIONS — circle grows into a pill on hover / focus.
+     The reveal animates grid-template-columns 0fr → 1fr rather than
+     max-width: 0fr collapses to the content's real width, so the open
+     state is never a guessed number and never clips a longer label.
+     ------------------------------------------------------------------ */
+  .hact {
+    display: inline-flex; align-items: center; flex-direction: row-reverse;
+    padding: var(--sp-05); border-radius: 999px;
+    border: 1px solid transparent; background: transparent;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .hact:hover, .hact:focus-within { background: rgba(26,26,24,.06); border-color: rgba(26,26,24,.10); }
+  .hact__btn {
+    flex: none; width: 40px; height: 40px; border-radius: 999px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(26,26,24,.16); color: var(--ink-soft); background: transparent;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .hact__btn svg { width: 17px; height: 17px; }
+  .hact:hover .hact__btn, .hact:focus-within .hact__btn { color: var(--ink); border-color: rgba(26,26,24,.28); }
+  /* minmax(0, …) is load-bearing: a bare 0fr track keeps an auto MINIMUM, so it
+     never shrinks past min-content and the first glyph of each label leaks out
+     of the closed circle. */
+  .hact__reveal { display: grid; grid-template-columns: minmax(0, 0fr); transition: grid-template-columns .36s var(--ease); }
+  /* the clipping wrapper must be padding-free: overflow:hidden clips to the
+     PADDING box, so padding on the clipped element itself leaves a sliver of
+     the first glyph showing out of the closed circle. Padding lives on the
+     label inside it. */
+  .hact__reveal > * { overflow: hidden; min-width: 0; }
+  .hact:hover .hact__reveal, .hact:focus-within .hact__reveal { grid-template-columns: minmax(0, 1fr); }
+  /* Email Alerts is a labelled CTA (brief §01: "email alerts … stay in header"), not a hover-reveal icon → always open */
+  .hact--alerts .hact__reveal { grid-template-columns: minmax(0, 1fr); }
+  .hact--alerts .hact__btn { border-color: transparent; }
+  /* client Aug20: same red approach as Sell Your Car — red border + red tint, hover goes solid red */
+  .hact--alerts { background: rgba(211,23,32,.12); border-color: var(--accent-red); }
+  .hdr:not(.is-scrolled) .hact--alerts { background: rgba(211,23,32,.26); border-color: var(--accent-red); }
+  .hact--alerts:hover, .hact--alerts:focus-within { background: var(--accent-red); border-color: var(--accent-red); }
+  .hact--alerts:hover .hact__label, .hact--alerts:focus-within .hact__label,
+  .hact--alerts:hover .hact__btn, .hact--alerts:focus-within .hact__btn { color: #fff; }
+  /* The two insets are not the same number because they are not the same job.
+     Leading: the gap from the icon disc to the first letter. Trailing: the gap
+     from the last letter to the pill's edge — and that one adds the pill's own
+     4px, so 6px here read as 10px total against 4px of inset on the icon side.
+     A disc has visual mass at its edge and a letter has none, so equal numbers
+     read as tighter on the text side; the label ends 18px from the edge. */
+  .hact__label {
+    display: block; white-space: nowrap; padding-inline: var(--sp-15) var(--sp-2);
+    font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
+  }
+  .hact__count { color: var(--ink-muted); }
+  /* Same pair of insets as the label, for the same reason — the search field is
+     the other thing that opens out of a disc. */
+  .hact__field {
+    display: block; width: 160px; height: 34px; margin-inline: var(--sp-15) var(--sp-2);
+    border: 0; background: transparent; outline: none;
+    font-family: var(--font-sans); font-size: var(--fs-body-sm); color: var(--ink);
+  }
+  .hact__field::placeholder { color: var(--ink-muted); }
+
+  /* over the hero the bar is transparent — the whole set inverts to white */
+  .hdr:not(.is-scrolled) .hact:hover,
+  .hdr:not(.is-scrolled) .hact:focus-within { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.26); }
+  .hdr:not(.is-scrolled) .hact__btn { border-color: rgba(255,255,255,.42); color: #fff; }
+  .hdr:not(.is-scrolled) .hact:hover .hact__btn,
+  .hdr:not(.is-scrolled) .hact:focus-within .hact__btn { border-color: #fff; color: #fff; }
+  .hdr:not(.is-scrolled) .hact__label,
+  .hdr:not(.is-scrolled) .hact__field { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.45); }
+  .hdr:not(.is-scrolled) .hact__count { color: rgba(255,255,255,.72); }
+  .hdr:not(.is-scrolled) .hact__field::placeholder { color: rgba(255,255,255,.72); }
+  .hdr__phone {
+    display: inline-flex; align-items: center; gap: var(--sp-1); white-space: nowrap;
+    font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink);
+  }
+  .hdr__phone svg { width: 15px; height: 15px; color: var(--ink-muted); }
+  .hdr__phone:hover { color: var(--ink); }
+
+  .hdr__burger { display: none; width: 44px; height: 44px; }
+  /* mobile-only compact phone icon (right side on mobile) */
+  .hdr__phone-m { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: var(--ink); justify-self: end; }
+  .hdr__phone-m svg { width: 20px; height: 20px; color: var(--ink-muted); }
+  /* client Aug20: mobile Call takes the Sell Your Car red approach — red ring + red glyph, hover solid red */
+  .hdr__phone-m { border: 1.5px solid var(--accent-red); border-radius: 999px; background: rgba(211,23,32,.12); color: var(--accent-red); }
+  .hdr__phone-m svg { color: var(--accent-red); }
+  .hdr__phone-m:hover, .hdr__phone-m:focus-visible { background: var(--accent-red); color: #fff; }
+  .hdr__phone-m:hover svg, .hdr__phone-m:focus-visible svg { color: #fff; }
+  .hdr__burger span { display: block; width: 24px; height: 1.5px; background: var(--ink); margin: var(--sp-05) auto; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+  .hdr.is-open .hdr__burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hdr.is-open .hdr__burger span:nth-child(2) { opacity: 0; }
+  .hdr.is-open .hdr__burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* mobile drawer */
+  .hdr__mobile {
+    display: none; border-top: 1px solid var(--rule); background: var(--bg);
+    padding: var(--sp-1) var(--container-pad) var(--sp-4);
+  }
+  .hdr.is-open .hdr__mobile { display: block; }
+  .hdr__mobile ul { display: grid; gap: 2px; margin-bottom: var(--sp-3); }
+  .hdr__mobile a.mlink { display: block; padding: var(--sp-2) var(--sp-05); font-size: 1.05rem; font-family: var(--font-sans); font-weight: var(--fw-medium); color: var(--ink); border-bottom: 1px solid var(--rule); }
+  .hdr__mobile .mcta { display: grid; gap: var(--sp-15); margin-top: var(--sp-1); }
+  .hdr__mobile .btn { width: 100%; }
+  /* phone in the mobile menu — a centred accent pill, distinct from the nav links */
+  .hdr__mobile .hdr__phone {
+    display: flex; width: fit-content; margin: var(--sp-3) auto var(--sp-05);
+    align-items: center; justify-content: center; gap: var(--sp-15);
+    padding: var(--sp-15) var(--sp-4); border-radius: 999px;
+    background: var(--accent); color: #fff;
+    font-size: var(--fs-body); font-weight: var(--fw-medium); letter-spacing: .01em;
+    transition: background var(--dur) var(--ease);
+  }
+  .hdr__mobile .hdr__phone svg { color: #fff; }
+  .hdr__mobile .hdr__phone:hover { background: var(--accent-hover); color: #fff; }
+
+  /* ============================================================
+     HERO — light inset frame (ref7)
+     ============================================================ */
+  .hero { position: relative; margin-top: calc(-1 * var(--hdr-h)); }   /* slide up under the transparent header */
+  .hero__frame {
+    position: relative; overflow: hidden; isolation: isolate;
+    height: 72svh; min-height: 520px; border-radius: 0;   /* client p5: tighten CTA↔bottom gap (motion/video lives in the lower band) */
+  }
+  .hero__media { position: absolute; inset: 0; z-index: -2; }
+  .hero__media picture { display: block; width: 100%; height: 100%; }
+  .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 66%; }
+  /* autoplay background video (desktop) — sits over the still poster, under the scrim */
+  .hero__bgvideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+  @media (max-width: 760px) { .hero__bgvideo { display: none; } }   /* mobile keeps the portrait still */
+  @media (prefers-reduced-motion: reduce) { .hero__bgvideo { display: none; } }   /* reduced-motion keeps the still */
+  /* subtle dark scrim so the white type reads — heavier where the copy sits, image stays dominant (brief) */
+  .hero__media::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(74% 58% at 50% 40%, rgba(0,0,0,.46) 0%, rgba(0,0,0,0) 72%),
+      linear-gradient(180deg, rgba(0,0,0,.34) 0%, rgba(0,0,0,.12) 38%, rgba(0,0,0,.24) 70%, rgba(0,0,0,.50) 100%);
+  }
+  .hero__inner {
+    position: relative; height: 100%;
+    display: flex; flex-direction: column; align-items: center;   /* client r3: centred hero on desktop */
+    text-align: center; max-width: var(--container-max); margin-inline: auto;
+    padding: clamp(40px, 6vw, 84px) var(--container-pad);
+    justify-content: flex-start;
+    /* push content back down below the overlapping header */
+    padding-top: calc(clamp(40px, 6vw, 84px) + var(--hdr-h));
+  }
+  .hero__title {
+    font-family: var(--font-display); font-weight: 500; color: #fff;
+    font-size: calc(var(--fs-hero) * 1.08); line-height: 1.04; letter-spacing: normal;   /* Cormorant Garamond — natural tracking */
+    text-shadow: 0 2px 30px rgba(0,0,0,.42), 0 1px 4px rgba(0,0,0,.32);
+  }
+  /* client p2: drop the cursive; a refined serif signature, right-aligned to the title edge */
+  .hero__title { display: inline-block; }
+  .hero__title .by {
+    display: block; text-align: right; font-style: normal; font-weight: 500;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Lora', Georgia, serif;   /* client p2: Iowan Old Style (native on Apple), warm-serif fallback elsewhere */
+    font-size: clamp(1.4rem, .95rem + 1.3vw, 1.95rem); line-height: 1; letter-spacing: 0; margin-top: .16em; margin-right: -.04em;
+  }
+  .hero__sub {
+    margin-top: clamp(16px, 1.8vw, 24px); max-width: 40ch;
+    font-family: var(--font-text); font-style: italic; font-size: clamp(1.2rem, .85rem + 1.15vw, 1.7rem);
+    line-height: 1.45; color: #fff;
+    text-shadow: 0 1px 16px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+  }
+  .hero__ctas { display: flex; gap: var(--sp-2); margin-top: clamp(24px, 3vw, 34px); flex-wrap: wrap; justify-content: center; }
+  .hero__ctas .btn--light { box-shadow: 0 1px 3px rgba(26,26,24,.06); }
+  /* client p4/Aug20: unified shape; both bold + equal width (desktop); primary = stone fill;
+     secondary "Sell Your Car" now defaults to the red treatment (was hover) and its hover goes fully solid red */
+  .hero__ctas .btn { border-radius: 8px; border-width: 1.5px; font-weight: 700; min-width: 220px; }
+  .hero__ctas .btn--primary { background: var(--bg-deep); color: var(--ink); border-color: var(--bg-deep); }
+  .hero__ctas .btn--primary:hover { background: #fff; border-color: #fff; }
+  .hero__ctas .btn--secondary.on-dark { background: rgba(211,23,32,.20); color: #fff; border-color: var(--accent-red); }
+  .hero__ctas .btn--secondary.on-dark:hover { background: var(--accent-red); border-color: var(--accent-red); color: #fff; }
+
+  /* HERO video — wireframe calls for a full-bleed film with a centred ▶.
+     Image is the poster; the button plays bhcc-film.mp4 inline over the hero. */
+  .hero__play {
+    --sz: clamp(66px, 6vw, 88px);
+    margin-top: clamp(24px, 3vw, 36px);
+    width: var(--sz); height: var(--sz); border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer; color: #fff;
+    background: rgba(255,255,255,.10); border: 1.5px solid rgba(255,255,255,.72);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    box-shadow: 0 14px 44px -14px rgba(0,0,0,.55);
+    transition: transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+  }
+  .hero__play svg { width: 34%; height: 34%; margin-left: 9%; }  /* optically centre the triangle */
+  .hero__play:hover { transform: scale(1.08); background: rgba(255,255,255,.92); color: #1a1a18; border-color: #fff; }
+  .hero__play:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+  .hero__video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; background: #000; border: 0; z-index: 3;
+    opacity: 0; visibility: hidden; transition: opacity .5s var(--ease);
+  }
+  .hero__frame.is-playing .hero__video { opacity: 1; visibility: visible; }
+  .hero__frame.is-playing .hero__inner { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .hero__close {
+    position: absolute; top: calc(var(--hdr-h) + 14px); right: clamp(16px, 3vw, 34px);
+    z-index: 4; width: 46px; height: 46px; border-radius: 50%;
+    display: none; place-items: center; cursor: pointer; color: #fff;
+    background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.5);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    transition: background .25s var(--ease);
+  }
+  .hero__frame.is-playing .hero__close { display: grid; }
+  .hero__close svg { width: 44%; height: 44%; }
+  .hero__close:hover { background: rgba(0,0,0,.82); }
+
+  /* HERO intro — title, by-line, sub, then the two CTAs rise from the bottom
+     one by one on load. .js only; reduced-motion shows them at rest. */
+  @keyframes heroRise { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }
+  .js .hero__title .hero__line { display: inline-block; }
+  .js .hero__title .hero__line,
+  .js .hero__title .by,
+  .js .hero__sub,
+  .js .hero__play,
+  .js .hero__ctas .btn { opacity: 0; animation: heroRise .85s var(--ease) forwards; }
+  .js .hero__title .hero__line   { animation-delay: .15s; }
+  .js .hero__title .by           { animation-delay: .34s; }
+  .js .hero__sub                 { animation-delay: .52s; }
+  .js .hero__play                { animation-delay: .66s; }
+  .js .hero__ctas .btn:nth-child(1) { animation-delay: .80s; }
+  .js .hero__ctas .btn:nth-child(2) { animation-delay: .94s; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .hero__title .hero__line, .js .hero__title .by, .js .hero__sub, .js .hero__play, .js .hero__ctas .btn { opacity: 1; animation: none; }
+  }
+  /* slow cinematic zoom-out on the idle hero image — perceptible but calm.
+     linear + alternate so it keeps visibly moving (no dead-zone at the ends). */
+  @keyframes heroDrift {
+    from { transform: scale(1.18) translate3d(-1.6%, -1.2%, 0); }
+    to   { transform: scale(1.04) translate3d(0, 0, 0); }
+  }
+  .js .hero__media img { transform-origin: 52% 62%; animation: heroDrift 22s linear infinite alternate; will-change: transform; }
+  @media (prefers-reduced-motion: reduce) { .hero__media img { animation: none; transform: none; } }
+
+  /* search band — a thin-lined card under the full-screen hero */
+  .searchbar { padding-block: clamp(26px, 3vw, 44px); }
+  /* client p6: intro line above the search — black Iowan Old Style, ~hero_sub size */
+  .searchbar__intro {
+    font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Lora', Georgia, serif;
+    font-weight: 500; color: var(--ink); line-height: 1.15; text-align: center;   /* client r3: centred over the search bar */
+    font-size: clamp(1.3rem, .95rem + 1.1vw, 1.75rem); margin-bottom: clamp(14px, 1.4vw, 20px);
+  }
+  .searchbar__in {
+    display: flex; align-items: center; gap: var(--sp-3);
+    border: 1px solid var(--rule); border-radius: 16px;
+    padding: clamp(16px, 1.8vw, 22px) clamp(20px, 2.2vw, 30px);
+    background: rgba(255,255,255,.35);
+  }
+  .search-form { flex: 1; }
+  .search-form__field { position: relative; max-width: 100%; }   /* fill the form column — long search field */
+  .search-form__field input {
+    width: 100%; height: 54px; padding: 0 var(--sp-5) 0 var(--sp-3); border-radius: 999px;
+    background: var(--bg-deep); border: 1px solid rgba(26,26,24,.10);
+    font-family: var(--font-sans); font-size: var(--fs-body-sm); color: var(--ink);
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .search-form__field input::placeholder { color: var(--ink-muted); }
+  .search-form__field input:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .search-form__btn {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center;
+    background: var(--ink); color: #fff; transition: background var(--dur) var(--ease);
+  }
+  .search-form__btn:hover { background: var(--accent); }
+  .search-form__btn svg { width: 17px; height: 17px; }
+  /* client Aug20: the alerts CTA is the inverse of the solid primary — red outline, not bold.
+     Aug21: it moved out of the search block and under the Featured cars, so the class is
+     named for what it is rather than for where it used to live. Geometry now comes from
+     .center-cta, which sets it once for both buttons in the pair. */
+  .cta-alerts {
+    font-weight: var(--fw-medium);
+    background: transparent; color: var(--accent-red); border-color: var(--accent-red);
+  }
+  .cta-alerts:hover { background: var(--accent-red); color: #fff; border-color: var(--accent-red); }
+
+  /* ============================================================
+     FEATURED CLASSICS — borderless cards
+     ============================================================ */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gap); }
+  .card { display: block; }
+  .card figure { overflow: hidden; background: var(--bg-deep); aspect-ratio: 16 / 9; border-radius: 6px; }
+  .card img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+  /* horizontal view — image left, details right; 2 across */
+  .cards--h { grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 3vw, 48px) clamp(24px, 2.6vw, 40px); }
+  .card--h { display: grid; grid-template-columns: 56% 1fr; gap: clamp(16px, 1.6vw, 24px); align-items: center; }
+  .card--h figure { aspect-ratio: 16 / 9; align-self: center; }
+  .card--h img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
+  .card--h .card__meta { flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--sp-1); margin-top: 0; }
+  .card--h .card__view { display: inline-flex; align-items: center; gap: var(--sp-1); margin-top: var(--sp-1); font-size: var(--fs-body-sm); font-weight: var(--fw-medium); color: var(--ink-soft); }
+  .card--h .card__view .a { transition: transform var(--dur) var(--ease); }
+  .card--h:hover .card__view { color: var(--accent); }
+  .card--h:hover .card__view .a { transform: translateX(4px); }
+  .card:hover img { transform: scale(var(--img-hover-scale)); }
+  .card__meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); margin-top: var(--sp-2); }
+  .card__title {
+    font-family: var(--font-display); font-weight: var(--fw-card);
+    font-size: var(--fs-h4); line-height: var(--lh-card); color: var(--ink);
+  }
+  .card__price { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-body-sm); color: var(--accent); letter-spacing: .02em; white-space: nowrap; }
+
+  /* Featured Classics — the primary buyer moment: wider container, larger
+     imagery, bigger model + price, tighter spacing, restrained hover reveal. */
+  .section--featured { padding-top: clamp(30px, 4vw, 54px); }
+  .section--featured .lede { margin-bottom: clamp(22px, 2.6vw, 34px); }
+  .section--featured .cards { gap: clamp(20px, 1.8vw, 30px); }
+  .section--featured .card figure { aspect-ratio: 1200 / 740; border-radius: 9px; }
+  .section--featured .card__meta { margin-top: var(--sp-3); }
+  .section--featured .card__title { font-size: clamp(1.18rem, .92rem + .7vw, 1.5rem); line-height: 1.14; min-height: 2.28em; }  /* reserve 2 lines so 1- and 2-line titles align */
+  .section--featured .card__price { font-size: clamp(1rem, .9rem + .32vw, 1.18rem); }
+  .section--featured .card__view {
+    display: inline-flex; align-items: center; gap: var(--sp-1); margin-top: var(--sp-1);
+    font-size: var(--fs-body-sm); font-weight: var(--fw-medium); letter-spacing: .015em;
+    color: var(--ink-soft);
+    opacity: 0; transform: translateY(4px);
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .section--featured .card__view .a { transition: transform var(--dur) var(--ease); }
+  .section--featured .card:hover .card__view,
+  .section--featured .card:focus-visible .card__view { opacity: 1; transform: none; color: var(--accent); }
+  .section--featured .card:hover .card__view .a { transform: translateX(3px); }
+  @media (hover: none) { .section--featured .card__view { opacity: 1; transform: none; } }
+
+  /* ============================================================
+     FOUNDER — split
+     ============================================================ */
+  /* founder — contained rounded photo card + copy, both in view (index2 format) */
+  .founder-sec { padding-block: var(--section-py); }
+  .founder { max-width: 1320px; margin-inline: auto; padding-inline: var(--container-pad);
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(32px, 4vw, 64px); align-items: stretch; }
+  .founder__media {
+    position: relative; overflow: hidden; background: var(--bg-deep);
+    border-radius: 16px; box-shadow: 0 24px 60px -28px rgba(26,26,24,.35);
+  }
+  /* the photo card stretches to match the text-block height; the wide showroom fills it (cover) */
+  .founder__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; will-change: transform; }
+  .founder__body { align-self: center; max-width: 500px; }
+  .founder__body .eyebrow { display: block; margin-bottom: var(--sp-3); }
+  .founder__quote {
+    font-family: var(--font-display); font-weight: 400; color: var(--ink);
+    font-size: var(--fs-editorial); line-height: 1.14; letter-spacing: -.01em;
+  }
+  .founder__p { margin-top: var(--sp-3); color: var(--ink-soft); font-size: var(--fs-body-lg); line-height: 1.6; }
+  .founder__link { margin-top: var(--sp-4); }
+
+  /* ============================================================
+     SELL — DARK SLAB
+     ============================================================ */
+  /* Section = the photo's own proportion (2000×1000 → aspect-ratio 2/1),
+     so the showroom frames show at natural size, not stretched into a tall
+     band. ≈712px @1440. No min-height on desktop (mobile override below).
+     Content: vertical centre, left aligned. */
+  .sell { position: relative; overflow: hidden; background: var(--dark); color: var(--cream); text-align: left;
+          aspect-ratio: 2 / 1; display: grid; place-items: center; }
+  /* Gentle over-scan (8%): with the section already at the photo's 2:1, cover
+     shows the whole frame; a small headroom lets the parallax drift ±25px
+     without exposing an edge, keeping the photo essentially uncropped. */
+  /* Alex Aug21: parallax off. The 8% over-scan existed only so the drift never exposed an edge;
+     with nothing drifting it was pure crop. inset:0 puts a 2:1 frame in a 2:1 section, so the
+     picture now shows whole — nothing is cut on any side. */
+  .sell__bg { position: absolute; inset: 0; z-index: 0; }
+  .sell__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+  .sell__frame { position: absolute; inset: 0; }
+  /* Alex Aug21: softer. 1600ms on a long ease-out, so the room comes up like a dimmer being
+     turned rather than a switch being thrown — the first third of the curve does most of the
+     travel and the last stretch settles slowly, which is what reads as "gentle" rather than
+     simply "slow". Leaving on the same curve so it does not snap back. */
+  .sell__frame--lit { opacity: 0; transition: opacity 1600ms cubic-bezier(.22, .61, .36, 1); }
+  .sell.is-lit .sell__frame--lit { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .sell__frame--lit { transition: none; } }
+  /* two-layer scrim: horizontal (dark on the LEFT where the copy sits, fading
+     right so the white Porsche keeps presence) + a gentle vertical for the
+     bright skylight/floor. Keeps left text ≥AA. */
+  /* no scrim: Alex's gradients are baked into the two exports themselves, so nothing is
+     layered over the picture here. See the markup note. */
+  .sell__overlay { display: none; }
+  .sell .shell { position: relative; z-index: 2; width: 100%; }
+  .sell__in { max-width: 620px; margin-inline: 0; position: relative; }
+  .sell .eyebrow { color: var(--accent-dark); display: block; margin-bottom: var(--sp-2); }
+  .sell h2 {
+    font-family: var(--font-display); font-weight: 400; color: #fff;
+    font-size: var(--fs-h1); line-height: 1.06; letter-spacing: -.01em;
+  }
+  .sell__sub { margin-top: var(--sp-2); font-size: var(--fs-body-lg); color: var(--cream); }
+  .sell__actions { display: flex; align-items: center; justify-content: flex-start; gap: var(--sp-3); margin-top: var(--sp-4); flex-wrap: wrap; }
+  .sell__phone { display: inline-flex; align-items: center; gap: var(--sp-1); font-weight: var(--fw-medium); color: #fff; font-size: var(--fs-body-lg); }
+  .sell__phone svg { width: 17px; height: 17px; color: var(--accent-dark); }
+  .sell__phone:hover { color: var(--accent-dark); }
+  /* muted caption can fall over the sunlit floor of the new showroom photo —
+     a soft shadow keeps it ≥AA there without changing colour or the overlay */
+  .sell__trust { margin-top: var(--sp-3); font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); letter-spacing: .03em; text-shadow: 0 1px 7px rgba(8, 6, 4, .78); }
+  /* client Aug20/21: the whole background is a clickable link, and the hover effect is the two
+     frames crossfading — nothing is layered on top. The brightness(1.32)+scale that used to
+     stand in for this is gone; a flat multiplier lifts the blacks too, which is exactly why the
+     client called it underwhelming. */
+  .sell__cover { position: absolute; inset: 0; z-index: 4; }   /* covers the image; content promoted above */
+  .sell__actions { position: relative; z-index: 5; }           /* Sell Today + phone stay clickable */
+  /* client Aug21: the badge is an INLINE mark at the end of the trust line, not an object
+     positioned against the copy column. Measured off the client's own mockup
+     ("add badge to We Buy.jpg"): full badge = 4.17% of viewport width (60px at 1440),
+     set 27px after the END OF THE TEXT, centred on the line rather than sat on its baseline.
+     Anchoring it to the column box instead — the r1 approach — left 211px of dead air at
+     1440 between the text end and the badge, which is exactly the "floating in the middle"
+     the client rejected. In the text flow it tracks the sentence at every width for free. */
+  .sell__badge { display: inline-block; vertical-align: middle; pointer-events: none;
+    /* Alex Aug21: bigger again. The client's "too big" was really two complaints, and only one
+       of them was size — at 104px it also sat 200px adrift of the text, which is what read as
+       floating. Welded to the end of the sentence it can carry far more weight, so this goes
+       past the mockup's 4.17% to 6.6vw (95px at 1440) and still reads as a mark on the line. */
+    width: clamp(54px, 6.6vw, 98px); height: auto;   /* 54 floor, not 64: at 761 the 2:1 section left the taller badge only 12px above its own clip */
+    margin-left: clamp(12px, 1.15vw, 20px);
+    /* the line-box grows to the badge, so pull the extra leading back off the paragraph */
+    margin-block: calc(-.5 * clamp(54px, 6.6vw, 98px) * 170 / 134);
+    filter: drop-shadow(0 3px 10px rgba(0,0,0,.45)); }
+
+  /* ============================================================
+     BUYERS STRIP — Alex's real buy handshakes (client Aug20)
+     ============================================================ */
+  .buyers { background: var(--dark); color: var(--cream); }
+  .buyers__head { text-align: center; margin-bottom: clamp(22px, 2.6vw, 38px); }
+  .buyers__head .eyebrow { color: var(--accent-dark); display: block; margin-bottom: var(--sp-2); }
+  .buyers__title { font-family: var(--font-display); font-weight: 400; color: #fff; font-size: var(--fs-h2); line-height: 1.05; letter-spacing: 0; }
+  /* horizontal strip that scrolls; the last frame sits partly cut so it reads as scrollable */
+  /* client Aug20 (r2): a paged carousel with VISIBLE arrows + dots — no free horizontal scroll */
+  .buyers__carousel { position: relative; }
+  .buyers__viewport { overflow: hidden; }
+  .buyers__track { display: flex; transition: transform .5s var(--ease); will-change: transform; }
+  @media (prefers-reduced-motion: reduce) { .buyers__track { transition: none; } }
+  .buyers__item { flex: 0 0 25%; box-sizing: border-box; padding-inline: clamp(5px, .6vw, 9px); margin: 0; }
+  /* client Aug21: "the images are too big and don't fit ... not cut off, not super zoomed in".
+     All three were one bug. The <img> carries height="522", which is a presentational hint, so
+     BOTH dimensions were definite and `aspect-ratio` was silently ignored — the frames rendered
+     316x522 PORTRAIT and object-fit:cover threw away the sides, which is what cropped the people
+     and read as a zoom. `height: auto` hands the sizing back to aspect-ratio. The ratio is now
+     the source files' own 760/522 rather than a rounded 3/2, so these crop by nothing at all,
+     and the frames drop from 522px tall to ~215px — which is the "too big" complaint as well. */
+  .buyers__item img { width: 100%; height: auto; aspect-ratio: 760 / 522; object-fit: cover;
+    border-radius: 8px; display: block; background: #0c0b09;
+    transition: transform var(--dur-slow) var(--ease), filter var(--dur) var(--ease); }
+  .buyers__item:hover img { transform: scale(1.03); filter: brightness(1.06); }
+  @media (max-width: 900px) { .buyers__item { flex-basis: 50%; } }
+  @media (max-width: 560px) { .buyers__item { flex-basis: 100%; } }
+  /* arrows — clearly visible discs, red on hover */
+  .buyers__nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+    width: 52px; height: 52px; display: grid; place-items: center; border-radius: 999px; color: #fff;
+    background: rgba(20,18,16,.55); border: 1px solid rgba(255,255,255,.32);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+  .buyers__nav svg { width: 24px; height: 24px; }
+  .buyers__nav:hover { background: var(--accent-red); border-color: var(--accent-red); }
+  .buyers__nav:disabled { opacity: .3; cursor: default; }
+  .buyers__nav--prev { left: clamp(4px, 1vw, 14px); }
+  .buyers__nav--next { right: clamp(4px, 1vw, 14px); }
+  /* dots — visibly sized; the active one a wide red pill */
+  .buyers__dots { display: flex; justify-content: center; gap: var(--sp-2); margin-top: clamp(18px, 2vw, 28px); }
+  .buyers__dots button { width: 12px; height: 12px; border-radius: 999px; background: rgba(255,255,255,.30);
+    transition: background var(--dur) var(--ease), width var(--dur) var(--ease); }
+  .buyers__dots button:hover { background: rgba(255,255,255,.55); }
+  .buyers__dots button.is-active { width: 34px; background: var(--accent-red); }
+
+  @media (max-width: 560px) {
+    /* client Aug21: at one frame per page the arrows sat dead centre on the photo — which on
+       these pictures means on somebody's face. There is no edge to hide them against here, so
+       they leave the picture entirely and join the dots in a control row underneath. Nothing
+       is drawn over the image at any width now. */
+    .buyers__nav { top: 100%; bottom: auto; transform: translateY(28px); width: 44px; height: 44px; }
+    .buyers__nav svg { width: 21px; height: 21px; }
+    .buyers__nav--prev { left: 2px; }
+    .buyers__nav--next { right: 2px; }
+    .buyers__dots { margin-top: 28px; min-height: 44px; align-items: center; }
+  }
+
+  /* ============================================================
+     VISUAL BREAKERS — full-bleed cinematic dividers between sections.
+     Edge-to-edge: they live in .page (full viewport width, no max-width) with
+     no .shell, so width:100% is already bleed — no 100vw (avoids the scrollbar
+     overflow that body's overflow-x:clip would otherwise have to hide).
+     ============================================================ */
+  /* full-bleed dividers at the photo's own 2:1 proportion — not cropped to a fixed height */
+  .breaker { position: relative; overflow: hidden; width: 100%; aspect-ratio: 2 / 1; background: var(--dark-deep); }
+  /* over-scan gives the parallax headroom so no edge shows as the bg drifts */
+  .breaker__bg { position: absolute; left: 0; right: 0; top: -11%; height: 122%; z-index: 0; will-change: transform; }
+  .breaker__bg img { width: 100%; height: 100%; object-fit: cover; }
+  .breaker__overlay { position: absolute; inset: 0; z-index: 1; }
+  /* night frame → gentle vignette so the caption reads over the road/skyline */
+  .breaker--night .breaker__overlay { background:
+    linear-gradient(180deg, rgba(8,7,5,.34) 0%, rgba(8,7,5,.10) 40%, rgba(8,7,5,.16) 62%, rgba(8,7,5,.60) 100%); }
+  .breaker__cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(20px, 4.5vh, 44px); text-align: center; padding-inline: var(--container-pad); }
+  .breaker__cap .eyebrow { display: inline-block; color: var(--accent-dark); text-shadow: 0 1px 12px rgba(6,5,3,.9); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  /* PROOF BAND — showroom photo + three claims (ported from index2) */
+  .breaker--day .breaker__overlay { background:
+    linear-gradient(180deg, rgba(8,7,5,0) 42%, rgba(8,7,5,.55) 80%, rgba(8,7,5,.92) 100%); }
+  .breaker__cap--proof { bottom: clamp(44px, 13%, 110px); }
+  .proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); text-align: center; }
+  .proof li { padding-left: 0; }
+  .proof__k {
+    display: block; font-family: var(--font-display); font-weight: var(--fw-heading); color: #fff;
+    font-size: clamp(1.45rem, 1rem + 1.15vw, 2rem); line-height: 1.15;
+    text-shadow: 0 2px 18px rgba(6,5,3,.75);
+  }
+  /* The interval is declared rather than left over. Three claims of different
+     lengths wrapped to one, two and one line on their own, so the headings sat
+     at three depths and the bodies under them started at three heights; the
+     breaks are now written into the copy and every claim is two lines. That
+     removed the slack a one-line claim used to leave behind, which is what had
+     been standing in for this gap. */
+  .proof__v {
+    margin-top: var(--sp-3);
+    display: block; color: var(--cream); font-weight: var(--fw-body-dark);
+    font-size: var(--fs-body-sm); line-height: 1.5; max-width: 32ch; margin-inline: auto;
+    text-shadow: 0 1px 10px rgba(6,5,3,.85);
+  }
+
+  /* ============================================================
+     TESTIMONIALS + PRESS
+     ============================================================ */
+  .quotes { position: relative; text-align: center; max-width: 900px; margin-inline: auto; }
+  .quotes .eyebrow { display: block; margin-bottom: var(--sp-3); }
+  /* stack all quotes in one grid cell → track height = tallest quote, so it
+     never jumps when you switch. Only opacity animates. */
+  .quote-track { display: grid; }
+  .quote { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity var(--dur-slow) var(--ease); }
+  .quote.is-active { opacity: 1; visibility: visible; }
+  /* elegant chevrons on the sides */
+  .quote-nav { position: absolute; top: 44%; transform: translateY(-50%); width: 48px; height: 48px; display: grid; place-items: center; border-radius: 999px; color: var(--ink-soft); background: var(--bg); border: 1px solid var(--rule); box-shadow: 0 1px 4px rgba(26,26,24,.06); transition: color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+  .quote-nav:hover { color: #fff; background: var(--accent); border-color: var(--accent); }
+  .quote-nav svg { width: 23px; height: 23px; stroke-width: 1.9; }
+  .quote-nav--prev { left: clamp(-8px, -2vw, -26px); }
+  .quote-nav--next { right: clamp(-8px, -2vw, -26px); }
+  @media (max-width: 560px) { .quote-nav--prev { left: -4px; } .quote-nav--next { right: -4px; } }
+  .quote__mark { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); line-height: .6; color: var(--accent); height: .5em; }
+  .quote blockquote {
+    font-family: var(--font-text); font-style: italic; font-weight: 400;
+    font-size: calc(var(--fs-quote) * 1.1); line-height: var(--lh-quote); color: var(--ink);
+    max-width: 28ch; margin: var(--sp-3) auto 0;
+  }
+  .quote__by { display: block; margin-top: var(--sp-3); font-family: var(--font-sans); font-style: normal; font-size: calc(var(--fs-body-sm) * 1.12); font-weight: var(--fw-medium); color: var(--ink-muted); letter-spacing: .04em; }
+  .quote-dots { display: flex; justify-content: center; gap: var(--sp-15); margin-top: var(--sp-4); }
+  .quote-dots button { width: 8px; height: 8px; border-radius: 999px; background: rgba(26,26,24,.18); transition: background var(--dur) var(--ease), transform var(--dur) var(--ease); }
+  .quote-dots button.is-active { background: var(--accent); transform: scale(1.35); }
+
+  .press { margin-top: clamp(30px, 4vw, 46px); border-top: 1px solid var(--rule); padding-top: clamp(24px, 3vw, 36px); }
+  .press__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(22px, 3.6vw, 52px); }
+  /* Mixed-source press SVGs (white / 4-colour / two-tone) unified to ONE muted
+     mono tone: brightness(0) flattens every fill to black, opacity mutes it to
+     a grey ≈ --ink-muted on the cream ground. Hover lifts to near-solid. */
+  .press__logo {
+    width: auto; height: 30px; filter: brightness(0); opacity: .62;
+    transition: opacity var(--dur) var(--ease);
+  }
+  .press__logo:hover { opacity: .95; }
+  /* equal OPTICAL height — badges read larger than wide wordmarks at same px */
+  .press__logo--hemmings { height: 24px; }
+  .press__logo--thr      { height: 26px; }
+  .press__logo--t911     { height: 44px; }
+  .press__logo--ebay     { height: 29px; }
+  .press__logo--google   { height: 28px; }
+  .press__logo--yelp     { height: 29px; }
+
+  /* ============================================================
+     NEWS / EVENTS — dark section, Cayenne composition
+     LEFT: staggered/offset masonry of showroom photos.
+     RIGHT: large Gloock headline + sub + ghost CTA.
+     ============================================================ */
+  /* Sticky-scroll: LEFT column of 4 posts scrolls; RIGHT heading is sticky and
+     unsticks when the list ends. No overflow clip on .news — it would kill sticky. */
+  .news {
+    --news-bg:    #212528;                 /* cool dark grey base          */
+    --news-haze:  rgba(108,126,142,.20);   /* dirty slate-blue, top-left   */
+    --news-pool:  rgba(11,13,15,.66);      /* deep pool, bottom-right      */
+    position: relative; color: var(--cream);
+    background:
+      radial-gradient(58% 46% at 14% 16%, var(--news-haze) 0%, rgba(108,126,142,0) 62%),
+      radial-gradient(64% 58% at 88% 90%, var(--news-pool) 0%, rgba(11,13,15,0) 62%),
+      var(--news-bg);
+  }
+  /* Film grain over the flat gradient. Generated in-place with feTurbulence —
+     no asset to ship, tiles seamlessly (stitchTiles), and scales with the
+     section. Kept under 7% so it is texture, not visible dirt. */
+  .news::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    opacity: .062;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .news > .shell { position: relative; z-index: 1; }
+  /* Heading row on top, three article cards below it — all in view at once
+     (manager feedback 2026-07: was a sticky heading with posts scrolling past
+     one at a time). */
+  .news__in { max-width: 1200px; margin-inline: auto; }
+  /* heading + "see all" on one row, like brief §08 */
+  .news__head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: clamp(16px, 2vw, 32px);
+    margin-bottom: clamp(40px, 5vw, 68px);
+  }
+  /* client r3 (index5): revert to the PRIOR layout — three equal cards showing
+     the current posts. The asymmetric feature+mini split was not asked for. */
+  .news__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.5vw, 22px); }
+  /* whole tile is the link, wrapped in a dark-grey card (a step below the
+     #212528 section) so the three posts read as a set */
+  .npost {
+    display: flex; flex-direction: column; overflow: hidden;
+    background: #191c1f; border: 1px solid rgba(239,236,228,.07); border-radius: 12px;
+    transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .npost:hover { transform: translateY(-4px); border-color: rgba(239,236,228,.16); box-shadow: 0 22px 48px -24px rgba(0,0,0,.7); }
+  .npost figure { overflow: hidden; background: #0c0b09; aspect-ratio: 16 / 10; }
+  .npost img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+  .npost:hover img { transform: scale(1.04); }
+  .npost:hover .npost__more { color: var(--accent-dark-hover); }
+  .npost:hover .npost__more .a { transform: translateX(4px); }
+  /* copy sits inside the card with padding; the meta row pushes "Read More" to
+     the bottom so every card's CTA lines up regardless of title/excerpt length */
+  .npost__title {
+    margin: 0; padding: clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) 0;
+    font-family: var(--font-sans); font-weight: var(--fw-medium);
+    color: #fff; font-size: clamp(1rem, .92rem + .34vw, 1.18rem);
+    line-height: 1.32; letter-spacing: -.005em;
+    /* reserve a two-line box so every card's excerpt/CTA line up: shorter
+       titles keep the height, longer ones clamp to two lines */
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+    min-height: calc(clamp(18px, 2vw, 24px) + 2 * 1.32em);
+  }
+  /* reserve three lines so every excerpt is the same height → the CTA lands at
+     the same level on all cards and the gap after the text is equal */
+  .npost__text {
+    margin: var(--sp-15) 0 0; padding-inline: clamp(18px, 2vw, 24px);
+    color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.6;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+    min-height: calc(3 * 1.6em);
+  }
+  .npost__more { margin: clamp(20px, 2.2vw, 26px) clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px); }
+
+  .news__head .eyebrow { display: block; color: var(--accent-dark); margin-bottom: var(--sp-3); }
+  .news__head-lead { max-width: 46ch; }
+  .news__title {
+    font-family: var(--font-display); font-weight: 400; color: #fff;
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem); line-height: 1.04; letter-spacing: -.02em;
+  }
+  .news__sub { margin-top: var(--sp-2); color: var(--cream); font-size: var(--fs-body-lg); line-height: 1.55; max-width: 46ch; }
+  .news__cta { flex: none; }
+
+  /* ============================================================
+     FOOTER — DARK
+     ============================================================ */
+  /* sticky-reveal: footer is pinned to the viewport bottom BEHIND .page
+     (z-index 0 < 1); the News slab scrolls up off it at the end of the page,
+     uncovering the footer from beneath. Layout only — survives no-JS + reduced
+     motion. Near-black footer under the warm-charcoal News = a tonal step at
+     the seam so the reveal reads. */
+  .footer {
+    --fo-accent:    var(--ink-soft-on-dark);
+    --fo-accent-hi: var(--cream);
+    /* Dark dirty blue, not the warm near-black --dark-deep. It still has to sit a
+       clear tonal step BELOW the News slab (#212528) or the sticky-reveal at the
+       page end stops reading as a reveal. Measured L: News .0186 → footer .0082. */
+    --fo-bg: #1A1A18;
+    position: sticky; bottom: 0; z-index: 0; color: var(--cream); padding-block: clamp(40px, 4.5vw, 60px) 32px;
+    /* A sticky-reveal footer MUST be at least a viewport tall. Its content is
+       ~744px; on a 900px screen the reveal left the bottom 156px of the page
+       (the end of News) stranded above it, because the footer simply could not
+       cover the screen. min-height:100svh guarantees it fills the viewport at
+       the end of the scroll; the content sits at the top and the base gradient
+       fills the slack below. The content is centred vertically and nudged a
+       little past centre (55%) so it does not float dead-centre in the tall
+       slab; the base gradient then reads as a deliberate floor beneath it. */
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    /* LA-skyline photograph as the ground, held down by a heavy scrim so the
+       cream text keeps AA over it. The photo is already near-black at top and
+       bottom (where the copy sits) — the scrim only firms that up. A soft pool
+       of light at the very bottom stops the page ending on a flat slab, without
+       lifting the top where the News→footer tonal step lives. */
+    background:
+      radial-gradient(120% 52% at 50% 118%, rgba(233,229,219,.10) 0%, rgba(233,229,219,.04) 42%, rgba(233,229,219,0) 72%),
+      linear-gradient(180deg, rgba(20,18,16,.80) 0%, rgba(20,18,16,.62) 42%, rgba(20,18,16,.74) 100%),
+      url("assets/images/footer/footer_background.png") center / cover no-repeat,
+      var(--fo-bg);
+  }
+  /* client r3: the footer is a FULL-SCREEN panel — min-height:100svh so the
+     LA-skyline background fills the whole viewport, with the (now compact ~700px)
+     content centred inside it and the pinned header floating over the empty top.
+     The reveal only engages once the viewport is tall enough that centred content
+     clears the header (slack ≥ --hdr-h); below that it falls back to a normal
+     in-flow footer so the header never covers the content and nothing is cut. */
+  @media (max-height: 860px) {
+    .footer { position: static; min-height: 0; }
+  }
+  /* Connect column widened (and the inter-column gap tightened) so the six
+     social glyphs sit on one line at a larger size */
+  .footer__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.6fr; gap: clamp(24px, 2.8vw, 44px); }
+  .footer__lockup { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 20px); }
+  .footer__shield { height: clamp(58px, 5vw, 74px); width: auto; }
+  .footer__sig { height: clamp(19px, 1.7vw, 25px); width: auto; }
+  .footer__brand p { margin-top: var(--sp-3); max-width: 34ch; color: var(--ink-soft-on-dark); font-size: var(--fs-body-sm); line-height: 1.7; font-weight: var(--fw-body-dark); }
+  .footer__col h3 { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--fo-accent); margin-bottom: var(--sp-2); }
+  .footer__col ul { display: grid; gap: var(--sp-05); }
+  /* pill hover, same idiom as the header nav. Inline-block + self-start so the
+     pill hugs the text rather than filling the column; negative inline margin
+     cancels the pill's own padding so the labels stay flush to the column edge. */
+  .footer__col a {
+    display: inline-block; justify-self: start;
+    padding: var(--sp-05) var(--sp-15); margin-inline-start: calc(var(--sp-15) * -1); border-radius: 999px;
+    font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark);
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .footer__col a:hover { color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
+  /* Inventory/Company are <details>: plain columns on desktop (summary inert,
+     chevron hidden, list always shown), tap-to-open accordions on mobile. */
+  .footer__acc > summary { list-style: none; display: block; }
+  .footer__acc > summary::-webkit-details-marker { display: none; }
+  .footer__acc > summary::marker { content: ""; }
+  .footer__acc .acc-chev { display: none; }
+  @media (min-width: 761px) { .footer__acc > summary { pointer-events: none; } }
+  .footer__connect .contact { display: grid; gap: var(--sp-15); margin-bottom: var(--sp-3); font-size: var(--fs-body-sm); color: var(--cream); font-weight: var(--fw-body-dark); }
+  .footer__connect .contact a { display: inline-flex; align-items: center; gap: var(--sp-1); }
+  .footer__connect .contact svg { width: 14px; height: 14px; color: var(--fo-accent); flex: none; }
+  .footer__hours { display: inline-flex; align-items: center; gap: var(--sp-1); }
+  .footer__addr { display: inline-flex; align-items: flex-start; gap: var(--sp-1); }
+  /* bare glyphs, no circles — one line. Without the 48px chips six icons fit
+     the column easily, so they can be larger and generously spaced. */
+  .footer__social { display: flex; flex-wrap: nowrap; gap: clamp(16px, 1.6vw, 22px); margin-top: var(--sp-4); margin-bottom: var(--sp-3); }
+  .footer__social a { display: grid; place-items: center; color: var(--cream); transition: color var(--dur) var(--ease); }
+  .footer__social a:hover { color: var(--fo-accent-hi); }
+  .footer__social svg { width: 30px; height: 30px; }
+  /* signup on the left, language switcher opposite on the right, on one row */
+  .footer__base {
+    margin-top: clamp(24px, 3vw, 36px); padding-top: clamp(20px, 2.4vw, 30px);
+    border-top: 1px solid var(--rule-dark);
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: clamp(20px, 3vw, 44px); flex-wrap: wrap;
+  }
+  /* switcher aligns to the baseline of the input row, not the label above it */
+  .footer__lang { align-self: flex-end; }
+  .footer__form { width: min(520px, 100%); }   /* Alex Aug22: widened so the label holds one line */
+  /* Alex Aug22: the label sits on ONE line. The 30ch cap was breaking it after "in", which is a
+     weak break — an article stranded at the end of the line. Below 560px it is allowed to wrap
+     again, because at that width one line would demand type under the 14px floor. */
+  .footer__form label { display: block; font-size: 1.06rem; line-height: 1.4; color: #fff; margin-bottom: var(--sp-2); font-weight: var(--fw-medium); max-width: none; white-space: nowrap; }
+  /* wraps again below 700px. Not 560: nowrap needs ~520px whatever the form is set to, and at a
+     561px viewport the container is ~521px — a one-pixel margin, which is not a margin. */
+  @media (max-width: 700px) { .footer__form label { white-space: normal; } }
+  .footer__form .row { display: flex; gap: var(--sp-1); }
+
+  /* Native <select>: it inherits the OS control look, so the arrow is hidden
+     with appearance:none and drawn as our own chevron. The globe and chevron
+     are pointer-events:none so the whole pill stays clickable. */
+  .footer__lang { position: relative; display: inline-flex; align-items: center; }
+  .footer__lang select {
+    appearance: none; -webkit-appearance: none;
+    height: 42px; padding: 0 var(--sp-5) 0 var(--sp-5); border-radius: 999px;
+    background: rgba(255,255,255,.04); border: 1px solid var(--rule-dark);
+    color: var(--cream); font-family: var(--font-sans); font-size: var(--fs-body-sm);
+    font-weight: var(--fw-body-dark); cursor: pointer;
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .footer__lang select:hover { border-color: var(--fo-accent-hi); background: var(--accent-wash-dark); }
+  .footer__lang select:focus { outline: none; border-color: var(--fo-accent-hi); }
+  .footer__lang option { background: var(--fo-bg); color: var(--cream); }
+  .footer__lang-icon, .footer__lang-chev {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--fo-accent); pointer-events: none; display: grid; place-items: center;
+  }
+  .footer__lang-icon { left: 14px; }
+  .footer__lang-chev { right: 14px; }
+  .footer__lang-icon svg { width: 16px; height: 16px; }
+  .footer__lang-chev svg { width: 15px; height: 15px; }
+  .footer__form input {
+    flex: 1; min-width: 0; height: 48px; padding: 0 var(--sp-3); border-radius: 999px;
+    /* client Aug21: semi-opaque like the hero's secondary button, not a solid red fill — same
+       treatment as .hero__ctas .btn--secondary.on-dark: a 20% red tint carrying a solid red edge. */
+    background: rgba(211,23,32,.20);
+    border: 1px solid var(--accent-red); color: #fff;
+    font-family: var(--font-sans); font-size: var(--fs-body-sm);
+  }
+  .footer__form input::placeholder { color: rgba(255,255,255,.82); }
+  .footer__form input:focus { outline: none; border-color: #fff; }
+  .footer__bottom {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2);
+    margin-top: clamp(24px, 3vw, 36px); padding-top: var(--sp-3); border-top: 1px solid var(--rule-dark);
+    font-size: var(--fs-body-sm); color: var(--ink-soft-on-dark); font-weight: var(--fw-body-dark);
+  }
+  .footer__bottom nav { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+  .footer__bottom a:hover { color: var(--fo-accent-hi); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 1024px) {
+    /* per brief: hamburger left · logo centered · phone icon right */
+    .hdr__nav { display: none; }
+    .hdr__actions { display: none; }
+    .hdr__burger { display: block; order: -1; }
+    .brand { justify-self: center; }        /* centre the logo */
+    .hdr__phone-m { display: inline-flex; }
+    .founder { grid-template-columns: 1fr; }
+    .founder__media { border-radius: 16px; aspect-ratio: 16 / 10; }
+    .founder__body { padding: var(--sp-4) var(--container-pad) var(--sp-1); }
+    .footer__grid { grid-template-columns: 1fr 1fr; gap: var(--sp-5) var(--sp-4); }
+    .footer__brand { grid-column: 1 / -1; }
+    /* stacked footer is taller than the viewport → drop the sticky-reveal so the
+       brand/columns at the top aren't pinned off-screen; flow it normally */
+    .footer { position: static; min-height: 0; justify-content: flex-start; }
+  }
+  @media (max-width: 760px) {
+    /* taller header to seat the larger crest logo (per mobile comp) */
+    :root { --hdr-h: 128px; --hdr-h-scrolled: 74px; }
+    /* header is NOT sticky over the hero — it scrolls away with the hero; only
+       the compact bar (is-scrolled) becomes fixed once scrolled past the hero. */
+    .hdr { position: absolute; left: 0; right: 0; }
+    .hdr.is-scrolled { position: fixed; }
+    .hero { margin-top: 0; }
+    /* over the hero: stacked shield + script (per comp). after scroll: the
+       compact horizontal lockup, as before. */
+    .brand__logo--hero { display: none !important; }
+    .hdr:not(.is-scrolled) .brand__mobile { display: flex; }
+    .hdr:not(.is-scrolled) .brand__logo--bar { display: none !important; }
+    .hdr.is-scrolled .brand__mobile { display: none !important; }
+    .hdr.is-scrolled .brand__logo--bar { display: block !important; }
+    .hdr__burger, .hdr__phone-m { align-self: start; margin-top: var(--sp-1); }
+    .hdr.is-scrolled .hdr__burger, .hdr.is-scrolled .hdr__phone-m { align-self: center; margin-top: 0; }
+    /* mobile hero — portrait image, copy up top, full-width CTAs pinned to the bottom */
+    .hero__frame { min-height: 0; height: 100svh; max-height: none; }
+    .hero__media img { object-position: 50% 50%; }
+    .hero__inner { justify-content: flex-start; padding-bottom: clamp(26px, 6vw, 40px); }
+    .hero__title { font-size: clamp(2.8rem, 13vw, 3.5rem); }   /* larger — wraps to two lines like the comp */
+    .hero__title .by { text-align: left; margin-right: 0; }   /* mobile: signature aligns to the left column, not flush-right */
+    .hero__sub { text-align: left; }   /* keep the whole hero on one left edge */
+    .hero__title { display: block; }   /* block, so .by aligns to the container edge not the title's word-width box */
+    .hero__inner { text-align: left; align-items: flex-start; }
+    .hero__ctas { margin-top: auto; width: 100%; flex-direction: column; align-items: stretch; gap: var(--sp-15); }
+    .hero__ctas .btn { width: 100%; justify-content: center; }
+    /* the Featured pair stacks the same way the hero pair does — full width, one per row */
+    .center-cta { flex-direction: column; align-items: stretch; gap: var(--sp-15); }
+    .center-cta .btn { width: 100%; justify-content: center; }
+    .cards { grid-template-columns: 1fr; gap: var(--sp-5); }
+    .searchbar__in { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
+    .search-form__field { max-width: none; }
+    .searchbar .arrow-link { justify-content: center; }
+    .footer__grid { grid-template-columns: 1fr; gap: var(--sp-1); }
+    /* Inventory/Company collapse into tap-to-open accordions; Connect + social
+       + language switcher stay always visible (per brief). */
+    .footer__acc { border-top: 1px solid var(--rule-on-dark, rgba(239,236,228,.14)); }
+    .footer__acc > summary { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding-block: var(--sp-2); }
+    .footer__acc > summary h3 { margin-bottom: 0; }
+    .footer__acc .acc-chev { display: grid; place-items: center; color: var(--fo-accent); transition: transform var(--dur) var(--ease); }
+    .footer__acc .acc-chev svg { width: 18px; height: 18px; }
+    .footer__acc[open] .acc-chev { transform: rotate(180deg); }
+    .footer__acc > ul { gap: var(--sp-15); padding-bottom: var(--sp-2); }
+    .footer__connect { margin-top: var(--sp-2); }
+    .footer__base { flex-direction: column; align-items: stretch; }
+    .footer__lang { align-self: flex-start; }
+    .footer__bottom { flex-direction: column; align-items: flex-start; }
+    /* Mobile We Buy — client: "boring, can't see the image", and it's "secretly
+       the most important CTA". Restructure to a photo-forward stack: the showroom
+       photo sits on top (fully visible, no heavy scrim), the copy drops onto the
+       solid dark panel below at full contrast. */
+    .sell { aspect-ratio: auto; min-height: 0; padding-block: 0; display: flex; flex-direction: column; place-items: stretch; }
+    .sell__bg { position: relative; inset: auto; height: clamp(320px, 46svh, 440px); flex: none; transform: none; }
+    .sell__bg img { object-position: 50% 40%; }
+    .sell__bg::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 48%;
+      background: linear-gradient(180deg, rgba(18,16,12,0), var(--dark)); pointer-events: none; }
+    /* mobile proof band: photo-forward like the We Buy section — photo on top,
+       the three claims on a solid dark panel below (not overlaid on the image) */
+    .breaker--day { aspect-ratio: auto; min-height: 0; padding-block: 0; display: flex; flex-direction: column; background: var(--dark); }
+    .breaker--day .breaker__bg { position: relative; inset: auto; top: auto; height: clamp(300px, 42svh, 420px); flex: none; transform: none; }
+    .breaker--day .breaker__bg::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 46%; background: linear-gradient(180deg, rgba(20,18,14,0), var(--dark)); pointer-events: none; }
+    .breaker--day .breaker__overlay { display: none; }
+    .breaker--day .breaker__cap--proof { position: static; grid-area: auto; padding: clamp(30px, 7vw, 46px) var(--container-pad) clamp(40px, 10vw, 60px); }
+    .proof { grid-template-columns: 1fr; gap: clamp(28px, 7vw, 40px); }
+    .proof__k { min-height: 0; }
+    .proof__v { max-width: none; }
+    /* copy now sits on the solid dark panel (not over the photo) → no scrim needed */
+    .sell__overlay { display: none; }
+    .sell .shell { padding-top: clamp(26px, 6vw, 36px); padding-bottom: clamp(34px, 9vw, 50px); }
+    .sell__in { max-width: none; }
+    /* mobile: centre the whole We Buy copy (text + button + phone + trust) */
+    .sell { text-align: center; }
+    .sell__in { margin-inline: auto; }
+    .sell__actions { gap: var(--sp-2); margin-top: var(--sp-3); justify-content: center; }
+    .sell__actions .btn { width: 100%; justify-content: center; text-align: center; }
+    .sell__phone { justify-content: center; }
+    /* mobile keeps the badge on its own line under the centred copy: inline at the end of
+       a two-line centred sentence would hang off the last line's tail. Bigger here than on
+       desktop because it is standing alone rather than punctuating a sentence. */
+    .sell__badge { display: block; margin: var(--sp-3) auto 0; width: clamp(92px, 25vw, 116px); }
+  }
+
+  /* 761–900: .section's vw-scaled padding-block (≈86px a side at 761) on top of the hard
+     2:1 aspect-ratio leaves less content height than the copy needs down here, so the trust
+     line was being cut off by the section's own overflow:hidden. Ease the padding for this
+     band only — the 2:1 crop, the photo and the copy's left column are all unchanged.
+     (r1 also re-anchored the badge to the section corner in this band; carrying it in the
+     text flow removes the need — it now travels with the sentence at every width.) */
+  @media (min-width: 761px) and (max-width: 900px) {
+    .sell { padding-block: clamp(28px, 5vw, 64px); }
+  }
+
+  /* News — the three equal cards step down 3 → 2 → 1 */
+  @media (max-width: 900px) {
+    .news__list { grid-template-columns: repeat(2, 1fr); }
+    .news__head { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 560px) {
+    .news__list { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     INDEX8 — HERO TEXT FADES (client, Sep 1 — revised spec)
+     ------------------------------------------------------------
+     Exactly as specified: at ~3.5s the h1 ("Beverly Hills Car Club" + "by Alex Manos") and the
+     subtitle fade out over ~800ms, leaving the video and the two CTAs. Opacity only — no slide,
+     no scale, no blur. The buttons do not move, the header is untouched, the video is neither
+     stopped nor dimmed.
+
+     A class on the section rather than a one-way animation: it gives an honest reduced-motion
+     path and stays reversible. The h1 stays in the DOM throughout, so the page still announces
+     what it is to a search engine and to a screen reader.
+     ============================================================ */
+  /* Page-local, deliberately NOT in assets/css/tokens.css: that file is linked as ?v=11 by every
+     page including index7, so changing it either serves stale from cache or forces a version bump
+     that edits index7.html. Scoping the token here keeps index7 untouched. */
+  :root { --ease-in: cubic-bezier(0.55, 0, 1, 0.45); }
+  /* --ease-in, not --ease. This is an exit, and the house --ease is the ENTRANCE curve
+     (easeOutQuint): on it the text was down to 4% opacity 450ms into an 800ms fade, so the
+     client's 800ms read as a ~400ms snap followed by an invisible tail. The exit curve holds
+     the words legible through the first half and accelerates them away — 800ms that is
+     actually 800ms. Motion invariant I3: entrances decelerate, exits accelerate. */
+  .hero__title, .hero__sub { transition: opacity 800ms var(--ease-in); }
+  /* The entrance animation sits ON .hero__sub itself with fill-mode: forwards, so it keeps
+     asserting opacity for the life of the page — and a filling animation suppresses the
+     transition on that property, which made the subtitle SNAP out while the h1 (whose animation
+     is on its inner spans, leaving the element free) faded correctly. Retiring the animation
+     once it has finished hands opacity back to the cascade and the transition works. */
+  .hero.is-settled .hero__sub { animation: none; opacity: 1; }
+  /* Placed after .is-settled so that at equal specificity this wins on source order.
+     !important is the belt to that braces: if .is-settled ever fails to land, the still-filling
+     animation would outrank every normal declaration whatever its specificity, and only
+     !important can take opacity back. pointer-events is not motion, it is correctness —
+     invisible text must not swallow clicks meant for the video or the buttons. */
+  .hero.is-receded .hero__title,
+  .hero.is-receded .hero__sub { opacity: 0 !important; pointer-events: none; }
+
+  /* NO CTA MOVEMENT. index8 settled the buttons downward as the text went; it is removed here
+     because it broke, and the client had asked for exactly this in writing ("Do NOT move or
+     reposition the CTA buttons").
+
+     Why it broke, so nobody rebuilds it: .hero__frame is 72svh with a min-height of 520px and its
+     content is TOP-anchored, so the bottom of the buttons sits ~488px below the frame top no
+     matter how tall the window is. The room beneath them is therefore (hero height − 488), while
+     the travel was computed from the WINDOW (8vh) and knew nothing about that room. Below ~762px
+     of viewport height the room runs out; below 722px the hero hits its 520px floor and stops
+     shrinking while the travel keeps growing. At 1440x700 the buttons were clipped by 16px — a
+     third of a button — by the frame's own overflow:hidden. Measured, and it is a window-HEIGHT
+     failure, which is why checking 1440x900 and 390x844 missed it entirely. */
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__title, .hero__sub { transition: none; }
+    .hero.is-receded .hero__title, .hero.is-receded .hero__sub { opacity: 1 !important; }
+  }
+
+  /* ============================================================
+     INDEX8 — HERO STILL HANDS OVER TO THE FILM WITHOUT A CUT
+     ------------------------------------------------------------
+     Three things had to line up before the swap stopped being visible. The picture is handled in
+     the markup (the still is now the film's own frame at 24s). The other two are here:
+
+     1. The crop. The still sat at object-position 50% 66% and the video at 50% 50%, so even the
+        same photograph would have jumped. Desktop-only — mobile has no video and keeps its own
+        framing, which the 50% 50% rule at the mobile breakpoint already sets.
+     2. The zoom. heroDrift runs the still from scale(1.18) to scale(1.04); by the time the video
+        can play it is around 1.16 while the video is at 1.0. Rather than kill the drift — it is
+        what stops a static hero looking dead during the wait — the film dissolves in over 700ms,
+        which covers the 16% and reads as the shot settling.
+
+     Gated on .js so that with scripting off the video is simply never opacity-0 and hidden.
+     ============================================================ */
+  @media (min-width: 761px) {
+    .hero__media img { object-position: 50% 50%; }
+    .js .hero__bgvideo { opacity: 0; transition: opacity 700ms var(--ease); }
+    .js .hero__bgvideo.is-live { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* the video is display:none here anyway; belt and braces so nothing can strand it invisible */
+    .js .hero__bgvideo { opacity: 1; transition: none; }
+  }
+
+  /* ============================================================
+     INDEX9 — PORSCHE ROOM BAND FLATTENED (client, Sep 2)
+     ------------------------------------------------------------
+     "The Porsche room and We Buy images are too large vertically — my mockup tried to address
+     what a more desired crop / aspect ratio would look like."
+
+     He is right, and the measurement says so plainly: the band was 713px tall to carry 151px of
+     text, with 513px of empty picture above it. A hard 2/1 on a full-bleed band is what made the
+     page read as loose.
+
+     Desktop only. Below 761px .breaker--day already drops the ratio entirely for a fixed-height
+     image plus stacked copy, so the mobile band is untouched.
+     ============================================================ */
+  @media (min-width: 761px) {
+    .breaker--day { aspect-ratio: 3.4 / 1; }
+    /* The crop window is now 44% of the photo instead of 75%, so WHICH 44% is the whole design
+       decision. 80% drops the roof and the marque flags entirely and fills the frame with the
+       collection: the base of the wall along the top edge, the row of red 911s, then cars all the
+       way down. That is the crop the client drew — his note was that the ceiling was taking up
+       too much room, and he is right that a warehouse roof is not what this band is selling. */
+    .breaker--day .breaker__bg img { object-position: 50% 80%; }
+    /* The scrim is re-cut with the crop, and it is not cosmetic. Flattening the band alone already
+       broke it: at 2/1 all six text rows passed, at 3.4/1 all six FAILED (worst pixel 2.89-4.36
+       against floors of 3.0/4.5), because the copy sits at the same relative height while the
+       PICTURE behind it changed. Raising the crop to 80% then put that copy on red bodywork and
+       chrome — raw luminance ~0.54 under the worst glyph, a far worse ground for white than the
+       concrete wall was.
+
+       MEASURED ACROSS THE PARALLAX, not at a single scroll position. .breaker__bg is 122% tall and
+       translates as the band crosses the viewport, so the picture under a fixed line of text
+       MOVES. At the earlier stops "Delivered worldwide" landed on exactly 3.00 against a 3.0 floor
+       while the band was entering, and every heading sat within 0.3 of failing. These carry the
+       worst case clear of the floor in all three states. Top 24% left clear so the picture opens
+       cleanly. */
+    .breaker--day .breaker__overlay { background:
+      linear-gradient(180deg, rgba(8,7,5,0) 24%, rgba(8,7,5,.55) 60%, rgba(8,7,5,.82) 88%, rgba(8,7,5,.95) 100%); }
+  }
+
+  /* ============================================================
+     INDEX8 — TIGHTER VERTICAL RHYTHM (client, Sep 1)
+     ------------------------------------------------------------
+     Everything here is scoped to min-width 761px, so the mobile layout below that breakpoint is
+     byte-for-byte the index7 layout and needs no re-checking.
+
+     The scale reference the client named is the Featured Classics card: its image is 263px tall
+     at 1440. Section padding was 128px a side — 49% of a card image, which is what reads as loose
+     when the whole page is seen at once. These values put it at roughly 27%, so the air between
+     sections is about a quarter of a card rather than half of one.
+
+     Nothing is restructured, nothing is re-typeset, no crop is re-framed. Only padding, the hero
+     band height and one section proportion move.
+     ============================================================ */
+  @media (min-width: 761px) {
+
+    /* 4 + 5 — the space BETWEEN sections and inside text sections. One token drives founder,
+       buyers, news and the Featured bottom, so the rhythm stays consistent rather than each
+       section getting its own hand-picked number. 128 -> 72 at 1440. */
+    :root { --section-py: clamp(48px, 5vw, 72px); }
+    .section--compact { padding-block: clamp(34px, 3.2vw, 46px); }   /* testimonials: 54 -> 46 */
+
+    /* 1 — hero height RETURNED to the index7 value, deliberately against the client's own
+       item 1. That band is the only place the film plays, and a fifth off its height is a fifth
+       off the one moving thing on the page. The tightening below it does the work instead: the
+       search block now sits at the fold without the hero having to give up room.
+       Reinstate the cut by restoring: height 58svh; min-height 460px. */
+    /* .hero__frame — left at the index7 72svh / 520px */
+
+    /* 2 — hero -> intro -> search -> Featured heading -> cards, closed up in sequence */
+    .searchbar { padding-block: clamp(18px, 2vw, 28px); }            /* 44 -> 28 */
+    .searchbar__intro { margin-bottom: clamp(10px, 1.1vw, 15px); }   /* was 14 -> 20 */
+    .section--featured { padding-top: clamp(20px, 2.2vw, 32px); }    /* 54 -> 32 */
+    .section--featured .lede { margin-bottom: clamp(14px, 1.6vw, 22px); }  /* 34 -> 22 */
+
+    /* 3 — above and below the cards and the CTA pair */
+    .center-cta { margin-top: clamp(22px, 2.4vw, 34px); }            /* 60 -> 34 */
+
+    /* No image band is re-proportioned. The breaker was briefly cut to 2.5/1 and put back: item 6
+       says keep image crops unchanged, and shortening a full-bleed band crops it — there is no
+       way to take the height without taking the picture. The We Buy band was never touched for
+       the same reason plus one more: its two frames are drawn at exactly 2:1 with gradients
+       authored by hand for that height.
+       To take 143px off the page here again: .breaker--day { aspect-ratio: 2.5 / 1; } */
+
+    .footer { padding-block: clamp(34px, 3.4vw, 46px) 28px; }        /* 60 -> 46 */
+
+    /* 7 — the centred pagination comes off both carousels. DESKTOP ONLY, deliberately: the
+       complaint was that they look odd floating under a wide row, and up here the prev/next
+       arrows already carry the job. On mobile they stay — the buyers strip runs seven single-frame
+       pages there, so the markers are the only thing telling you where you are, and the arrows
+       were moved into a row WITH them last round, which would collapse without them.
+       They remain in the DOM and keep working for keyboard and screen-reader users. */
+    .buyers__dots, .quote-dots { display: none; }
+  }
+
+  /* NOTE ON ORDER: the block below must stay LAST. Media queries carry no specificity, so between
+     two rules of equal weight the later one wins — and the INDEX8 pass above sets .searchbar,
+     .section--featured, .section--compact, .center-cta and .footer padding too. Placed before it,
+     every value here is silently overruled. */
+
+  /* ============================================================
+     INDEX10 — THIRD TIGHTENING PASS, RE-PACED RATHER THAN SHAVED (client, Sep 2)
+     ------------------------------------------------------------
+     The client marked "More up" against nine gaps: search -> Featured heading, cards -> CTA pair,
+     CTA pair -> Porsche band, band -> founder, founder -> next, -> Satisfied Customers, buyer
+     photos -> quote, -> What they're saying, logos -> News & Events.
+
+     Measured first: the sections butt EDGE TO EDGE — the gap between every pair is exactly 0.
+     Every gap he circled is padding INSIDE a section, and almost all of it was the same number:
+     72px top and 72px bottom on founder, buyers, news and the Featured bottom.
+
+     That uniformity is the actual fault, and it is why asking for "tighter" three times has not
+     worked. Identical gaps everywhere give the eye nothing to group by, so the page reads slow and
+     gets reported as loose. Two rules from the spacing system apply and they point the same way:
+
+     - I1 (invariant): internal gaps must be smaller than the gap to the neighbouring group.
+       Uniform gaps flatten hierarchy into a list. A DENSE page with deliberate hierarchy is good
+       work; an airy one with uniform gaps is not. So density here is not the problem.
+     - D2: equal top and bottom padding READS as bottom-tight and shoves each section into the
+       next — which is very close to what he is describing. Target 1 : 1.5.
+
+     So this pass cuts AND redistributes: 72/72 -> 32/48. Less total air, and for the first time an
+     actual ratio. Values are on the project's 8px ramp (--sp-4 / --sp-5), not hand-picked.
+
+     The air-first default (D1) is deliberately yielded, and the system allows it by name: it
+     yields "when the deliverable's job is density — catalogues" and "when the audience expects
+     density as a signal of capability". A dealer with two hundred cars in stock is that case, and
+     the client reads space as missing inventory. Recorded as a yield, not a slip.
+
+     Desktop only, as every pass has been. Nothing is restructured, re-typeset or re-cropped.
+     ============================================================ */
+  @media (min-width: 761px) {
+    /* chapter breaks: 144 of padding per boundary -> 80, and bottom-heavy for the first time */
+    .section, .founder-sec { padding-block: clamp(22px, 2.2vw, 32px) clamp(32px, 3.3vw, 48px); }
+    /* the testimonial band is a sub-chapter and stays tighter than a full section (I1) */
+    .section--compact { padding-block: clamp(18px, 1.7vw, 24px) clamp(24px, 2.2vw, 32px); }
+
+    /* the run he marked first: search -> Featured heading -> cards */
+    .searchbar { padding-block: clamp(12px, 1.1vw, 16px) clamp(18px, 1.7vw, 24px); }
+    .searchbar__intro { margin-bottom: clamp(8px, .85vw, 12px); }
+    .section--featured { padding-top: clamp(18px, 1.7vw, 24px); }
+    .section--featured .lede { margin-bottom: clamp(12px, 1.1vw, 16px); }
+
+    /* cards -> the CTA pair. Stays clearly smaller than the 32/48 chapter break so the buttons
+       still read as belonging to the cards above them rather than floating between sections. */
+    .center-cta { margin-top: clamp(16px, 1.7vw, 24px); }
+
+    .footer { padding-block: clamp(24px, 2.2vw, 32px) 24px; }
+
+    /* THE 84px HE ACTUALLY DREW A LINE THROUGH. Between the price row and the CTA pair the box
+       gap is 24px, but the INK gap measured 84px — and the difference is not padding. It is
+       .card__view ("View Details"), which sits at opacity:0 on pointer devices and still reserves
+       36px of flow under every card: invisible, unclickable, holding the card box open below its
+       last visible line. A gap with nothing in it is the hardest kind to explain to a client,
+       because there is nothing to point at.
+
+       Dropped only where it was never visible anyway — (hover: hover), i.e. desktop. The route is
+       not lost: the whole card is an <a>, and hovering already scales the photograph, so the card
+       says it is clickable without a label that only appears once you are already on it. Gated on
+       (hover: hover) rather than width so a wide TOUCH screen keeps it: below that, @media
+       (hover: none) shows it inline and there it earns its height. Mobile is untouched. */
+  }
+  @media (min-width: 761px) and (hover: hover) {
+    .section--featured .card__view { display: none; }
+  }
+
+
+</style>
+</head>
+<body>
+
+<!-- .page = the layer that scrolls up and over the sticky footer at page end -->
+<!-- ============================================================
+     HEADER — sits OUTSIDE .page so its sticky context is the whole
+     document; the nav stays pinned even over the footer (client r3).
+     ============================================================ -->
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <button class="hdr__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" id="burger">
+      <span></span><span></span><span></span>
+    </button>
+    <a class="brand" href="/" aria-label="Beverly Hills Car Club by Alex Manos — home">
+      <!-- full lockup over the hero; shield alone once the bar comes in -->
+      <img class="brand__logo brand__logo--hero" src="assets/images/hero/logo.png?v=2" alt="Beverly Hills Car Club by Alex Manos" width="329" height="123" fetchpriority="high">
+      <img class="brand__logo brand__logo--bar" src="assets/images/logo-lockup.png?v=2" alt="" aria-hidden="true" width="327" height="123">
+      <!-- mobile: shield crest only (the hero title carries "by Alex Manos") -->
+      <span class="brand__mobile">
+        <img class="brand__shield" src="assets/images/logo-shield.svg" alt="" aria-hidden="true" width="97" height="104">
+      </span>
+    </a>
+
+    <nav class="hdr__nav" aria-label="Primary">
+      <ul>
+        <li class="has-menu">
+          <a href="/inventory.htm">Inventory<span class="nav-caret" aria-hidden="true"></span></a>
+          <ul class="submenu">
+            <li><a href="/inventory.htm">Cars for Sale</a></li>
+            <li><a href="/sale-specials.htm">Sale Specials</a></li>
+            <li><a href="/new-arrivals.htm">New Arrivals</a></li>
+            <li><a href="/coming-soon.htm">Cars Coming Soon</a></li>
+            <li><a href="/right-hand-drive.htm">Right-Hand Drive</a></li>
+            <li><a href="/pagoda-inventory.htm">Pagoda Inventory</a></li>
+            <li><a href="/sold-inventory.htm">Sold Inventory</a></li>
+            <li><a href="/rentals.htm">Rentals</a></li>
+            <li><a href="/email-alerts.htm">Get Email Alerts</a></li>
+          </ul>
+        </li>
+        <li class="has-menu">
+          <a href="/sell-your-car.htm">Sell Your Car<span class="nav-caret" aria-hidden="true"></span></a>
+          <ul class="submenu">
+            <li><a href="/sell-your-car.htm">We Buy Cars</a></li>
+            <li><a href="/wanted-list.htm">Wanted List</a></li>
+          </ul>
+        </li>
+        <li class="has-menu">
+          <a href="/about.htm">About<span class="nav-caret" aria-hidden="true"></span></a>
+          <ul class="submenu">
+            <li><a href="/about.htm">About BHCC</a></li>
+            <li><a href="/about.htm">Alex Manos</a></li>
+            <li><a href="/testimonials.htm">Testimonials</a></li>
+            <li><a href="/careers.htm">Careers</a></li>
+            <li><a href="/store.htm">BHCC Store</a></li>
+          </ul>
+        </li>
+        <li class="has-menu">
+          <a href="/blog.htm">Blog<span class="nav-caret" aria-hidden="true"></span></a>
+          <ul class="submenu">
+            <li><a href="/blog.htm">Articles &amp; News</a></li>
+            <li><a href="/blog.htm">Alex's Car Tales</a></li>
+            <li><a href="/classic-cars-index.htm">Classic Cars Index</a></li>
+          </ul>
+        </li>
+        <li class="has-menu">
+          <a href="/how-to-buy.htm">How To Buy<span class="nav-caret" aria-hidden="true"></span></a>
+          <ul class="submenu">
+            <li><a href="/how-to-buy.htm">Buying Guide</a></li>
+            <li><a href="/shipping.htm">Shipping</a></li>
+            <li><a href="/faqs.htm">FAQs</a></li>
+            <li><a href="/buy-with-crypto.htm">Buy with Crypto</a></li>
+          </ul>
+        </li>
+        <li><a href="/contact.htm">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <!-- Three circles that grow into their content on hover / keyboard focus.
+           The labels are always in the DOM — only visually collapsed — so a
+           screen reader gets "Search inventory", the number and "My Garage, 5
+           saved" without needing the hover state. -->
+      <form class="hact hact--search" role="search" action="/inventory.htm">
+        <span class="hact__reveal"><span>
+          <input class="hact__field" type="search" name="q" placeholder="Make, model or year…" aria-label="Search inventory">
+        </span></span>
+        <button class="hact__btn" type="submit" aria-label="Search inventory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </form>
+
+      <a class="hact hact--phone" href="tel:+13109750272">
+        <span class="hact__reveal"><span><span class="hact__label">(310) 975-0272</span></span></span>
+        <span class="hact__btn" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </span>
+      </a>
+
+      <a class="hact hact--alerts" href="/email-alerts.htm" aria-label="Email Alerts">
+        <span class="hact__reveal"><span><span class="hact__label">Email Alerts</span></span></span>
+        <span class="hact__btn" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </span>
+      </a>
+    </div>
+    <a class="hdr__phone-m" href="tel:+13109750272" aria-label="Call (310) 975-0272">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </a>
+  </div>
+
+  <!-- mobile drawer -->
+  <div class="hdr__mobile" id="mobileNav">
+    <div class="mnav">
+      <details class="mdrop">
+        <summary>Inventory</summary>
+        <a class="msub" href="/inventory.htm">Cars for Sale</a>
+        <a class="msub" href="/sale-specials.htm">Sale Specials</a>
+        <a class="msub" href="/new-arrivals.htm">New Arrivals</a>
+        <a class="msub" href="/coming-soon.htm">Cars Coming Soon</a>
+        <a class="msub" href="/right-hand-drive.htm">Right-Hand Drive</a>
+        <a class="msub" href="/pagoda-inventory.htm">Pagoda Inventory</a>
+        <a class="msub" href="/sold-inventory.htm">Sold Inventory</a>
+        <a class="msub" href="/rentals.htm">Rentals</a>
+        <a class="msub" href="/email-alerts.htm">Get Email Alerts</a>
+      </details>
+      <details class="mdrop">
+        <summary>Sell Your Car</summary>
+        <a class="msub" href="/sell-your-car.htm">We Buy Cars</a>
+        <a class="msub" href="/wanted-list.htm">Wanted List</a>
+      </details>
+      <details class="mdrop">
+        <summary>About</summary>
+        <a class="msub" href="/about.htm">About BHCC</a>
+        <a class="msub" href="/about.htm">Alex Manos</a>
+        <a class="msub" href="/testimonials.htm">Testimonials</a>
+        <a class="msub" href="/careers.htm">Careers</a>
+        <a class="msub" href="/store.htm">BHCC Store</a>
+      </details>
+      <details class="mdrop">
+        <summary>Blog</summary>
+        <a class="msub" href="/blog.htm">Articles &amp; News</a>
+        <a class="msub" href="/blog.htm">Alex's Car Tales</a>
+        <a class="msub" href="/classic-cars-index.htm">Classic Cars Index</a>
+      </details>
+      <details class="mdrop">
+        <summary>How To Buy</summary>
+        <a class="msub" href="/how-to-buy.htm">Buying Guide</a>
+        <a class="msub" href="/shipping.htm">Shipping</a>
+        <a class="msub" href="/faqs.htm">FAQs</a>
+        <a class="msub" href="/buy-with-crypto.htm">Buy with Crypto</a>
+      </details>
+      <a class="mlink" href="/contact.htm">Contact</a>
+    </div>
+    <a class="hdr__phone" href="tel:+13109750272">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      (310) 975-0272
+    </a>
+  </div>
+</header>
+
+<div class="page">
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero" aria-label="Introduction">
+  <div class="hero__frame">
+    <div class="hero__media">
+      <picture>
+        <source media="(max-width: 760px)" srcset="assets/images/hero/hero-mobile.png">
+        <!-- Desktop still is the film's OWN opening frame (bhcc-film.mp4 @ 24s, where the script
+             starts playback), not a different photograph. It used to be hero-drive.jpg: a red
+             300SL on an overcast canyon road, while the video opens on a black 190SL on the 6th
+             Street bridge at golden hour. Different car, colour, location and time of day, so the
+             handover read as the page swapping its mind — on a cold cache over 4G that still sat
+             there for 3.5s before the cut. Mobile keeps hero-mobile.png; the img below stays as
+             the final fallback. -->
+        <source media="(min-width: 761px)" srcset="assets/images/hero-film-frame.jpg">
+        <img src="assets/images/hero-drive.jpg?v=1" alt="A red Mercedes-Benz 300SL roadster on a coastal canyon road at dusk" fetchpriority="high" width="2400" height="1716">
+      </picture>
+      <!-- autoplay background video replaces the still (client p5 / brief §02). Real ambient footage from BHCC drops in here; bhcc-film.mp4 is a placeholder. -->
+      <video class="hero__bgvideo" autoplay muted loop playsinline preload="auto" poster="assets/images/hero-film-frame.jpg" aria-hidden="true">
+        <source src="assets/video/bhcc-film.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="hero__inner">
+      <h1 class="hero__title"><span class="hero__line">Beverly Hills Car Club</span><span class="by">by Alex Manos</span></h1>
+      <p class="hero__sub">The world's largest dealer of European and American classic cars. Hundreds of vehicles in-stock, every&nbsp;day!</p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary" href="/inventory.htm">Browse Inventory</a>
+        <a class="btn btn--secondary on-dark" href="/sell-your-car.htm">Sell Your Car</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* HERO background video — autoplay / muted / loop. Real ambient footage from BHCC
+   drops into <source>; bhcc-film.mp4 is a placeholder whose first ~10s is a title
+   card, so we start past it and loop a driving window. Skip-forward only (no retry
+   loop), so it degrades gracefully where range-seek isn't available. */
+(function () {
+  var v = document.querySelector('.hero__bgvideo');
+  if (!v) return;
+  var START = 24, END = 118;
+  v.addEventListener('loadedmetadata', function () { try { v.currentTime = START; } catch (e) {} });
+  v.addEventListener('timeupdate', function () { if (v.currentTime > END) { try { v.currentTime = START; } catch (e) {} } });
+  v.addEventListener('playing', function () { v.classList.add('is-live'); }, { once: true });
+  var p = v.play && v.play();
+  if (p && p.catch) p.catch(function () {});
+})();
+</script>
+
+<!-- search band -->
+<section class="searchbar shell" aria-label="Search inventory">
+  <h2 class="searchbar__intro">Find your dream car, today!</h2>
+  <div class="searchbar__in">
+      <form class="search-form" action="/inventory.htm" role="search">
+        <div class="search-form__field">
+          <input type="search" placeholder="Search by make, model or year…" aria-label="Search inventory">
+          <button class="search-form__btn" type="submit" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          </button>
+        </div>
+      </form>
+      <a class="arrow-link" href="/inventory.htm">View All Inventory <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURED CLASSICS
+     ============================================================ -->
+<section class="section section--featured" aria-labelledby="feat-h">
+  <div class="shell shell--wide">
+    <div class="lede">
+      <span class="eyebrow">The Collection</span>
+      <h2 id="feat-h">Featured classics</h2>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="https://www.beverlyhillscarclub.com/1962-jaguar-xke-series-i-roadster-c-17753.htm">
+        <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series I Roadster" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1962 Jaguar XKE Series I Roadster</h3><span class="card__price mono">$56,500</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="card" href="https://www.beverlyhillscarclub.com/1962-ferrari-250gte-c-16635.htm">
+        <figure><img src="assets/images/inventory-real/1962-ferrari-250gte.jpg" alt="1962 Ferrari 250 GTE" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1962 Ferrari 250 GTE</h3><span class="card__price">On request</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="card" href="https://www.beverlyhillscarclub.com/1969-aston-martin-dbs-left-hand-drive-c-16944.htm">
+        <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1969 Aston Martin DBS</h3><span class="card__price mono">$59,950</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+    </div>
+
+    <div class="center-cta">
+      <a class="btn btn--primary" href="/inventory.htm">View All Inventory</a>
+      <a class="btn btn--secondary cta-alerts" href="/email-alerts.htm">New Inventory Alerts</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROOF BAND — showroom photo + three claims (from index2), under inventory
+     ============================================================ -->
+<section class="breaker breaker--day" aria-labelledby="proof-h">
+  <div class="breaker__bg">
+    <img src="assets/images/porsche-room.jpg" alt="The Beverly Hills Car Club warehouse — rows of classic Porsches and other European classics beneath marque flags" loading="lazy" width="2000" height="1333">
+  </div>
+  <div class="breaker__overlay" aria-hidden="true"></div>
+  <div class="breaker__cap breaker__cap--proof">
+    <h2 id="proof-h" class="sr-only">Why Beverly Hills Car Club</h2>
+    <div class="shell">
+      <ul class="proof">
+        <li>
+          <span class="proof__k">Since 2008</span>
+          <span class="proof__v">Buying and selling European and American classics in Los Angeles.</span>
+        </li>
+        <li>
+          <span class="proof__k">Inspected &amp; documented</span>
+          <span class="proof__v">Every car inspected, documented and photographed before it reaches you.</span>
+        </li>
+        <li>
+          <span class="proof__k">Delivered worldwide</span>
+          <span class="proof__v">From our Los Angeles showroom to anywhere in the world.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOUNDER — condensed single row
+     ============================================================ -->
+<section class="founder-sec section--tint" aria-labelledby="founder-h">
+    <div class="founder">
+      <figure class="founder__media">
+        <img src="assets/images/alex-editorial.jpg" alt="Alex Manos among rows of classic cars in the Beverly Hills Car Club showroom" loading="lazy" width="1280" height="553">
+      </figure>
+      <div class="founder__body">
+        <span class="eyebrow">Alex Manos, Founder</span>
+        <p class="founder__quote" id="founder-h">I've been buying and selling the world's finest classic cars since&nbsp;2008.</p>
+        <p class="founder__p">What began with a single Porsche is now the largest collection of European and American classics under one roof in Los Angeles — every car personally reviewed, inspected and photographed before it ever reaches you.</p>
+      </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SELL — DARK SLAB
+     ============================================================ -->
+<section class="section sell" aria-labelledby="sell-h">
+  <div class="sell__bg" aria-hidden="true">
+    <!-- client: "a hover effect that brightens ... lightbox-like illumination". Two exports of
+         the same Figma frame (2163:62) — the room dim, then the room lit. Alex authored the
+         gradients by hand in that file and they are baked into both files, so there is no CSS
+         scrim here at all: the treatment that keeps the copy legible is part of the picture.
+         Registration is exact — the two are the same frame with only the fill changed, and all
+         40 sample points align at zero offset, so the fade cannot swim. -->
+    <img class="sell__frame sell__frame--dim" src="assets/images/sell-dim.jpg" alt="" loading="lazy" width="1920" height="960">
+    <img class="sell__frame sell__frame--lit" src="assets/images/sell-lit.jpg" alt="" loading="lazy" width="1920" height="960">
+  </div>
+  <div class="sell__overlay" aria-hidden="true"></div>
+  <!-- client Aug20: the whole image is a link that brightens on hover; the Sell Today
+       button and phone are promoted above it and stay independently clickable -->
+  <a class="sell__cover" href="/sell-your-car.htm" aria-label="Sell your classic car — we buy classic cars"></a>
+  <div class="shell">
+    <div class="sell__in">
+      <span class="eyebrow">Sell Your Classic Car</span>
+      <h2 id="sell-h">We buy classic cars!</h2>
+      <p class="sell__sub">From a single Porsche to an entire collection — Alex personally reviews every car offered. Nationwide,&nbsp;In-Any-Condition.</p>
+      <div class="sell__actions">
+        <a class="btn btn--primary on-dark" href="/sell-your-car.htm">Sell Today</a>
+        <a class="sell__phone" href="tel:+13109750272">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          (310) 975-0272
+        </a>
+      </div>
+      <p class="sell__trust">Trusted by collectors worldwide · Serving enthusiasts since 2008<img class="sell__badge" src="assets/images/badge-5star.png" alt="2,250+ five-star ratings" width="134" height="170" loading="lazy"></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     BUYERS STRIP — Alex's real buy handshakes (client Aug20)
+     ============================================================ -->
+<section class="section buyers" aria-labelledby="buyers-h">
+  <div class="shell shell--wide">
+    <div class="buyers__head">
+      <span class="eyebrow">Satisfied Customers</span>
+      <h2 id="buyers-h" class="buyers__title">Real sellers, real results, great service!</h2>
+    </div>
+    <div class="buyers__carousel">
+      <button class="buyers__nav buyers__nav--prev" type="button" aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="buyers__viewport" data-buyers-viewport>
+        <div class="buyers__track" data-buyers-track>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-ferrari.jpg" alt="Alex Manos with a seller beside their classic Ferrari" loading="lazy" width="760" height="522"></figure>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-porsche.jpg" alt="Alex Manos with a seller beside a classic Porsche" loading="lazy" width="760" height="522"></figure>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-911.jpg" alt="Alex Manos with a seller beside a Porsche 911" loading="lazy" width="760" height="522"></figure>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-aston.jpg" alt="Alex Manos with a seller beside a classic Aston Martin" loading="lazy" width="760" height="522"></figure>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-mercedes.jpg" alt="Alex Manos with a seller beside a classic Mercedes-Benz" loading="lazy" width="760" height="522"></figure>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-project.jpg" alt="Alex Manos with a seller beside a classic project car" loading="lazy" width="760" height="522"></figure>
+          <figure class="buyers__item"><img src="assets/images/buyers/buyer-classics.jpg" alt="Alex Manos with a seller and their classic cars" loading="lazy" width="760" height="522"></figure>
+            </div>
+      </div>
+      <button class="buyers__nav buyers__nav--next" type="button" aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="buyers__dots" data-buyers-dots></div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     TESTIMONIALS + PRESS
+     ============================================================ -->
+<section class="section section--compact" aria-labelledby="quotes-h">
+  <div class="shell">
+    <div class="quotes">
+      <span class="eyebrow" id="quotes-h">What they're saying</span>
+      <button type="button" class="quote-nav quote-nav--prev" id="quotePrev" aria-label="Previous testimonial">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="quote-nav quote-nav--next" id="quoteNext" aria-label="Next testimonial">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <div class="quote-track" id="quoteTrack">
+        <figure class="quote is-active">
+          <div class="quote__mark" aria-hidden="true">&ldquo;</div>
+          <blockquote>Alex and his team made selling my classic Porsche absolutely seamless — professional, fair and a genuine pleasure to work with.</blockquote>
+          <figcaption class="quote__by">John D. · Beverly Hills, CA</figcaption>
+        </figure>
+        <figure class="quote">
+          <div class="quote__mark" aria-hidden="true">&ldquo;</div>
+          <blockquote>The finest collection of European classics I've seen under one roof. They knew the car's history better than I did.</blockquote>
+          <figcaption class="quote__by">Michael R. · Greenwich, CT</figcaption>
+        </figure>
+        <figure class="quote">
+          <div class="quote__mark" aria-hidden="true">&ldquo;</div>
+          <blockquote>From the first call to delivery, every detail was handled with care. This is how buying a classic should feel.</blockquote>
+          <figcaption class="quote__by">Elena V. · Miami, FL</figcaption>
+        </figure>
+      </div>
+      <div class="quote-dots" id="quoteDots" role="tablist" aria-label="Testimonials">
+        <button type="button" class="is-active" aria-label="Testimonial 1"></button>
+        <button type="button" aria-label="Testimonial 2"></button>
+        <button type="button" aria-label="Testimonial 3"></button>
+      </div>
+
+      <div class="press">
+        <div class="press__row" aria-label="As featured in">
+          <img class="press__logo press__logo--hemmings" src="assets/images/press/hemmings.svg" alt="Hemmings" loading="lazy">
+          <img class="press__logo press__logo--t911" src="assets/images/press/total911.svg" alt="Total 911" loading="lazy">
+          <img class="press__logo press__logo--ebay" src="assets/images/press/ebay.svg" alt="eBay" loading="lazy">
+          <img class="press__logo press__logo--google" src="assets/images/press/google.svg" alt="Google" loading="lazy">
+          <img class="press__logo press__logo--yelp" src="assets/images/press/yelp.svg" alt="Yelp" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NEWS / EVENTS — dark, staggered showroom media (Cayenne format)
+     ============================================================ -->
+<section class="section news" aria-labelledby="news-h">
+  <div class="shell news__in">
+
+    <!-- heading row on top -->
+    <div class="news__head">
+      <div class="news__head-lead">
+        <h2 class="news__title" id="news-h">News &amp; Events</h2>
+        <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
+      </div>
+      <div class="news__cta">
+        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See All Articles <span aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
+      </div>
+    </div>
+
+    <!-- real posts from beverlyhillscarclub.com/blog.htm. Titles, links and
+         pull-quotes are the live ones; the site publishes no visible dates, so
+         the meta line carries the section instead of an invented date. -->
+    <div class="news__list">
+      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-eternal-summer-ferrari-360-f1-spider.htm">
+        <figure><img src="assets/images/news/news-ferrari-360.jpg" alt="A 2001 Ferrari 360 F1 Spider" loading="lazy" width="900" height="638"></figure>
+        <h3 class="npost__title">Eternal Summer, Ferrari 360 F1 Spider</h3>
+        <p class="npost__text">An ancient town in the Emilia-Romagna region of northern Italy, Modena was not only the birthplace of Enzo Ferrari, but also of operatic tenor Luciano Pavarotti and chef Massimo Bottura.</p>
+        <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-unimprovable-porsche-carrera-coupe-g50.htm">
+        <figure><img src="assets/images/news/news-porsche-g50.jpg" alt="A 1988 Porsche Carrera Coupe G50" loading="lazy" width="900" height="638"></figure>
+        <h3 class="npost__title">Unimprovable, Porsche Carrera Coupe G50</h3>
+        <p class="npost__text">The very first Porsche gearbox was a transaxle, a common case sharing the gear stack and the differential — a design theory every 356-to-997 street and race car shares.</p>
+        <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-post-modern-masterpiece-delorean-dmc-12.htm">
+        <figure><img src="assets/images/news/news-delorean-dmc12.jpg" alt="A red 1981 DeLorean DMC-12" loading="lazy" width="900" height="638"></figure>
+        <h3 class="npost__title">Postmodern Masterpiece, DeLorean DMC-12</h3>
+        <p class="npost__text">Singular among automobiles, the gorgeous rear-engined DeLorean DMC-12 exists in a category of one — a machine charged with hypnotic allure, daring engineering, renegade spirit, and a whiff of delicious controversy.</p>
+        <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+</div><!-- /.page -->
+
+<!-- ============================================================
+     FOOTER — DARK (sticky-reveal, sits beneath .page)
+     ============================================================ -->
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <!-- the real mark, not a text stand-in. logo-signature-cream.png exists
+             precisely for this surface: its ink is flipped to --cream because the
+             master signature is pure black and would vanish here. -->
+        <div class="footer__lockup">
+          <img class="footer__shield" src="assets/images/logo-shield-hi.png" alt="Beverly Hills Car Club" width="260" height="262" loading="lazy">
+          <img class="footer__sig" src="assets/images/logo-signature-cream.png" alt="by Alex Manos" width="155" height="34" loading="lazy">
+        </div>
+        <p>The world's finest European and American classic automobiles, bought and sold from Los Angeles since 2008.</p>
+      </div>
+
+      <details class="footer__col footer__acc" open>
+        <summary>
+          <h3>Inventory</h3>
+          <span class="acc-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
+        <ul>
+          <li><a href="/new-arrivals.htm">New Arrivals</a></li>
+          <li><a href="/coming-soon.htm">Cars Coming Soon</a></li>
+          <li><a href="/sale-specials.htm">Sale Specials</a></li>
+          <li><a href="/right-hand-drive.htm">Right-Hand Drive</a></li>
+          <li><a href="/sold-inventory.htm">Sold Inventory</a></li>
+          <li><a href="/rentals.htm">Rentals</a></li>
+          <li><a href="/sell-your-car.htm">Sell Your Car</a></li>
+        </ul>
+      </details>
+
+      <details class="footer__col footer__acc" open>
+        <summary>
+          <h3>Company</h3>
+          <span class="acc-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
+        <ul>
+          <li><a href="/about.htm">About Alex Manos</a></li>
+          <li><a href="/how-to-buy.htm">How To Buy</a></li>
+          <li><a href="/shipping.htm">Shipping</a></li>
+          <li><a href="/faqs.htm">FAQs</a></li>
+          <li><a href="/buy-with-crypto.htm">Buy with Crypto</a></li>
+          <li><a href="/store.htm">BHCC Store</a></li>
+          <li><a href="/careers.htm">Careers</a></li>
+          <li><a href="/blog.htm">Press &amp; Blog</a></li>
+        </ul>
+      </details>
+
+      <div class="footer__col footer__connect">
+        <h3>Connect</h3>
+        <div class="contact">
+          <a href="tel:+13109750272"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(310) 975-0272</a>
+          <a href="mailto:info@beverlyhillscarclub.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>info@beverlyhillscarclub.com</a>
+          <span class="footer__addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>4576½ Worth St, Los Angeles, CA 90063</span>
+          <span class="footer__hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Mon–Fri 8–6 · Sat 10–5 · Sun closed</span>
+        </div>
+        <!-- all six networks the live site links, per brief §09 -->
+        <div class="footer__social">
+          <a href="https://www.facebook.com/beverlyhillscarclub" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5H14z"/></svg></a>
+          <a href="https://www.youtube.com/user/beverlyhillscarclub" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://twitter.com/BevHillsCC" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h3l-6.6 7.5L21.7 21h-6l-4.7-6.1L5.6 21h-3l7.1-8.1L2.6 3h6.1l4.2 5.6zm-1.1 16h1.7L7.7 4.7H5.9z"/></svg></a>
+          <a href="https://www.instagram.com/beverlyhillscarclub" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.pinterest.com/beverlyhillscc" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.08-.8-.15-2 .03-2.9l1.16-4.9s-.3-.6-.3-1.47c0-1.38.8-2.4 1.8-2.4.85 0 1.26.64 1.26 1.4 0 .86-.55 2.14-.83 3.33-.24 1 .5 1.8 1.48 1.8 1.77 0 3.13-1.87 3.13-4.57 0-2.39-1.72-4.06-4.17-4.06-2.84 0-4.5 2.13-4.5 4.33 0 .86.33 1.78.74 2.28a.3.3 0 0 1 .07.28l-.28 1.15c-.05.18-.15.22-.34.13-1.25-.58-2.03-2.4-2.03-3.87 0-3.15 2.29-6.04 6.6-6.04 3.46 0 6.15 2.47 6.15 5.77 0 3.44-2.17 6.2-5.18 6.2-1.01 0-1.96-.52-2.29-1.15l-.62 2.37c-.22.86-.83 1.94-1.24 2.6A10 10 0 1 0 12 2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/beverly-hills-car-club" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0zM3.3 8.4h3.28V21H3.3zM9.34 8.4h3.14v1.72h.05c.44-.83 1.5-1.7 3.1-1.7 3.31 0 3.92 2.18 3.92 5.02V21h-3.27v-4.9c0-1.17-.02-2.67-1.63-2.67-1.63 0-1.88 1.27-1.88 2.58V21H9.34z"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signup and the language switcher sit below the columns, centred.
+         The brief (§09) puts the switcher in the footer because it was removed
+         from the header; the seven languages are the ones the live site
+         actually offers, not a guessed set. -->
+    <div class="footer__base">
+      <form class="footer__form" action="/subscribe" method="post">
+        <label for="nl">Immediately get new inventory arrivals in your inbox.</label>
+        <div class="row">
+          <input type="email" id="nl" name="email" placeholder="Email address" required>
+          <button class="btn btn--primary on-dark btn--sm" type="submit">Get Email Alerts</button>
+        </div>
+      </form>
+
+      <div class="footer__lang">
+        <label class="sr-only" for="lang">Language</label>
+        <span class="footer__lang-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg>
+        </span>
+        <select id="lang" name="lang">
+          <option value="en" selected>English</option>
+          <option value="nl">Nederlands</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+          <option value="ru">Русский</option>
+          <option value="es">Español</option>
+        </select>
+        <span class="footer__lang-chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© 2026 Beverly Hills Car Club by Alex Manos. All rights reserved.</span>
+      <nav aria-label="Legal">
+        <a href="/privacy.htm">Privacy Policy</a>
+        <a href="/terms.htm">Terms of Service</a>
+        <a href="https://allautonetwork.com">Powered by All Auto Network</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // sticky header shadow
+  const hdr = document.getElementById('hdr');
+  const heroEl = document.querySelector('.hero');
+  // stay transparent while the hero is the backdrop; go solid once it scrolls out
+  const onScroll = () => {
+    const trigger = heroEl ? heroEl.offsetHeight - 80 : 8;
+    hdr.classList.toggle('is-scrolled', window.scrollY > trigger);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // mobile menu
+  const burger = document.getElementById('burger');
+  burger.addEventListener('click', () => {
+    const open = hdr.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.querySelectorAll('.hdr__mobile a').forEach(a =>
+    a.addEventListener('click', () => { hdr.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); }));
+
+  // Footer Inventory/Company: tap-to-open accordions on mobile, always-open columns on desktop
+  (function () {
+    const mq = window.matchMedia('(max-width: 760px)');
+    const accs = document.querySelectorAll('.footer__acc');
+    if (!accs.length) return;
+    const sync = () => accs.forEach(d => { d.open = !mq.matches; });
+    sync();
+    mq.addEventListener('change', sync);
+  })();
+
+  // Search circle: first click opens the field and focuses it rather than
+  // submitting an empty query — on touch there is no hover to open it with.
+  (function () {
+    const form = document.querySelector('.hact--search');
+    if (!form) return;
+    const field = form.querySelector('.hact__field');
+    form.querySelector('.hact__btn').addEventListener('click', e => {
+      if (!field.value.trim()) { e.preventDefault(); field.focus(); }
+    });
+  })();
+
+  // testimonial rotator
+  (function () {
+    const track = document.getElementById('quoteTrack');
+    if (!track) return;
+    const slides = [...track.querySelectorAll('.quote')];
+    const dots = [...document.getElementById('quoteDots').querySelectorAll('button')];
+    let i = 0, timer = null;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function go(n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('is-active', k === i));
+      dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
+    }
+    dots.forEach((d, k) => d.addEventListener('click', () => { go(k); restart(); }));
+    const prev = document.getElementById('quotePrev'), next = document.getElementById('quoteNext');
+    if (prev) prev.addEventListener('click', () => { go(i - 1); restart(); });
+    if (next) next.addEventListener('click', () => { go(i + 1); restart(); });
+    function restart() { if (reduce) return; clearInterval(timer); timer = setInterval(() => go(i + 1), 6000); }
+    restart();
+  })();
+
+  // buyers carousel — paged (arrows + dots), no free scroll (client Aug20)
+  (function () {
+    const vp = document.querySelector('[data-buyers-viewport]');
+    const track = document.querySelector('[data-buyers-track]');
+    const dotsWrap = document.querySelector('[data-buyers-dots]');
+    const prev = document.querySelector('.buyers__nav--prev');
+    const next = document.querySelector('.buyers__nav--next');
+    if (!vp || !track || !dotsWrap) return;
+    const total = track.children.length;
+    let page = 0, pages = 1;
+    let per = 1;
+    function render() {
+      /* with a count that does not divide by the page size (7 frames, 4 per page) a plain
+         page*100% leaves an empty slot on the last page; clamping the start index makes the
+         last page sit flush against the end instead. */
+      const start = Math.min(page * per, Math.max(0, total - per));
+      track.style.transform = 'translateX(' + (-start * (100 / per)) + '%)';
+      [...dotsWrap.children].forEach((d, k) => d.classList.toggle('is-active', k === page));
+      if (prev) prev.disabled = page === 0;
+      if (next) next.disabled = page === pages - 1;
+    }
+    function measure() {
+      const itemW = track.children[0].getBoundingClientRect().width || 1;
+      per = Math.max(1, Math.round(vp.getBoundingClientRect().width / itemW));
+      pages = Math.max(1, Math.ceil(total / per));
+      if (page > pages - 1) page = pages - 1;
+      if (dotsWrap.children.length !== pages) {
+        dotsWrap.innerHTML = '';
+        for (let k = 0; k < pages; k++) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Go to slide ' + (k + 1));
+          b.addEventListener('click', () => { page = k; render(); });
+          dotsWrap.appendChild(b);
+        }
+      }
+      render();
+    }
+    if (prev) prev.addEventListener('click', () => { if (page > 0) { page--; render(); } });
+    if (next) next.addEventListener('click', () => { if (page < pages - 1) { page++; render(); } });
+    measure();
+    let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 150); });
+  })();
+
+  /* WE BUY — the room lights up. Pointer devices on hover; touch has none, so there it runs
+     once when the section is 45% on screen and stays lit. */
+  (function () {
+    const sell = document.querySelector('.sell');
+    if (!sell || !sell.querySelector('.sell__frame--lit')) return;
+    const lit = on => sell.classList.toggle('is-lit', on);
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      sell.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') lit(true); });
+      sell.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') lit(false); });
+      sell.addEventListener('focusin', () => lit(true));
+      sell.addEventListener('focusout', e => { if (!sell.contains(e.relatedTarget)) lit(false); });
+      return;
+    }
+    if (!('IntersectionObserver' in window)) { lit(true); return; }
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.intersectionRatio >= 0.45) { lit(true); io.disconnect(); } });
+    }, { threshold: [0, 0.45, 1] });
+    io.observe(sell);
+  })();
+
+  /* HERO — the title and subtitle recede once the video has had a moment to establish itself,
+     leaving the picture and the two CTAs. Reversible on hover and on scrolling back to the top,
+     so someone returning to the hero is never met with an unlabelled video. Never runs under
+     reduced motion. */
+  /* 3500ms and 800ms are the client's own numbers (Sep 1 spec), not a judgement call. */
+  (function () {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sub = hero.querySelector('.hero__sub');
+    /* retire the entrance animation the moment it ends, so the fade below has a clean base.
+       The timeout is a fallback: last delay .52s + .85s duration = 1.37s. */
+    if (sub) {
+      const settle = () => hero.classList.add('is-settled');
+      sub.addEventListener('animationend', settle, { once: true });
+      setTimeout(settle, 1600);
+    }
+    const start = () => setTimeout(() => hero.classList.add('is-receded'), 3500);
+    /* If the page opens in a background tab the timer would burn down unwatched and the visitor
+       would arrive at a hero that never had a title. Start the clock the first time it is seen. */
+    if (document.hidden) {
+      document.addEventListener('visibilitychange', function once() {
+        if (document.hidden) return;
+        document.removeEventListener('visibilitychange', once);
+        start();
+      });
+    } else {
+      start();
+    }
+  })();
+
+  // gentle parallax on the full-bleed breaker dividers (softer than the sell band)
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const items = [...document.querySelectorAll('.breaker')]
+      .map(b => ({ b, bg: b.querySelector('.breaker__bg') })).filter(x => x.bg);
+    if (!items.length) return;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      const mob = window.matchMedia('(max-width: 760px)').matches;
+      for (const { b, bg } of items) {
+        if (mob && b.classList.contains('breaker--day')) { bg.style.transform = ''; continue; }   // photo-forward on mobile — no parallax
+        const r = b.getBoundingClientRect();
+        if (r.bottom < -120 || r.top > vh + 120) continue;   // skip off-screen
+        const prog = (r.top + r.height / 2 - vh / 2) / vh;
+        let dy = prog * -68;                                  // visible parallax drift
+        dy = Math.max(-44, Math.min(44, dy));                 // clamp within the 11% over-scan
+        bg.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      }
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
+  // scroll-linked zoom + drift on the founder portrait — slow push-in as it passes
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const media = document.querySelector('.founder__media');
+    const img = media && media.querySelector('img');
+    if (!img) return;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      const r = media.getBoundingClientRect();
+      if (r.bottom < -160 || r.top > vh + 160) { ticking = false; return; }
+      const prog = (r.top + r.height / 2 - vh / 2) / vh;   // + above centre, − below
+      const scale = 1.09 + prog * 0.07;                    // ~1.04–1.15, never below 1
+      let dy = prog * -24; dy = Math.max(-18, Math.min(18, dy));
+      img.style.transform = `scale(${scale.toFixed(3)}) translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
+  // News/Events is a pure CSS sticky-column now (right heading sticky, left
+  // posts scroll, unsticks at section end) — no JS needed.
+
+  // Scroll reveal — images rise from blur, text slides in from the side.
+  (function () {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const imgSel  = '.card figure, .npost figure, .founder__media, .breaker, .sell__bg, .press';
+    const leftSel = '.lede, .npost__date, .npost__title, .npost__text, .npost__more, .sell__in > *';
+    const rightSel = '.founder__body > *, .news__head > *';
+    document.querySelectorAll(imgSel).forEach(el => el.setAttribute('data-reveal', 'img'));
+    document.querySelectorAll(leftSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text'); });
+    document.querySelectorAll(rightSel).forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'text-r'); });
+    document.querySelectorAll('.proof li').forEach(el => el.setAttribute('data-reveal', 'up'));
+    const all = document.querySelectorAll('[data-reveal]');
+    if (reduce) { all.forEach(e => e.classList.add('is-in')); return; }
+    // gentle stagger within card / post / sell groups (step-in one by one)
+    ['.cards', '.news__list', '.sell__in'].forEach(sel => {
+      const c = document.querySelector(sel); if (!c) return;
+      [...c.children].forEach((child, i) => {
+        const d = (i * 0.07) + 's';
+        if (child.hasAttribute('data-reveal')) child.style.transitionDelay = d;
+        child.querySelectorAll('[data-reveal]').forEach(el => { el.style.transitionDelay = d; });
+      });
+    });
+    // proof band — three claims step up from the bottom, one after another
+    const proof = document.querySelector('.proof');
+    if (proof) [...proof.children].forEach((li, i) => { li.style.transitionDelay = (i * 0.14).toFixed(2) + 's'; });
+    // founder — the portrait reveals first, then the quote/body slide in one by one
+    const founderBody = document.querySelector('.founder__body');
+    if (founderBody) {
+      [...founderBody.children].forEach((child, i) => {
+        if (child.hasAttribute('data-reveal')) child.style.transitionDelay = (0.32 + i * 0.1).toFixed(2) + 's';
+      });
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+    all.forEach(el => io.observe(el));
+  })();
+</script>
+
+</body>
+</html>
