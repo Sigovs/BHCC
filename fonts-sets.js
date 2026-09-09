@@ -19,6 +19,8 @@
 window.FONT_CSS = [
   "https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300..700;1,300..700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300..900;1,9..40,300..900&family=DM+Serif+Display:ital@0;1&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Epilogue:ital,wght@0,300..800;1,300..800&family=Figtree:ital,wght@0,300..900;1,300..900&family=Fjalla+One&family=Forum&family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=Inter+Tight:wght@300..600&family=Italiana&display=swap",
   "https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Karla:ital,wght@0,300..800;1,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Manrope:wght@300..800&family=Marcellus&family=Montserrat:ital,wght@0,300..800;1,300..700&family=Oswald:wght@300..700&family=Outfit:wght@300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Prata&family=Public+Sans:ital,wght@0,300..800;1,300..800&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Sora:wght@300..800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400..800&family=Urbanist:ital,wght@0,300..800;1,300..800&display=swap"
+  ,
+  "https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Roboto+Slab:wght@100..900&family=Vollkorn:ital,wght@0,400..900;1,400..900&family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
 ];
 
 /* Both pages need these in their <head>; injecting from here keeps the list in one place. */
@@ -67,6 +69,12 @@ window.FONT_SETS = [
     d:"'Figtree',sans-serif", b:"'Figtree',sans-serif", m:"'Figtree',sans-serif",
     w:"Rounder and more open than the rest of this group — approachable without being soft. Its figures are particularly even, which is worth watching on the price row: a lot of friendly faces fall apart the moment they have to set a dollar amount next to a phone number." },
 
+  { k:'librebaskerville', n:'Libre Baskerville', s:'transitional serif · + Inter Tight', t:'transitional serif', g:'Serif — book and text',
+    d:"'Libre Baskerville',serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
+    w:"A Baskerville drawn for screens rather than adapted to them — wide, generously spaced, with a large x-height. It is the least fashionable face on this page and the easiest to read at length. Where Cormorant thins out as it shrinks, this holds its colour all the way down to a caption, which is the one thing the current face cannot do." },
+  { k:'vollkorn', n:'Vollkorn', s:'warm book serif · + Inter Tight', t:'warm book serif', g:'Serif — book and text',
+    d:"'Vollkorn',serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
+    w:"German for wholemeal, and it reads like it: sturdy, slightly rough, with none of Cormorant's fragility. It carries a headline with weight instead of elegance — closer to a stamped chassis plate than to an invitation. Worth a look if the objection to the current face is that it feels delicate." },
   { k:'ebgaramond', n:'EB Garamond', s:'old-style serif · + Manrope', t:'old-style serif', g:'Serif — book and text',
     d:"'EB Garamond',serif", b:"'Manrope',sans-serif", m:"'Manrope',sans-serif",
     w:"The most direct answer to the note. The same class as the face on the site today — a Garamond — but cut with more weight in the stem, so it does not thin out through the middle sizes the way Cormorant does. If this fixes the complaint, the objection was to one particular cut and the site keeps its serif." },
@@ -92,6 +100,9 @@ window.FONT_SETS = [
   { k:'dmserif', n:'DM Serif Display', s:'modern serif · + DM Sans', t:'modern serif', g:'Serif — display and didone',
     d:"'DM Serif Display',serif", b:"'DM Sans',sans-serif", m:"'DM Sans',sans-serif",
     w:"Flat, heavy serifs and a matched sans from the same foundry — the pair is drawn to go together rather than assembled from two places. Cleaner and more contemporary than a Garamond without going all the way to a didone. Display cut only, so there is no bold to lean on." },
+  { k:'abril', n:'Abril Fatface', s:'fat didone · + Manrope', t:'fat didone', g:'Serif — display and didone',
+    d:"'Abril Fatface',serif", b:"'Manrope',sans-serif", m:"ui-monospace,Menlo,monospace",
+    w:"The loudest thing here. A fat-face didone from the era of poster type — enormous contrast, tiny counters, no interest whatsoever in being quiet. One word of it is a statement; a sentence of it is a headache, so it only works if the headline stays to three or four words." },
   { k:'italiana', n:'Italiana', s:'engraved display · + Manrope', t:'engraved display', g:'Serif — display and didone',
     d:"'Italiana',serif", b:"'Manrope',sans-serif", m:"'Manrope',sans-serif",
     w:"The most extreme option on this page: very high contrast, very light, drawn for couture and hotel identities. It is magnificent at hero size and it disappears at anything else, so it can only ever be the display voice. Drag the size slider down and it fails on purpose — that failure is the point of showing it." },
@@ -106,6 +117,16 @@ window.FONT_SETS = [
     d:"'Forum',serif", b:"'Manrope',sans-serif", m:"'Manrope',sans-serif",
     w:"The same inscriptional register as the two above, but lighter and less ceremonial — the capitals are narrower and the whole thing sits more quietly. If Cinzel is a film poster and Marcellus is a plaque, this is an engraved invitation. It has a real lowercase, which the other two effectively do not." },
 
+
+  /* Slab was the one register the first thirty had nothing in. It sits between a serif and a
+     grotesque: the weight of machinery, the legibility of a book face. For a dealer in mechanical
+     objects it is the most obviously on-subject direction on the page, which is why two are here. */
+  { k:'zillaslab', n:'Zilla Slab', s:'industrial slab · one family', t:'industrial slab', g:'Slab — the machine register',
+    d:"'Zilla Slab',serif", b:"'Zilla Slab',serif", m:"'Zilla Slab',serif",
+    w:"A slab with the serifs cut square and the corners left sharp — drawn for Mozilla, and it still reads engineered rather than literary. It is the only face here that would look at home stencilled on a workshop door, and it sets a price with real authority." },
+  { k:'robotoslab', n:'Roboto Slab', s:'neutral slab · + Inter Tight', t:'neutral slab', g:'Slab — the machine register',
+    d:"'Roboto Slab',serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
+    w:"The quiet half of the slab register. Even strokes, no flourish, a full weight range from hairline to black — it gives the machinery reference without the period costume that Zilla carries. The safest way to try a slab before committing to one with more voice." },
   { k:'oswald', n:'Oswald', s:'condensed · + Hanken Grotesk + JetBrains Mono', t:'condensed', g:'Condensed — plate and poster',
     d:"'Oswald',sans-serif", b:"'Hanken Grotesk',sans-serif", m:"'JetBrains Mono',monospace",
     w:"Condensed, vertical, poster-like — the register of an auction catalogue cover or a race number. It fits far more headline into the same measure than anything else here, which matters on a hero carrying a long line. Its figures are narrow, so the price row is where it is decided." },
@@ -116,6 +137,9 @@ window.FONT_SETS = [
     d:"'Fjalla One',sans-serif", b:"'Manrope',sans-serif", m:"'JetBrains Mono',monospace",
     w:"Heavier and flatter than either above — a display-only condensed with real weight in the stems. It gives a headline the density of a printed catalogue cover. One weight only, and no lowercase worth reading at small size, so everything below the headline has to come from the sans." },
 
+  { k:'bebas', n:'Bebas Neue', s:'poster caps · + Inter Tight', t:'poster caps', g:'Condensed — plate and poster',
+    d:"'Bebas Neue',sans-serif", b:"'Inter Tight',sans-serif", m:"ui-monospace,Menlo,monospace",
+    w:"Capitals only, very tall, very narrow — the lettering of a race number and an auction lot board. It has no lowercase at all, so it can never be the body face; it is a display voice for two or three words and nothing more. Sets a year and a marque in a very small space." },
   { k:'tri-editorial', n:'Literata', s:'+ Public Sans + JetBrains Mono', t:'three voices · editorial', g:'Three voices — display, text, data',
     d:"'Literata',serif", b:"'Public Sans',sans-serif", m:"'JetBrains Mono',monospace",
     w:"Three voices, each with one job. Literata is a book serif with an optical-size axis, so it is redrawn as it shrinks rather than merely scaled — the failure mode that kills most display serifs on this page. Public Sans carries the reading, and the monospace carries facts only: prices, the phone number, the ratings count." },

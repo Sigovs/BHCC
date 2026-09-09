@@ -2295,6 +2295,18 @@
     border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 50px rgba(0,0,0,.42)}
   .fsw__ttl{font-family:'Inter Tight',system-ui,sans-serif;font-size:11px;letter-spacing:.14em;
     text-transform:uppercase;color:rgba(255,255,255,.52);margin:2px 2px 8px}
+  /* The count, stated. The rail never said how many there were, and the first screenful is one
+     register's worth — so someone who did not think to scroll a panel inside a scrolling page saw
+     about a dozen sans-serifs and asked for more variations. The number is read from the data at
+     build time, so it cannot go stale the next time a face is added. */
+  .fsw__count{display:flex;align-items:center;gap:11px;margin:2px 2px 12px}
+  .fsw__num{flex:0 0 auto;width:46px;height:46px;border-radius:999px;display:grid;place-items:center;
+    background:#D31720;color:#fff;font-family:'Inter Tight',system-ui,sans-serif;
+    font-size:19px;font-weight:700;letter-spacing:-.02em}
+  .fsw__lbl{font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;font-weight:600;
+    line-height:1.25;color:#fff}
+  .fsw__lbl b{display:block;font-weight:400;font-size:11px;letter-spacing:.04em;
+    color:rgba(255,255,255,.45);margin-top:2px}
   .fsw__grp{font-family:'Inter Tight',system-ui,sans-serif;font-size:10px;letter-spacing:.12em;
     text-transform:uppercase;color:rgba(255,255,255,.34);margin:12px 2px 4px}
   .fsw__b{display:block;width:100%;text-align:left;cursor:pointer;padding:8px 10px;border-radius:9px;
@@ -2342,8 +2354,10 @@
   const sheet = document.createElement('style');
   document.head.appendChild(sheet);
 
+  const GROUP_COUNT = new Set(SETS.map(o => o.g)).size;
   let html = '<button class="fsw__hide" type="button" aria-label="Hide the typeface rail">×</button>' +
-              '<p class="fsw__ttl">Typeface</p>';
+              '<div class="fsw__count"><span class="fsw__num">' + SETS.length + '</span>' +
+              '<span class="fsw__lbl">Font systems<b>' + GROUP_COUNT + ' registers · pick any</b></span></div>';
   let group = null;
   SETS.forEach(o => {
     if (o.g !== group) { group = o.g; html += '<p class="fsw__grp">' + group + '</p>'; }

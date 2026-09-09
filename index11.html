@@ -1484,7 +1484,12 @@
 
     /* cards -> the CTA pair. Stays clearly smaller than the 32/48 chapter break so the buttons
        still read as belonging to the cards above them rather than floating between sections. */
-    .center-cta { margin-top: clamp(16px, 1.7vw, 24px); }
+    /* 24 -> 48. It had been 24, which is EXACTLY the gap inside a card between the description and
+       its View Details link — so the section's own two buttons read as the last card's third line
+       rather than as the action for the whole strip. The rule is the same one that fixed the card:
+       the gap to the next thing has to beat the gaps inside it. Card internals run 8 and 24; the
+       step out of the strip is 48. */
+    .center-cta { margin-top: clamp(30px, 3.4vw, 48px); }
 
     .footer { padding-block: clamp(24px, 2.2vw, 32px) 24px; }
 
