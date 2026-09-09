@@ -2317,8 +2317,15 @@
   .fsw__b:hover{background:rgba(255,255,255,.07);color:#fff}
   .fsw__b.is-on{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.32);color:#fff}
   .fsw__b.is-on span{color:rgba(255,255,255,.62)}
-  .fsw__link{display:block;margin-top:14px;text-align:center;background:#EFECE4;color:#141312;
-    border-radius:9px;padding:11px 12px;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;
+  /* The count and the compare link are the two things you want without hunting, so they ride in a
+     sticky header and the 35 options scroll underneath. Before this the link sat after the last
+     option — reaching it meant scrolling a panel inside a scrolling page, which is the same trap
+     that hid two thirds of the typefaces. */
+  .fsw__head{position:sticky;top:-14px;z-index:2;margin:-14px -14px 4px;padding:14px 14px 10px;
+    background:rgba(20,19,17,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.10);border-radius:14px 14px 0 0}
+  .fsw__link{display:block;margin:0;text-align:center;background:#EFECE4;color:#141312;
+    border-radius:9px;padding:9px 12px;font-family:'Inter Tight',system-ui,sans-serif;font-size:12.5px;
     font-weight:600;text-decoration:none;transition:background .18s ease,transform .18s ease}
   .fsw__link:hover{background:#fff;transform:translateY(-1px)}
   .fsw__hide{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:6px;
@@ -2356,15 +2363,17 @@
 
   const GROUP_COUNT = new Set(SETS.map(o => o.g)).size;
   let html = '<button class="fsw__hide" type="button" aria-label="Hide the typeface rail">×</button>' +
+              '<div class="fsw__head">' +
               '<div class="fsw__count"><span class="fsw__num">' + SETS.length + '</span>' +
-              '<span class="fsw__lbl">Font systems<b>' + GROUP_COUNT + ' registers · pick any</b></span></div>';
+              '<span class="fsw__lbl">Font systems<b>' + GROUP_COUNT + ' registers · pick any</b></span></div>' +
+              '<a class="fsw__link" href="fonts-specimen2.html">Compare two side by side &rarr;</a>' +
+              '</div>';
   let group = null;
   SETS.forEach(o => {
     if (o.g !== group) { group = o.g; html += '<p class="fsw__grp">' + group + '</p>'; }
     html += '<button class="fsw__b" type="button" data-set="' + o.k + '" style="font-family:' +
             o.d.replace(/"/g, '&quot;') + '">' + o.n + '<span>' + o.s + '</span></button>';
   });
-  html += '<a class="fsw__link" href="fonts-specimen2.html">Compare two side by side &rarr;</a>';
   html += '<button class=fsw__show type=button>Typeface ↑</button>';
   nav.innerHTML = html;
   nav.querySelector('.fsw__hide').addEventListener('click', () => nav.classList.add('is-folded'));
