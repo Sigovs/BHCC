@@ -1259,6 +1259,51 @@
   }
 
   /* ============================================================
+     INDEX11 — FEATURED CLASSICS IS A REAL CAROUSEL (client, Sep 9)
+     ------------------------------------------------------------
+     "our carousel might include more than three cars, so we need a) left & right arrows /
+      indicators they can scroll / swipe, b) on mobile let's have one just car tile and not three."
+
+     It was never a carousel — a static `repeat(3, 1fr)` grid holding three hard-coded cars, which
+     collapsed to one column on mobile and stacked all three. Now a paged track: three per view on
+     desktop, one on mobile, arrows either side, swipe on touch.
+
+     Built on the same paging model as the Satisfied Customers strip rather than a second
+     invention, so there is one carousel behaviour on this page and not two.
+
+     Arrows, NOT centred dots, on desktop — in round 7 he asked for exactly those markers to come
+     off the other two carousels, so re-introducing them here would undo his own edit. The dots
+     stay for mobile, where a one-up track gives no other sense of position, and they stay in the
+     DOM at every width so keyboard and screen-reader users keep the page control.
+     ============================================================ */
+  .feat { position: relative; }
+  .feat__viewport { overflow: hidden; }
+  .feat__track { display: flex; transition: transform .55s var(--ease); will-change: transform; }
+  @media (prefers-reduced-motion: reduce) { .feat__track { transition: none; } }
+  /* the gap lives INSIDE the item as padding, so a percentage translate of the track lands exactly
+     on a card edge — a flex `gap` would not divide evenly and the last page would sit off by the
+     accumulated gutter. */
+  .feat__item { flex: 0 0 33.3333%; box-sizing: border-box; padding-inline: clamp(10px, .9vw, 15px); }
+  @media (max-width: 760px) { .feat__item { flex-basis: 100%; padding-inline: 0; } }
+
+  .feat__nav { position: absolute; top: clamp(90px, 12vw, 150px); z-index: 3;
+    width: 46px; height: 46px; display: grid; place-items: center; border-radius: 999px; color: #fff;
+    background: rgba(20,18,16,.55); border: 1px solid rgba(255,255,255,.32);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+  .feat__nav svg { width: 22px; height: 22px; }
+  .feat__nav:hover { background: var(--accent-red); border-color: var(--accent-red); }
+  .feat__nav:disabled { opacity: .28; cursor: default; }
+  .feat__nav--prev { left: clamp(2px, .6vw, 10px); }
+  .feat__nav--next { right: clamp(2px, .6vw, 10px); }
+
+  .feat__dots { display: flex; justify-content: center; gap: var(--sp-15); margin-top: clamp(14px, 1.6vw, 22px); }
+  .feat__dots button { width: 9px; height: 9px; border-radius: 999px; background: rgba(26,26,24,.24);
+    transition: background var(--dur) var(--ease), width var(--dur) var(--ease); }
+  .feat__dots button:hover { background: rgba(26,26,24,.45); }
+  .feat__dots button.is-active { width: 22px; background: var(--accent-red); }
+
+  /* ============================================================
      INDEX9 — PORSCHE ROOM BAND FLATTENED (client, Sep 2)
      ------------------------------------------------------------
      "The Porsche room and We Buy images are too large vertically — my mockup tried to address
@@ -1349,7 +1394,7 @@
        pages there, so the markers are the only thing telling you where you are, and the arrows
        were moved into a row WITH them last round, which would collapse without them.
        They remain in the DOM and keep working for keyboard and screen-reader users. */
-    .buyers__dots, .quote-dots { display: none; }
+    .buyers__dots, .quote-dots, .feat__dots { display: none; }
   }
 
   /* NOTE ON ORDER: the block below must stay LAST. Media queries carry no specificity, so between
@@ -1683,22 +1728,54 @@
       <h2 id="feat-h">Featured classics</h2>
     </div>
 
-    <div class="cards">
-      <a class="card" href="https://www.beverlyhillscarclub.com/1962-jaguar-xke-series-i-roadster-c-17753.htm">
+    <div class="feat">
+      <div class="feat__viewport" data-feat-viewport>
+        <div class="feat__track" data-feat-track>
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1962-jaguar-xke-series-i-roadster-c-17753.htm">
         <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series I Roadster" loading="lazy" width="1200" height="740"></figure>
-        <div class="card__meta"><h3 class="card__title">1962 Jaguar XKE Series I Roadster</h3><span class="card__price mono">$56,500</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <div class="card__meta"><h3 class="card__title">1962 Jaguar XKE Series I Roadster</h3><span class="card__price mono">$54,500</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
-      <a class="card" href="https://www.beverlyhillscarclub.com/1962-ferrari-250gte-c-16635.htm">
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1962-ferrari-250gte-c-16635.htm">
         <figure><img src="assets/images/inventory-real/1962-ferrari-250gte.jpg" alt="1962 Ferrari 250 GTE" loading="lazy" width="1200" height="740"></figure>
-        <div class="card__meta"><h3 class="card__title">1962 Ferrari 250 GTE</h3><span class="card__price">On request</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <div class="card__meta"><h3 class="card__title">1962 Ferrari 250 GTE</h3><span class="card__price mono">$159,950</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
-      <a class="card" href="https://www.beverlyhillscarclub.com/1969-aston-martin-dbs-left-hand-drive-c-16944.htm">
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1969-aston-martin-dbs-left-hand-drive-c-16944.htm">
         <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="740"></figure>
-        <div class="card__meta"><h3 class="card__title">1969 Aston Martin DBS</h3><span class="card__price mono">$59,950</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <div class="card__meta"><h3 class="card__title">1969 Aston Martin DBS</h3><span class="card__price mono">$189,950</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1960-bentley-s2-continental-sport-saloon-left-hand-drive-by-james-young-c-17794.htm">
+        <figure><img src="assets/images/inventory-real/1960-bentley-s2-continental-sport-saloon-left-hand-drive-by-james-young.jpg" alt="1960 Bentley S2 Continental Sport Saloon Left-Hand-Drive by James Young" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1960 Bentley S2 Continental</h3><span class="card__price mono">$179,950</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1958-cadillac-eldorado-brougham-70-series-c-18343.htm">
+        <figure><img src="assets/images/inventory-real/1958-cadillac-eldorado-brougham-70-series.jpg" alt="1958 Cadillac Eldorado Brougham 70 Series" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1958 Cadillac Eldorado Brougham</h3><span class="card__price mono">$74,500</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1954-austin-healey-100-4-convertible-sports-car-c-17446.htm">
+        <figure><img src="assets/images/inventory-real/1954-austin-healey-100-4-convertible-sports-car.jpg" alt="1954 Austin-Healey 100-4 Convertible Sports Car" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1954 Austin-Healey 100-4</h3><span class="card__price mono">$34,750</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1962-alfa-romeo-2000-spider-c-17480.htm">
+        <figure><img src="assets/images/inventory-real/1962-alfa-romeo-2000-spider.jpg" alt="1962 Alfa Romeo 2000 Spider" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1962 Alfa Romeo 2000 Spider</h3><span class="card__price mono">$24,750</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1965-buick-special-c-17886.htm">
+        <figure><img src="assets/images/inventory-real/1965-buick-special.jpg" alt="1965 Buick Special" loading="lazy" width="1200" height="740"></figure>
+        <div class="card__meta"><h3 class="card__title">1965 Buick Special</h3><span class="card__price mono">$16,750</span></div>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+      </a>
+        </div>
+      </div>
+      <button class="feat__nav feat__nav--prev" type="button" aria-label="Previous vehicles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+      <button class="feat__nav feat__nav--next" type="button" aria-label="More vehicles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+      <div class="feat__dots" data-feat-dots aria-label="Vehicle pages"></div>
     </div>
 
     <div class="center-cta">
@@ -2138,6 +2215,70 @@
     let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 150); });
   })();
 
+  /* FEATURED CLASSICS — paged carousel. Same model as the Satisfied Customers strip, plus the
+     swipe the client asked for ("they can scroll / swipe"), which that one never had. */
+  (function () {
+    const vp = document.querySelector('[data-feat-viewport]');
+    const track = document.querySelector('[data-feat-track]');
+    const dots = document.querySelector('[data-feat-dots]');
+    const prev = document.querySelector('.feat__nav--prev');
+    const next = document.querySelector('.feat__nav--next');
+    if (!vp || !track) return;
+    const total = track.children.length;
+    let page = 0, pages = 1, per = 1;
+
+    function render() {
+      /* clamp the start index: with 8 cards at 3 per page the last page would otherwise leave an
+         empty slot, so it sits flush against the end instead. */
+      const start = Math.min(page * per, Math.max(0, total - per));
+      track.style.transform = 'translateX(' + (-start * (100 / per)) + '%)';
+      if (dots) [...dots.children].forEach((d, k) => d.classList.toggle('is-active', k === page));
+      if (prev) prev.disabled = page === 0;
+      if (next) next.disabled = page === pages - 1;
+    }
+    function measure() {
+      const itemW = track.children[0].getBoundingClientRect().width || 1;
+      per = Math.max(1, Math.round(vp.getBoundingClientRect().width / itemW));
+      pages = Math.max(1, Math.ceil(total / per));
+      if (page > pages - 1) page = pages - 1;
+      if (dots && dots.children.length !== pages) {
+        dots.innerHTML = '';
+        for (let k = 0; k < pages; k++) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Go to vehicles page ' + (k + 1));
+          b.addEventListener('click', () => { page = k; render(); });
+          dots.appendChild(b);
+        }
+      }
+      render();
+    }
+    const go = d => { const n = page + d; if (n >= 0 && n <= pages - 1) { page = n; render(); } };
+    if (prev) prev.addEventListener('click', () => go(-1));
+    if (next) next.addEventListener('click', () => go(1));
+
+    /* Swipe. Horizontal intent only: a vertical drag must still scroll the page, so the gesture is
+       claimed only once the pointer has travelled further across than down. The 45px threshold is
+       past the noise of a tap on a card, which is a link and has to keep working. */
+    let x0 = null, y0 = null, claimed = false;
+    vp.addEventListener('pointerdown', e => { x0 = e.clientX; y0 = e.clientY; claimed = false; }, { passive: true });
+    vp.addEventListener('pointermove', e => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0, dy = e.clientY - y0;
+      if (!claimed && Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+        claimed = true; go(dx < 0 ? 1 : -1); x0 = null;
+      }
+    }, { passive: true });
+    const end = () => { x0 = null; };
+    vp.addEventListener('pointerup', end, { passive: true });
+    vp.addEventListener('pointercancel', end, { passive: true });
+    /* a swipe must not also open the card it started on */
+    vp.addEventListener('click', e => { if (claimed) { e.preventDefault(); claimed = false; } }, true);
+
+    measure();
+    let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 150); });
+  })();
+
   /* WE BUY — the room lights up. Pointer devices on hover; touch has none, so there it runs
      once when the section is 45% on screen and stays lit. */
   (function () {
@@ -2255,7 +2396,7 @@
     const all = document.querySelectorAll('[data-reveal]');
     if (reduce) { all.forEach(e => e.classList.add('is-in')); return; }
     // gentle stagger within card / post / sell groups (step-in one by one)
-    ['.cards', '.news__list', '.sell__in'].forEach(sel => {
+    ['.feat__track', '.cards', '.news__list', '.sell__in'].forEach(sel => {
       const c = document.querySelector(sel); if (!c) return;
       [...c.children].forEach((child, i) => {
         const d = (i * 0.07) + 's';
