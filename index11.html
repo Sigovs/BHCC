@@ -1286,16 +1286,42 @@
   .feat__item { flex: 0 0 33.3333%; box-sizing: border-box; padding-inline: clamp(10px, .9vw, 15px); }
   @media (max-width: 760px) { .feat__item { flex-basis: 100%; padding-inline: 0; } }
 
-  .feat__nav { position: absolute; top: clamp(90px, 12vw, 150px); z-index: 3;
-    width: 46px; height: 46px; display: grid; place-items: center; border-radius: 999px; color: #fff;
-    background: rgba(20,18,16,.55); border: 1px solid rgba(255,255,255,.32);
-    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
-    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
-  .feat__nav svg { width: 22px; height: 22px; }
-  .feat__nav:hover { background: var(--accent-red); border-color: var(--accent-red); }
-  .feat__nav:disabled { opacity: .28; cursor: default; }
-  .feat__nav--prev { left: clamp(2px, .6vw, 10px); }
-  .feat__nav--next { right: clamp(2px, .6vw, 10px); }
+  /* The arrows sit on the HEADING ROW, not on the cars. First pass put them over the middle of the
+     outer photographs, which on a page whose job is selling those cars is the wrong place for a
+     control — a red disc landing on an Aston Martin's flank. There is 485px of empty shell to the
+     right of the centred heading at 1440; that is where they belong.
+     Anchored with `bottom: 100%` off the track rather than a magic offset, so they stay level with
+     the heading when the h2's clamp resizes it. */
+  .feat__nav { position: absolute; bottom: calc(100% + 18px); z-index: 3;
+    width: 42px; height: 42px; display: grid; place-items: center; border-radius: 999px;
+    color: var(--ink); background: transparent; border: 1px solid var(--rule);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+                color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+  .feat__nav svg { width: 20px; height: 20px; }
+  .feat__nav:hover { background: var(--accent-red); border-color: var(--accent-red); color: #fff; }
+  .feat__nav:disabled { opacity: .3; cursor: default; }
+  .feat__nav--prev { right: 52px; }
+  .feat__nav--next { right: 0; }
+  /* Touch gets no arrows: the gesture IS the control there, and a disc over the single visible car
+     is exactly the placement being removed above. Swipe plus the dots carry it. */
+  @media (max-width: 760px) { .feat__nav { display: none; } }
+
+  /* the ladder had one rung missing — it went 3-up straight to 1-up at 760, so 761-1000 was three
+     cards at ~250px with the titles wrapping to three lines. Two across in that band. */
+  @media (max-width: 1000px) and (min-width: 761px) { .feat__item { flex-basis: 50%; } }
+
+  /* THE EQUAL RESERVE. Three lines, clamped, and the same height held whether the copy fills them
+     or not — so eight cards of different-length dealer prose still line up on one baseline and the
+     View Details row never steps between neighbours. min-height does the reserving, line-clamp does
+     the trimming; without both, a short entry shortens its card and a long one pushes past.
+     The source text is their own listing copy, trimmed to 148-158 characters at a word boundary,
+     so the ellipsis lands mid-sentence by design and reads as "there is more on the detail page". */
+  .card__desc {
+    margin-top: var(--sp-15); font-size: var(--fs-body-sm); line-height: 1.6; color: var(--ink-soft);
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+    min-height: calc(3 * 1.6 * var(--fs-body-sm));
+  }
+  @media (max-width: 760px) { .card__desc { -webkit-line-clamp: 3; } }
 
   .feat__dots { display: flex; justify-content: center; gap: var(--sp-15); margin-top: clamp(14px, 1.6vw, 22px); }
   .feat__dots button { width: 9px; height: 9px; border-radius: 999px; background: rgba(26,26,24,.24);
@@ -1483,7 +1509,12 @@
        (hover: none) shows it inline and there it earns its height. Mobile is untouched. */
   }
   @media (min-width: 761px) and (hover: hover) {
-    .section--featured .card__view { display: none; }
+    /* U21 above is why this was dropped in index10 — it was invisible and still reserving 36px.
+       The Sep 9 list asks for it back, "along with the 'view details' link", and now it is VISIBLE
+       at rest beside the description, so it earns the height it takes. The fault was never the
+       element; it was an element holding space while showing nothing. */
+    .section--featured .card__view { display: inline-flex; opacity: 1; transform: none; }
+    .section--featured .card:hover .card__view { color: var(--accent); }
   }
 
 
@@ -1734,42 +1765,50 @@
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1962-jaguar-xke-series-i-roadster-c-17753.htm">
         <figure><img src="assets/images/inventory-real/1962-jaguar-xke-roadster.jpg" alt="1962 Jaguar XKE Series I Roadster" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1962 Jaguar XKE Series I Roadster</h3><span class="card__price mono">$54,500</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this highly coveted 1962 Jaguar XKE Series I Roadster featured with matching numbers. Finished in a Green Sand color complemented with a tan…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1962-ferrari-250gte-c-16635.htm">
         <figure><img src="assets/images/inventory-real/1962-ferrari-250gte.jpg" alt="1962 Ferrari 250 GTE" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1962 Ferrari 250 GTE</h3><span class="card__price mono">$159,950</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">This GT/E 2+2 journey continued through the years, with stops in Switzerland, England, and eventually the United States. Complete with a Marcel Massini…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1969-aston-martin-dbs-left-hand-drive-c-16944.htm">
         <figure><img src="assets/images/inventory-real/1969-aston-martin-dbs.jpg" alt="1969 Aston Martin DBS" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1969 Aston Martin DBS</h3><span class="card__price mono">$189,950</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this 1969 Aston Martin DBS featured with matching numbers. Finished in White complemented by its chrome trim and blue interior. British…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1960-bentley-s2-continental-sport-saloon-left-hand-drive-by-james-young-c-17794.htm">
         <figure><img src="assets/images/inventory-real/1960-bentley-s2-continental-sport-saloon-left-hand-drive-by-james-young.jpg" alt="1960 Bentley S2 Continental Sport Saloon Left-Hand-Drive by James Young" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1960 Bentley S2 Continental</h3><span class="card__price mono">$179,950</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this ultra-rare 1960 Bentley S2 Continental Sport Saloon Left-Hand-Drive featured with coachwork by James Young. Finished in an exquisite…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1958-cadillac-eldorado-brougham-70-series-c-18343.htm">
         <figure><img src="assets/images/inventory-real/1958-cadillac-eldorado-brougham-70-series.jpg" alt="1958 Cadillac Eldorado Brougham 70 Series" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1958 Cadillac Eldorado Brougham</h3><span class="card__price mono">$74,500</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this rare and hand-built 1958 Cadillac Eldorado Brougham 70 Series, finished in its factory color Fairfax Blue (Code 126). The deep metallic blue…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1954-austin-healey-100-4-convertible-sports-car-c-17446.htm">
         <figure><img src="assets/images/inventory-real/1954-austin-healey-100-4-convertible-sports-car.jpg" alt="1954 Austin-Healey 100-4 Convertible Sports Car" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1954 Austin-Healey 100-4</h3><span class="card__price mono">$34,750</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this 1954 Austin-Healey 100-4 Convertible Sports Car featured with matching numbers and finished in a black exterior beautifully complemented by…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1962-alfa-romeo-2000-spider-c-17480.htm">
         <figure><img src="assets/images/inventory-real/1962-alfa-romeo-2000-spider.jpg" alt="1962 Alfa Romeo 2000 Spider" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1962 Alfa Romeo 2000 Spider</h3><span class="card__price mono">$24,750</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this 1962 Alfa Romeo 2000 Spider that is fresh out of the dry state of Nevada and is currently sitting in bare metal combined with a red…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
       <a class="card feat__item" href="https://www.beverlyhillscarclub.com/1965-buick-special-c-17886.htm">
         <figure><img src="assets/images/inventory-real/1965-buick-special.jpg" alt="1965 Buick Special" loading="lazy" width="1200" height="740"></figure>
         <div class="card__meta"><h3 class="card__title">1965 Buick Special</h3><span class="card__price mono">$16,750</span></div>
-        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+        <p class="card__desc">Introducing this 1965 Buick Special featuring body by Fisher that is finished in a white exterior complemented by a grey interior. This iconic classic…</p>
+        <span class="card__view">View Details <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
         </div>
       </div>
