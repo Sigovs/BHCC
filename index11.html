@@ -1286,21 +1286,27 @@
   .feat__item { flex: 0 0 33.3333%; box-sizing: border-box; padding-inline: clamp(10px, .9vw, 15px); }
   @media (max-width: 760px) { .feat__item { flex-basis: 100%; padding-inline: 0; } }
 
-  /* The arrows sit on the HEADING ROW, not on the cars. First pass put them over the middle of the
-     outer photographs, which on a page whose job is selling those cars is the wrong place for a
-     control — a red disc landing on an Aston Martin's flank. There is 485px of empty shell to the
-     right of the centred heading at 1440; that is where they belong.
-     Anchored with `bottom: 100%` off the track rather than a magic offset, so they stay level with
-     the heading when the h2's clamp resizes it. */
-  .feat__nav { position: absolute; bottom: calc(100% + 18px); z-index: 3;
-    width: 42px; height: 42px; display: grid; place-items: center; border-radius: 999px;
-    color: var(--ink); background: transparent; border: 1px solid var(--rule);
+  /* The arrows flank the strip, OUTSIDE the cards, in gutters of their own. Two earlier placements
+     were wrong for the same underlying reason: the first put them over the middle of the outer
+     photographs — a control sitting on the car the page is selling — and the second parked them on
+     the heading row, which was clean but left them a long way from the thing they move.
+     So the track is inset by exactly the room a disc needs and they live in that inset. They never
+     touch a photograph and they sit where the hand expects them.
+     Red, matching the New Inventory Alerts button already on this page: outlined at rest, solid on
+     hover, so the pair reads as one family rather than a new kind of control. */
+  @media (min-width: 761px) { .feat { padding-inline: 58px; } }
+  /* centred on the PHOTOGRAPH, not on the card: the card runs on below the image with title,
+     price, description and link, so centring on the card would drop the arrows into the text.
+     The image height follows the card width, so measure() publishes it and this reads it. */
+  .feat__nav { position: absolute; top: calc(var(--feat-img-h, 228px) / 2 - 22px); z-index: 3;
+    width: 44px; height: 44px; display: grid; place-items: center; border-radius: 999px;
+    color: var(--accent-red); background: var(--bg); border: 1.5px solid var(--accent-red);
     transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
                 color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
   .feat__nav svg { width: 20px; height: 20px; }
   .feat__nav:hover { background: var(--accent-red); border-color: var(--accent-red); color: #fff; }
-  .feat__nav:disabled { opacity: .3; cursor: default; }
-  .feat__nav--prev { right: 52px; }
+  .feat__nav:disabled { opacity: .26; cursor: default; }
+  .feat__nav--prev { left: 0; }
   .feat__nav--next { right: 0; }
   /* Touch gets no arrows: the gesture IS the control there, and a disc over the single visible car
      is exactly the placement being removed above. Swipe plus the dots carry it. */
@@ -2293,6 +2299,8 @@
     }
     function measure() {
       const itemW = track.children[0].getBoundingClientRect().width || 1;
+      const fig = track.querySelector('figure');
+      if (fig) vp.parentElement.style.setProperty('--feat-img-h', Math.round(fig.getBoundingClientRect().height) + 'px');
       per = Math.max(1, Math.round(vp.getBoundingClientRect().width / itemW));
       pages = Math.max(1, Math.ceil(total / per));
       if (page > pages - 1) page = pages - 1;
