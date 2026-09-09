@@ -1317,11 +1317,22 @@
      The source text is their own listing copy, trimmed to 148-158 characters at a word boundary,
      so the ellipsis lands mid-sentence by design and reads as "there is more on the detail page". */
   .card__desc {
-    margin-top: var(--sp-15); font-size: var(--fs-body-sm); line-height: 1.6; color: var(--ink-soft);
+    /* 12 -> 8: the description belongs to the title, so it sits close to it. The bigger part of the
+       gap under a ONE-line title is not this margin at all — it is the empty second line held by
+       .card__title's min-height: 2.28em, which is what keeps every description in the row starting
+       on the same line. That reserve is worth more than a tight single card, so it stays; this
+       closes the part that is actually spacing. */
+    margin-top: var(--sp-1); font-size: var(--fs-body-sm); line-height: 1.6; color: var(--ink-soft);
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
     min-height: calc(3 * 1.6 * var(--fs-body-sm));
   }
   @media (max-width: 760px) { .card__desc { -webkit-line-clamp: 3; } }
+  /* The hierarchy was inverted: the CTA sat CLOSER to the description (8px) than the description
+     sat to its title (12px), so the link read as the paragraph's last line rather than as the
+     thing you act on. Now 8 inside the text block, 24 before the action — spacing I1, the internal
+     gap smaller than the gap to the next thing. Outside the desktop block on purpose: the mobile
+     card has the same three parts in the same order and needs the same separation. */
+  .section--featured .card__view { margin-top: var(--sp-3); }
 
   .feat__dots { display: flex; justify-content: center; gap: var(--sp-15); margin-top: clamp(14px, 1.6vw, 22px); }
   .feat__dots button { width: 9px; height: 9px; border-radius: 999px; background: rgba(26,26,24,.24);
