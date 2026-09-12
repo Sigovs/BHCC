@@ -1389,14 +1389,18 @@
      photograph so only the inner two-thirds shows — the figure's overflow clips the rest. The
      disc reads as part of the frame rather than as a thing laid on the car. */
   .gal__nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
-    width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center;
-    color: #1A1A18; background: rgba(244,241,234,.78); border: 0;
+    width: 44px; height: 44px; padding: 0; border-radius: 50%; display: grid; place-items: center;
+    color: #1A1A18; background: rgba(244,241,234,.80); border: 0;
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     transition: background var(--dur) var(--ease), opacity var(--dur) var(--ease); }
-  .gal__nav svg { width: 16px; height: 16px; }
-  .gal__nav--prev { left: -14px; padding-left: 10px; }
-  .gal__nav--next { right: -14px; padding-right: 10px; }
-  .gal__nav:hover { background: rgba(244,241,234,.96); }
+  .gal__nav svg { width: 18px; height: 18px; }
+  /* the disc is a true circle set 16px past the edge; the chevron is nudged toward the visible
+     side so it sits centred in the part of the disc that shows, not in the part that is clipped */
+  .gal__nav--prev { left: -16px; }
+  .gal__nav--prev svg { transform: translateX(7px); }
+  .gal__nav--next { right: -16px; }
+  .gal__nav--next svg { transform: translateX(-7px); }
+  .gal__nav:hover { background: rgba(244,241,234,.97); }
   .gal__count { position: absolute; right: 10px; bottom: 10px; z-index: 2; font-size: 11px; letter-spacing: .06em;
     color: #1A1A18; background: rgba(244,241,234,.78); padding: 3px 8px; border-radius: 999px;
     -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-variant-numeric: tabular-nums;
