@@ -1385,17 +1385,20 @@
   .gal__track { display: flex; height: 100%; transition: transform .45s var(--ease); will-change: transform; }
   .gal__track img { flex: 0 0 100%; width: 100%; }
   @media (prefers-reduced-motion: reduce) { .gal__track { transition: none; } }
+  /* Alex, Sep 11, from a mockup: a pale disc with a dark chevron, tucked INTO the edge of the
+     photograph so only the inner two-thirds shows — the figure's overflow clips the rest. The
+     disc reads as part of the frame rather than as a thing laid on the car. */
   .gal__nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
-    width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center;
-    color: #fff; background: rgba(20,19,17,.52); border: 1px solid rgba(255,255,255,.34);
-    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center;
+    color: #1A1A18; background: rgba(244,241,234,.78); border: 0;
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     transition: background var(--dur) var(--ease), opacity var(--dur) var(--ease); }
-  .gal__nav svg { width: 14px; height: 14px; }
-  .gal__nav--prev { left: 10px; }
-  .gal__nav--next { right: 10px; }
-  .gal__nav:hover { background: rgba(20,19,17,.86); }
+  .gal__nav svg { width: 16px; height: 16px; }
+  .gal__nav--prev { left: -14px; padding-left: 10px; }
+  .gal__nav--next { right: -14px; padding-right: 10px; }
+  .gal__nav:hover { background: rgba(244,241,234,.96); }
   .gal__count { position: absolute; right: 10px; bottom: 10px; z-index: 2; font-size: 11px; letter-spacing: .06em;
-    color: #fff; background: rgba(20,19,17,.52); padding: 3px 8px; border-radius: 999px;
+    color: #1A1A18; background: rgba(244,241,234,.78); padding: 3px 8px; border-radius: 999px;
     -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-variant-numeric: tabular-nums;
     transition: opacity var(--dur) var(--ease); }
   @media (hover: hover) {
