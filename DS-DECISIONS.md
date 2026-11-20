@@ -144,3 +144,13 @@ If the client reviews on an iPad, this is likely where many "extra spacing" note
 Shots: .playwright-mcp/sweep-*.png
 4. **Porsche World logo** — please send the original colour logo file (we could not find an official
    one; the page shows a typeset stand-in). Also confirm "Porsche World" = the UK magazine.
+
+## UPDATE 2026-11-19 (late) — client screenshots received
+`NOVEMBER CHANGES/fwdallautonetworknewwebsitemockup/Slide 1–9` (numbered markers + green brackets).
+Checked against the build: all markers match what was done, except
+- **Slide 8 #3**: the marker sits on the **Alex + red DeLorean** tile — that is his "Alex + red Ferrari
+  image". We used Alex + red Ferrari 308 (founder-ferrari.jpg). Alex to decide.
+- **Slide 8 #2**: marker is in the gap between the News sub-heading and the cards, centred — the
+  subscribe box probably belongs there (ours sits right of the heading).
+- Screenshots are ~1570–1790px wide: he reviews on **desktop**, not iPad. Questions 1–2 above
+  (device / send screenshots) are answered; the tablet TODO is unrelated to his notes.

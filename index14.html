@@ -1868,20 +1868,22 @@
      an E-Mail Alerts subscribe box on the right of the head row (See All Articles drops to a text
      link under the sub), and the third column becomes the We Buy CTA card with the DS red button. */
   .section.news { padding-block: 24px 32px; }
-  .news__head { margin-bottom: 24px; align-items: center; }
+  .news__head { margin-bottom: 20px; align-items: flex-end; }
   .news__sub { margin-top: 8px; }
   .news__all { margin-top: 12px; color: var(--cream); }
   .news__all:hover { color: #fff; }
-  .news__subscribe { flex: 0 1 460px; padding: 20px 22px; border-radius: 12px; background: #191c1f; border: 1px solid rgba(239,236,228,.10); }
-  .news__subscribe-h { display: block; font-family: var(--font-display); font-size: clamp(1.375rem, 1.2rem + .5vw, 1.625rem); line-height: 1.04; color: #fff; }
-  .news__subscribe-p { margin: 6px 0 0; font-size: .875rem; color: var(--ink-soft-on-dark); }
-  .news__subscribe-row { display: flex; gap: 8px; margin-top: 14px; }
+  .news__subscribe { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 32px; row-gap: 4px;
+    margin: 0 0 20px; padding: 18px 22px; border-radius: 12px; background: #191c1f; border: 1px solid rgba(239,236,228,.10); }
+  .news__subscribe-h { grid-column: 1; display: block; font-family: var(--font-display); font-size: clamp(1.375rem, 1.2rem + .5vw, 1.625rem); line-height: 1.04; color: #fff; }
+  .news__subscribe-p { grid-column: 1; margin: 0; font-size: .875rem; color: var(--ink-soft-on-dark); }
+  .news__subscribe-row { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 8px; max-width: 560px; justify-self: end; width: 100%; }
   .news__subscribe-row input { flex: 1; min-width: 0; height: 48px; padding: 0 16px; border-radius: 8px; border: 1px solid rgba(239,236,228,.18);
     background: rgba(255,255,255,.06); color: #fff; font: inherit; font-size: .9375rem; }
   .news__subscribe-row input::placeholder { color: var(--ink-soft-on-dark); }
   .news__subscribe-row input:focus { outline: none; border-color: var(--cream); background: rgba(255,255,255,.10); }
   .news__subscribe-btn { height: 48px; padding: 0 22px; border-radius: 8px; background: var(--accent-red); border: 1.5px solid var(--accent-red); color: #fff; font-weight: 700; }
   .news__subscribe-btn:hover { background: var(--accent-red-hover); border-color: var(--accent-red-hover); }
+  @media (max-width: 900px) { .news__subscribe { grid-template-columns: 1fr; } .news__subscribe-row { grid-column: 1; grid-row: auto; justify-self: stretch; max-width: none; margin-top: 12px; } }
   .npost--promo { border-color: rgba(211,23,32,.45); }
   /* Alex Nov19: the photo fills the whole promo card; copy + button sit on a bottom scrim */
   .npost--promo { position: relative; justify-content: flex-end; min-height: 100%; }
@@ -1889,7 +1891,7 @@
   .npost--promo figure::after { content: ""; position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(180deg, rgba(10,11,12,0) 62%, rgba(10,11,12,.7) 100%); }
   .npost--promo > :not(figure) { position: relative; z-index: 1; }
-  .npost__promo-img { object-position: 64% 50%; }
+  .npost__promo-img { object-position: 84% 50%; }   /* landscape photo in a tall card — keep Alex (right) and the car's nose */
   @media (max-width: 760px) { .npost--promo { min-height: 360px; } }
   .npost--promo .npost__btn { margin-top: auto; align-self: stretch; justify-content: center; min-width: 0; background: var(--accent-red); box-shadow: 0 10px 28px -10px rgba(0,0,0,.7); }
   .npost--promo:hover .npost__btn { background: var(--accent-red-hover); border-color: var(--accent-red-hover); }   /* over a photo the 20% tint washes out — solid red here */
@@ -1900,7 +1902,7 @@
   .npost--promo .npost__text { min-height: 0; }
   .npost__btn { align-self: flex-start; margin: 0 clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px); }
   .npost--promo .npost__text + .npost__btn { margin-top: 18px; }
-  @media (max-width: 760px) { .news__subscribe { flex-basis: 100%; width: 100%; } .npost__btn { align-self: stretch; } }
+  @media (max-width: 760px) { .npost__btn { align-self: stretch; } }
 
   /* client Nov19 s7: reviews on graphite. Credit-line heading (DS role, 18px tracked caps), the quote
      mark gone, a continuous stream of real reviews (CSS marquee: two copies of the set, -50%),
@@ -2728,9 +2730,16 @@
       <div class="news__head-lead">
         <h2 class="news__title" id="news-h">News &amp; Events</h2>
         <p class="news__sub">Stories from the showroom — new arrivals, events and the cars worth keeping.</p>
-        <a class="arrow-link news__all" href="https://www.beverlyhillscarclub.com/blog.htm">See All Articles <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
       </div>
-      <!-- client Nov19 s8.2: E-Mail Alerts subscribe box (posts to the live alerts page) -->
+      <div class="news__cta">
+        <a class="btn btn--secondary on-dark" href="https://www.beverlyhillscarclub.com/blog.htm">See All Articles <span aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></a>
+      </div>
+    </div>
+
+    <!-- real posts from beverlyhillscarclub.com/blog.htm. Titles, links and
+         pull-quotes are the live ones; the site publishes no visible dates, so
+         the meta line carries the section instead of an invented date. -->
+    <!-- client Nov19 s8.2: E-Mail Alerts subscribe box — between the head and the cards, where marker #2 sits on his screenshot -->
       <form class="news__subscribe" action="/email-alerts.htm" method="get">
         <label class="news__subscribe-h" for="alerts-email">Subscribe to our E-Mail Alerts</label>
         <p class="news__subscribe-p">New arrivals in your inbox, before they reach the showroom floor.</p>
@@ -2739,11 +2748,7 @@
           <button class="btn news__subscribe-btn" type="submit">Subscribe</button>
         </div>
       </form>
-    </div>
 
-    <!-- real posts from beverlyhillscarclub.com/blog.htm. Titles, links and
-         pull-quotes are the live ones; the site publishes no visible dates, so
-         the meta line carries the section instead of an invented date. -->
     <div class="news__list">
       <a class="npost" href="https://www.beverlyhillscarclub.com/car-tales-eternal-summer-ferrari-360-f1-spider.htm">
         <figure><img src="assets/images/news/news-ferrari-360.jpg" alt="A 2001 Ferrari 360 F1 Spider" loading="lazy" width="900" height="638"></figure>
@@ -2757,10 +2762,10 @@
         <p class="npost__text">The very first Porsche gearbox was a transaxle, a common case sharing the gear stack and the differential — a design theory every 356-to-997 street and race car shares.</p>
         <span class="arrow-link arrow-link--dark npost__more">Read More <span class="a" aria-hidden="true"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
       </a>
-      <!-- client Nov19 s8.3: column 3 is a We Buy CTA, not a post. Image: Alex with a red Ferrari 308
-           (assets/images/founder-ferrari.jpg) — the client's "Alex + red Ferrari". -->
+      <!-- client Nov19 s8.3: column 3 is a We Buy CTA, not a post. Image: the tile his screenshot
+           marks (#3) — Alex with the red DeLorean, which he calls "Alex + red Ferrari". -->
       <a class="npost npost--promo" href="/sell-your-car.htm" aria-label="Sell your car to Alex Manos">
-        <figure><img class="npost__promo-img" src="assets/images/founder-ferrari.jpg" alt="Alex Manos seated in a red Ferrari 308" loading="lazy" width="1200" height="1077"></figure>
+        <figure><img class="npost__promo-img" src="assets/images/news/news-delorean-dmc12.jpg" alt="Alex Manos with a red DeLorean" loading="lazy" width="900" height="638"></figure>
         <span class="btn btn--secondary btn--sell npost__btn">Sell Your Car</span>
       </a>
     </div>
