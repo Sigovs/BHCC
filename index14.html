@@ -1841,12 +1841,10 @@
   /* client Nov19 s9.2 + s5.4 (Alex: "do everything needed", the hero film stays as is):
      - footer: the sticky full-screen reveal REQUIRED a viewport-tall slab, which is the empty field
        above and below the content. It is now an ordinary in-flow footer at content height.
-     - We Buy band: the 2.7:1 ratio (528px min) left 114/82px around the copy at 1440 and 203/169 at
-       1920; the band now hugs its copy with 48px above and below. The photo still covers it. */
+     - We Buy band: see below — left at the index13 ratio. */
   .footer { position: static; min-height: 0; justify-content: flex-start; padding-block: 40px 24px; }
-  @media (min-width: 761px) {
-    .sell { aspect-ratio: auto; min-height: 0; padding-block: 48px 88px; }   /* +40 below: the rating badge hangs ~48px under the trust line */
-  }
+  /* (We Buy band height reverted to index13 — Alex: the client never asked to crop that image;
+     his s5 marker #4 sits at the badge, not on the band height.) */
 
   /* client Nov19 s9: footer — column headings one step up the scale (12 -> 14/15, --fs-body-sm) and red;
      #D31720 measures 3.3:1 on this ground (fails AA for text), so the heading red is the lifted
