@@ -148,8 +148,8 @@ Shots: .playwright-mcp/sweep-*.png
 ## UPDATE 2026-11-19 (late) — client screenshots received
 `NOVEMBER CHANGES/fwdallautonetworknewwebsitemockup/Slide 1–9` (numbered markers + green brackets).
 Checked against the build: all markers match what was done, except
-- **Slide 8 #3**: the marker sits on the **Alex + red DeLorean** tile — that is his "Alex + red Ferrari
-  image". We used Alex + red Ferrari 308 (founder-ferrari.jpg). Alex to decide.
+- **Slide 8 #3**: the marker sits on the Alex + red DeLorean tile, but Alex's call: use the actual
+  **Alex + red Ferrari 308** photo (founder-ferrari.jpg) — final.
 - **Slide 8 #2**: marker is in the gap between the News sub-heading and the cards, centred — the
   subscribe box probably belongs there (ours sits right of the heading).
 - Screenshots are ~1570–1790px wide: he reviews on **desktop**, not iPad. Questions 1–2 above
